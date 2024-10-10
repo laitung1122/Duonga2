@@ -5279,15 +5279,15 @@ Library:GiveSignal(workspace.ChildAdded:Connect(function(child)
                     if Options.NotifyEntity.Value[shortName] then
                         Script.Functions.Alert({
                             Title = "ENTITIES",
-                            Description = shortName .. " has spawned!",
-                            Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Go find a hiding place!" or nil),
+                            Description = shortName .. " đã xuất hiện!",
+                            Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Hãy tìm nơi ẩn náu!" or nil),
                             Image = EntityTable.NotifyReason[child.Name].Image,
 
                             Warning = true
                         })
 
                         if Toggles.NotifyChat.Value then
-                            RBXGeneral:SendAsync(shortName .. " has spawned!")
+                            RBXGeneral:SendAsync(shortName .. " đã xuất hiện!")
                         end
                     end
                 end
@@ -5295,8 +5295,8 @@ Library:GiveSignal(workspace.ChildAdded:Connect(function(child)
         elseif EntityTable.NotifyMessage[child.Name] and Options.NotifyEntity.Value[shortName] then
             Script.Functions.Alert({
                 Title = "ENTITIES",
-                Description = shortName .. " has spawned!",
-                Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Go find a hiding place!" or nil),
+                Description = shortName .. " đã xuất hiện!",
+                Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Hãy tìm nơi ẩn náu!" or nil),
                 Image = EntityTable.NotifyReason[child.Name].Image,
 
                 Warning = true
