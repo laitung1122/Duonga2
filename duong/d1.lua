@@ -418,7 +418,7 @@ local Toggles = getgenv().Linoria.Toggles
 local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/mstudio45/MS-ESP/refs/heads/main/source.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "mspaint v2 | DOORS",
+    Title = "Dương Api V1 | DOORS",
     Center = true,
     AutoShow = true,
     Resizable = true,
@@ -430,10 +430,10 @@ local Window = Library:CreateWindow({
 
 local Tabs = {
     Main = Window:AddTab("Main"),
-    Exploits = Window:AddTab("Exploits"),
-    Visuals = Window:AddTab("Visuals"),
-    Floor = Window:AddTab("Floor"),
-    ["UI Settings"] = Window:AddTab("UI Settings"),
+    Exploits = Window:AddTab("Công cụ"),
+    Visuals = Window:AddTab("Tầm nhìn"),
+    Floor = Window:AddTab("Tự động đi"),
+    ["UI Settings"] = Window:AddTab("Cài đặt UI"),
 }
 
 --// Captions \\--
@@ -2421,7 +2421,7 @@ end
 
 --// Main \\--
 
-local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
+local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Người dùng") do
     PlayerGroupBox:AddSlider("SpeedSlider", {
         Text = "Tăng tốc chạy",
         Default = 0,
@@ -2491,7 +2491,7 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 end
 
-local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
+local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Đi tới") do
     ReachGroupBox:AddToggle("DoorReach", {
         Text = "Đi tới cửa",
         Default = false
@@ -2611,7 +2611,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
     end
 end
 
-local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
+local MiscGroupBox = Tabs.Main:AddRightGroupbox("Tính năng khác") do
     MiscGroupBox:AddButton({
         Text = "Hồi sinh",
         Func = function()
@@ -2672,7 +2672,7 @@ local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Công cụ chống l�
     })
 end
 
-local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
+local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trôn trôn vn") do
     TrollingGroupBox:AddToggle("SpamOtherTools", {
         Text = "Tạo 1 số công cụ khác",
         Default = false
@@ -2751,7 +2751,7 @@ end
 --// Visuals \\--
 
 local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
-    local ESPTab = ESPTabBox:AddTab("ESP") do
+    local ESPTab = ESPTabBox:AddTab("Định vị") do
         ESPTab:AddToggle("DoorESP", {
             Text = "Cửa",
             Default = false,
@@ -2816,7 +2816,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     end
 
-    local ESPSettingsTab = ESPTabBox:AddTab("Settings") do
+    local ESPSettingsTab = ESPTabBox:AddTab("Cài đặt") do
         ESPSettingsTab:AddToggle("ESPHighlight", {
             Text = "Tạo đường phác thảo trên vật thể",
             Default = true,
@@ -2898,7 +2898,7 @@ local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Chức năng") do
 end
 
 local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
-    local NotifyTab = NotifyTabBox:AddTab("Notifier") do
+    local NotifyTab = NotifyTabBox:AddTab("Cảnh báo") do
         NotifyTab:AddDropdown("NotifyEntity", {
             AllowNull = true,
             Values = {"Blitz", "Lookman", "Rush", "Ambush", "Eyes", "Halt Room", "A60", "A120", "Jeff The Killer", "Gloombat Swarm"},
@@ -2909,7 +2909,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         })
 
         NotifyTab:AddToggle("NotifyPadlock", {
-            Text = "Thông báo mã thu viện",
+            Text = "Thông báo mã thư viện",
             Default = false,
         })
 
@@ -2924,7 +2924,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         })
     end
 
-    local NotifySettingsTab = NotifyTabBox:AddTab("Settings") do
+    local NotifySettingsTab = NotifyTabBox:AddTab("Cài đặt") do
         NotifySettingsTab:AddToggle("NotifyChat", {
             Text = "Cảnh báo trong chat",
             Tooltip = "Entity and Padlock Code",
@@ -2958,7 +2958,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
     end
 end
 
-local SelfGroupBox = Tabs.Visuals:AddRightGroupbox("Self") do
+local SelfGroupBox = Tabs.Visuals:AddRightGroupbox("Bản thân") do
     SelfGroupBox:AddToggle("ThirdPerson", {
         Text = "Góc nhìn thứ ba",
         Default = false
@@ -3367,14 +3367,14 @@ task.spawn(function()
             end
         end))
     elseif isRooms then
-        local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+        local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
             Rooms_AntiEntityGroupBox:AddToggle("AntiA90", {
                 Text = "Chống-A90",
                 Default = false
             })
         end
 
-        local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
+        local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
             Rooms_AutomationGroupBox:AddToggle("AutoRooms", {
                 Text = "Tự động đến cửa 1000",
                 Default = false
@@ -6043,20 +6043,20 @@ MenuGroup:AddToggle("ExecuteOnTeleport", { Default = false, Text = "Execute on T
 MenuGroup:AddToggle("KeybindMenuOpen", { Default = false, Text = "Open Keybind Menu", Callback = function(value) Library.KeybindFrame.Visible = value end})
 MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) Library.ShowCustomCursor = Value end})
 MenuGroup:AddDivider()
-MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-MenuGroup:AddButton("Join Discord", function()
+MenuGroup:AddLabel("Vô nhóm discord để biết thêm chi tiết"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
+MenuGroup:AddButton("nhóm discord", function()
     local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-    Inviter.Join("https://discord.com/invite/cfyMptntHr")
+    Inviter.Join("https://discord.com/invite/aRdzCVfF")
     Inviter.Prompt({
-        name = "mspaint",
-        invite = "https://discord.com/invite/cfyMptntHr",
+        name = "Dương Test",
+        invite = "https://discord.com/invite/aRdzCVfF",
     })
-end):AddButton("Copy Link", function()
+end):AddButton("Sao chép liên kết", function()
     if setclipboard then
-        setclipboard("https://discord.com/invite/cfyMptntHr")
+        setclipboard("https://discord.com/invite/aRdzCVfF")
         Library:Notify("Copied discord link to clipboard!")
     else
-        Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
+        Library:Notify("Discord link:https://discord.com/invite/aRdzCVfF", 10)
     end
 end)
 MenuGroup:AddButton("Unload", function() Library:Unload() end)
