@@ -1,7 +1,7 @@
 local branch = getgenv().DuongApi_dev_mode and "dev" or "main"
 
 local HttpService = game:GetService("HttpService")
-local baseURL = "https://raw.githubusercontent.com/laitung1122/Duonga2" .. branch
+local baseURL = "https://raw.githubusercontent.com/laitung1122/Duonga2/" .. branch
 
 export type gameMapping = {
     exclusions: table?,
