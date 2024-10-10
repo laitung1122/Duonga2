@@ -1,9 +1,9 @@
 --!native
 --!optimize 2
 
-print("[Dương-Api] Đang tải...")
-if not ExecutorSupport then print("[Dương-Api] Loading stopped, please use the official loadstring for mspaint. (ERROR: ExecutorSupport == nil)") return end
-if getgenv().mspaint_loaded then print("[Dương-Api] Loading stopped. (ERROR: Already loaded)") return end
+print("[mspaint] Loading...")
+if not ExecutorSupport then print("[mspaint] Loading stopped, please use the official loadstring for mspaint. (ERROR: ExecutorSupport == nil)") return end
+if getgenv().mspaint_loaded then print("[mspaint] Loading stopped. (ERROR: Already loaded)") return end
 
 --// Services \\--
 local Lighting = game:GetService("Lighting")
@@ -21,7 +21,7 @@ local Workspace = game:GetService("Workspace")
 --// Loading Wait \\--
 if not game:IsLoaded() then game.Loaded:Wait() end
 if Players.LocalPlayer and Players.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and Players.LocalPlayer.PlayerGui.LoadingUI.Enabled then
-    print("[Dương-Api] Đang load game...")
+    print("[mspaint] Waiting for game to load...")
     repeat task.wait() until not Players.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and true or not Players.LocalPlayer.PlayerGui.LoadingUI.Enabled
 end
 
@@ -35,6 +35,7 @@ local Script = {
         Door = {},
         Humanoid = {},
         Player = {},
+        Pump = {},
         RootPart = {},
     },
 
@@ -71,6 +72,7 @@ local Script = {
         AnchorFinished = {},
         AutoWardrobeEntities = {},
         Bridges = {},
+        CollisionSize = Vector3.new(5.5, 3, 3),
         FlyBody = nil,
         Guidance = {},
         PaintingDebounce = false,
@@ -548,10 +550,10 @@ function Script.Functions.UpdateRPC()
     end
 
     BloxstrapRPC.SetRichPresence({
-        details = "DOOR[ Dương-Api ]",
+        details = "Playing DOORS [ mspaint v2 ]",
         state = roomNumberPrefix .. prettifiedRoomNumber .. " (" .. (PrettyFloorName[floor.Value] and PrettyFloorName[floor.Value] or ("The " .. floor.Value) ) .. ")",
         largeImage = {
-            hoverText = "Sử dụng Dương-Api V1"
+            hoverText = "Using mspaint v2"
         },
         smallImage = {
             assetId = 6925817108,
@@ -563,7 +565,7 @@ end
 --// Notification Functions \\--
 do
     function Script.Functions.Warn(message: string)
-        warn("WARN - aint:", message)
+        warn("WARN - mspaint:", message)
     end
 
     function Script.Functions.Notifs.Doors.Notify(unsafeOptions)
@@ -701,7 +703,7 @@ do
     end
     
     function Script.Functions.Log(options, condition: boolean | nil)
-        repeat task.wait() until getgenv().t_loaded
+        repeat task.wait() until getgenv().mspaint_loaded
         
         if Options.NotifyStyle.Value == "Linoria" then
             local linoriaMessage = options["LinoriaMessage"] or options.Description
@@ -841,13 +843,13 @@ do
             local opened = door:GetAttribute("Opened")
             local locked = room:GetAttribute("RequiresKey")
     
-            local doorState = if opened then "[Đã mở]" elseif locked then "[Bị Khóa]" else ""
+            local doorState = if opened then "[Opened]" elseif locked then "[Locked]" else ""
             local doorIdx = Script.Functions.RandomString()
     
             local doorEsp = Script.Functions.ESP({
                 Type = "Door",
                 Object = door:WaitForChild("Door"),
-                Text = string.format("Cửa %s %s", doorNumber, doorState),
+                Text = string.format("Door %s %s", doorNumber, doorState),
                 Color = Options.DoorEspColor.Value,
     
                 OnDestroy = function()
@@ -876,7 +878,7 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Chìa khóa",
+                Text = "Key",
                 Color = Options.ObjectiveEspColor.Value
             })
         -- Hotel
@@ -898,7 +900,7 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Sách",
+                Text = "Book",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "LiveBreakerPolePickup" then
@@ -943,14 +945,25 @@ do
             end
         elseif child.Name == "WaterPump" then
             local wheel = child:WaitForChild("Wheel", 5)
+            local onFrame = child:FindFirstChild("OnFrame", true)
     
-            if wheel then
-                Script.Functions.ESP({
+            if wheel and (onFrame and onFrame.Visible) then
+                local pumpIdx = Script.Functions.RandomString()
+
+                local pumpEsp = Script.Functions.ESP({
                     Type = "Objective",
                     Object = wheel,
                     Text = "Water Pump",
-                    Color = Options.ObjectiveEspColor.Value
+                    Color = Options.ObjectiveEspColor.Value,
+
+                    OnDestroy = function()
+                        if Script.FeatureConnections.Pump[pumpIdx] then Script.FeatureConnections.Pump[pumpIdx]:Disconnect() end
+                    end
                 })
+
+                Script.FeatureConnections.Pump[pumpIdx] = onFrame:GetPropertyChangedSignal("Visible"):Connect(function()
+                    if pumpEsp then pumpEsp.Destroy() end
+                end)
             end
         end
     end
@@ -989,10 +1002,10 @@ do
     function Script.Functions.ChestESP(chest)
         local text = chest.Name:gsub("Box", ""):gsub("_Vine", ""):gsub("_Small", ""):gsub("Locked", "")
         local locked = chest:GetAttribute("Locked")
-        local state = if locked then "[Bị khóa]" else ""
+        local state = if locked then "[Locked]" else ""
     
         Script.Functions.ESP({
-            Type = "Rương",
+            Type = "Chest",
             Object = chest,
             Text = string.format("%s %s", text, state),
             Color = Options.ChestEspColor.Value
@@ -1003,7 +1016,7 @@ do
         if not (player.Character and player.Character.PrimaryPart and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0) then return end
     
         local playerEsp = Script.Functions.ESP({
-            Type = "Người chơi",
+            Type = "Player",
             Object = player.Character,
             Text = string.format("%s [%.1f]", player.DisplayName, humanoid.Health),
             TextParent = player.Character.PrimaryPart,
@@ -1022,7 +1035,7 @@ do
     
     function Script.Functions.HidingSpotESP(spot)
         Script.Functions.ESP({
-            Type = "Chỗ ẩn nấp",
+            Type = "HidingSpot",
             Object = spot,
             Text = if spot:GetAttribute("LoadModule") == "Bed" then "Bed" else HidingPlaceName[floor.Value],
             Color = Options.HidingSpotEspColor.Value
@@ -1031,9 +1044,9 @@ do
     
     function Script.Functions.GoldESP(gold)
         Script.Functions.ESP({
-            Type = "Vàng",
+            Type = "Gold",
             Object = gold,
-            Text = string.format("Vàng [%s]", gold:GetAttribute("GoldValue")),
+            Text = string.format("Gold [%s]", gold:GetAttribute("GoldValue")),
             Color = Options.GoldEspColor.Value
         })
     end
@@ -1051,9 +1064,9 @@ do
         Script.Temp.Guidance[guidance] = part
     
         local guidanceEsp = Script.Functions.ESP({
-            Type = "Chỉ dẫn",
+            Type = "Guiding",
             Object = part,
-            Text = "Hướng dẫn",
+            Text = "Guidance",
             Color = Options.GuidingLightEspColor.Value
         })
     
@@ -1096,6 +1109,17 @@ do
     end
 
     function Script.Functions.ChildCheck(child)
+        -- optimization (ty lsplash)
+        if (child.Name == "AnimSaves" or child.Name == "Keyframe" or child:IsA("KeyframeSequence")) then
+            child:Destroy()
+            return
+        end
+        
+        -- skip
+        if not (child:IsA("ProximityPrompt") or child:IsA("Model") or child:IsA("BasePart") or child:IsA("Decal")) then
+            return
+        end
+                
         if Script.Functions.PromptCondition(child) then
             task.defer(function()
                 if not child:GetAttribute("Hold") then child:SetAttribute("Hold", child.HoldDuration) end
@@ -1135,11 +1159,9 @@ do
     
             if child.Name == "Snare" and Toggles.AntiSnare.Value then
                 child:WaitForChild("Hitbox", 5).CanTouch = false
-            end
-            if child.Name == "GiggleCeiling" and Toggles.AntiGiggle.Value then
+            elseif child.Name == "GiggleCeiling" and Toggles.AntiGiggle.Value then
                 child:WaitForChild("Hitbox", 5).CanTouch = false
-            end
-            if (child:GetAttribute("LoadModule") == "DupeRoom" or child:GetAttribute("LoadModule") == "SpaceSideroom") and Toggles.AntiDupe.Value then
+            elseif (child:GetAttribute("LoadModule") == "DupeRoom" or child:GetAttribute("LoadModule") == "SpaceSideroom") and Toggles.AntiDupe.Value then
                 Script.Functions.DisableDupe(child, true, child:GetAttribute("LoadModule") == "SpaceSideroom")
             end
     
@@ -1191,6 +1213,8 @@ do
                     clone.Parent = child.Parent
                     
                     table.insert(Script.Temp.Bridges, clone)
+                elseif Toggles.AntiSeekFlood.Value and child.Name == "SeekFloodline" then
+                    child.CanCollide = true
                 end
             end
         elseif child:IsA("Decal") and Toggles.AntiLag.Value then
@@ -2338,6 +2362,7 @@ do
                 collisionClone.CollisionCrouch:Destroy()
             end
     
+            Script.Temp.CollisionSize = collisionClone.Size
             collisionClone.Parent = character
         end
     
@@ -2366,7 +2391,7 @@ do
     
                             Time = 7
                         })
-                        if workspace:FindFirstChild("_internal_t_acbypassprogress") then workspace:FindFirstChild("_internal_mspaint_acbypassprogress"):Destroy() end
+                        if workspace:FindFirstChild("_internal_mspaint_acbypassprogress") then workspace:FindFirstChild("_internal_mspaint_acbypassprogress"):Destroy() end
                     end
                 end)
             end
@@ -2423,15 +2448,15 @@ end
 
 local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     PlayerGroupBox:AddSlider("SpeedSlider", {
-        Text = "Tăng tốc chạy",
+        Text = "Speed Boost",
         Default = 0,
         Min = 0,
-        Max = 10,
+        Max = 7,
         Rounding = 1
     })
 
     PlayerGroupBox:AddSlider("VelocityLimiter", {
-        Text = "Giới hạn vận tốc",
+        Text = "Velocity Limiter",
         Default = 25,
         Min = 0,
         Max = 25,
@@ -2439,50 +2464,50 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddToggle("NoAccel", {
-        Text = "Không tăng tốc",
+        Text = "No Acceleration",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("InstaInteract", {
-        Text = "Tương tác nhanh",
+        Text = "Instant Interact",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("FastClosetExit", {
-        Text = "Thoát khỏi tủ nhanh",
+        Text = "Fast Closet Exit",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("EnableJump", {
-        Text = "kích hoạt nút nhảy",
+        Text = "Enable Jump",
         Default = false,
         Visible = not isFools,
     })
 
     PlayerGroupBox:AddToggle("Noclip", {
-        Text = "Đi xuyên tường",
+        Text = "Noclip",
         Default = false
     }):AddKeyPicker("NoclipKey", {
         Mode = "Toggle",
         Default = "N",
-        Text = "Đi xuyên tường",
+        Text = "Noclip",
         SyncToggleState = true
     })
 
     PlayerGroupBox:AddToggle("Fly", {
-        Text = "Bay",
+        Text = "Fly",
         Default = false
     }):AddKeyPicker("FlyKey", {
         Mode = "Toggle",
         Default = "F",
-        Text = "Bay",
+        Text = "Fly",
         SyncToggleState = true
     })
     
     PlayerGroupBox:AddSlider("FlySpeed", {
-        Text = "Tốc độ bay",
+        Text = "Fly Speed",
         Default = 15,
         Min = 10,
         Max = 22,
@@ -2493,17 +2518,17 @@ end
 
 local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
     ReachGroupBox:AddToggle("DoorReach", {
-        Text = "Đi tới cửa",
+        Text = "Door Reach",
         Default = false
     })
 
     ReachGroupBox:AddToggle("PromptClip", {
-        Text = "Nhắc nhở",
+        Text = "Prompt Clip",
         Default = false
     })
 
     ReachGroupBox:AddSlider("PromptReachMultiplier", {
-        Text = "Hệ số tiếp cận",
+        Text = "Prompt Reach Multiplier",
         Default = 1,
         Min = 1,
         Max = 2,
@@ -2513,48 +2538,48 @@ end
 
 local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
     AutomationGroupBox:AddToggle("AutoInteract", {
-        Text = "Tự động tương tác",
+        Text = "Auto Interact",
         Default = false
     }):AddKeyPicker("AutoInteractKey", {
         Mode = Library.IsMobile and "Toggle" or "Hold",
         Default = "R",
-        Text = "Tự động tương tác",
+        Text = "Auto Interact",
         SyncToggleState = Library.IsMobile
     })
 
     AutomationGroupBox:AddDivider()
     AutomationGroupBox:AddToggle("AutoWardrobeNotif", {
-        Text = "Tự động " .. HidingPlaceName[floor.Value] .. " Notifications",
+        Text = "Auto " .. HidingPlaceName[floor.Value] .. " Notifications",
         Default = false
     })
 
     AutomationGroupBox:AddToggle("AutoWardrobe", {
-        Text = "Tự động " .. HidingPlaceName[floor.Value],
+        Text = "Auto " .. HidingPlaceName[floor.Value],
         Default = false,
-        Tooltip = "Có thể thất bại với nhiều thực thể (Rush và Ambush, 3+ Rush xuất hiện)",
+        Tooltip = "Might fail with multiple entities (Rush & Ambush, 3+ Rush spawns)",
         Visible = not isRetro
     }):AddKeyPicker("AutoWardrobeKey", {
         Mode = "Toggle",
         Default = "Q",
-        Text = "Tự động " .. HidingPlaceName[floor.Value],
+        Text = "Auto " .. HidingPlaceName[floor.Value],
         SyncToggleState = true
     })
     AutomationGroupBox:AddDivider()
 
     AutomationGroupBox:AddToggle("AutoHeartbeat", {
-        Text = "Tự động thắng trong chế độ nhịp tim",
+        Text = "Auto Heartbeat Minigame",
         Default = false,
         Visible = ExecutorSupport["getnamecallmethod"]
     })
 
     if isHotel or isFools then
         AutomationGroupBox:AddToggle("AutoLibrarySolver", {
-            Text = "Tự động giải mã khóa thư viện",
+            Text = "Auto Library Code",
             Default = false
         })
 
         AutomationGroupBox:AddSlider("AutoLibraryDistance", {
-            Text = "Khoảng cách mở khóa",
+            Text = "Unlock Distance",
             Default = 20,
             Min = 1,
             Max = 100,
@@ -2569,11 +2594,11 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
             Default = "Legit",
             Multi = false,
 
-            Text = "Phương pháp giải Auto Breaker"
+            Text = "Auto Breaker Solver Method"
         })
 
         AutomationGroupBox:AddToggle("AutoBreakerSolver", {
-            Text = "Hộp cầu dao tự động",
+            Text = "Auto Breaker Box",
             Default = false
         })
 
@@ -2605,7 +2630,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
         end)
     elseif isMines then
         AutomationGroupBox:AddToggle("AutoAnchorSolver", {
-            Text = "Trình giải neo tự động",
+            Text = "Auto Anchor Solver",
             Default = false
         })
     end
@@ -2613,7 +2638,7 @@ end
 
 local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     MiscGroupBox:AddButton({
-        Text = "Hồi sinh",
+        Text = "Revive",
         Func = function()
             remotesFolder.Revive:FireServer()
         end,
@@ -2621,7 +2646,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Chơi lại",
+        Text = "Play Again",
         Func = function()
             remotesFolder.PlayAgain:FireServer()
         end,
@@ -2629,7 +2654,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Sảnh",
+        Text = "Lobby",
         Func = function()
             remotesFolder.Lobby:FireServer()
         end,
@@ -2639,34 +2664,34 @@ end
 
 --// Exploits \\--
 
-local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Công cụ chống lại quái") do
+local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Anti-Entity") do
     AntiEntityGroupBox:AddToggle("AntiHalt", {
-        Text = "Chống-Halt",
+        Text = "Anti-Halt",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiScreech", {
-        Text = "Chống-Screech",
+        Text = "Anti-Screech",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiDupe", {
-        Text = "Chống-" .. (isBackdoor and "Vacuum" or "Dupe"),
+        Text = "Anti-" .. (isBackdoor and "Vacuum" or "Dupe"),
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiEyes", {
-        Text = "Chống-" .. (isBackdoor and "Lookman" or "Eyes"),
+        Text = "Anti-" .. (isBackdoor and "Lookman" or "Eyes"),
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiSnare", {
-        Text = "Chống bẫy",
+        Text = "Anti-Snare",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiHearing", {
-        Text = "Chống bị figure phát hiện",
+        Text = "Anti-Figure Hearing",
         Default = false,
         Visible = not isFools
     })
@@ -2674,17 +2699,17 @@ end
 
 local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
     TrollingGroupBox:AddToggle("SpamOtherTools", {
-        Text = "Tạo 1 số công cụ khác",
+        Text = "Spam Other Tools",
         Default = false
     }):AddKeyPicker("SpamOtherTools", {
         Default = "X",
-        Text = "Tạo 1 số công cụ khác",
+        Text = "Spam Other Tools",
         Mode = Library.IsMobile and "Toggle" or "Hold",
         SyncToggleState = Library.IsMobile
     })
 
     TrollingGroupBox:AddToggle("UpsideDown", {
-        Text = "Lộn ngược",
+        Text = "Upside Down",
         Default = false
     })
 end
@@ -2696,11 +2721,11 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
         Default = "Massless",
         Multi = false,
 
-        Text = "Phương pháp bypass tốc độ"
+        Text = "Speed Bypass Method"
     })
     
     BypassGroupBox:AddSlider("SpeedBypassDelay", {
-        Text = "độ trễ bypass",
+        Text = "Bypass Delay",
         Default = 0.21,
         Min = 0.2,
         Max = 0.22,
@@ -2709,40 +2734,40 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
     })
 
     BypassGroupBox:AddToggle("SpeedBypass", {
-        Text = "Tốc độ bypass",
+        Text = "Speed Bypass",
         Default = false
     })
 
     BypassGroupBox:AddToggle("LagbackDetection", {
-        Text = "Phát hiện độ trễ",
+        Text = "Lagback Detection",
         Default = false
     })
 
     BypassGroupBox:AddDivider()
     
     BypassGroupBox:AddToggle("InfItems", {
-        Text = "Vật phẩm vô tận",
+        Text = "Infinite Items",
         Default = false,
         Visible = not isFools
     })
 
     BypassGroupBox:AddToggle("InfCrucifix", {
-        Text = "thánh giá vô tận",
+        Text = "Infinite Crucifix",
         Default = false,
         Visible = not isFools,
-        Tooltip = "Rất nguy hiểm, bạn có thể chết/mất cây thánh giá",
+        Tooltip = "Very risky, you might die/lose the crucifix",
         Risky = true
     })
 
     BypassGroupBox:AddDivider()
 
     BypassGroupBox:AddToggle("FakeRevive", {
-        Text = "hồi sinh giả",
+        Text = "Fake Revive",
         Default = false
     })
 
     BypassGroupBox:AddToggle("DeleteSeek", {
-        Text = "xóa seek (beta)",
+        Text = "Delete Seek (FE)",
         Default = false
     })
 end
@@ -2753,42 +2778,42 @@ end
 local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     local ESPTab = ESPTabBox:AddTab("ESP") do
         ESPTab:AddToggle("DoorESP", {
-            Text = "Cửa",
+            Text = "Door",
             Default = false,
         }):AddColorPicker("DoorEspColor", {
             Default = Color3.new(0, 1, 1),
         })
     
         ESPTab:AddToggle("ObjectiveESP", {
-            Text = "chìa khóa/công cụ",
+            Text = "Objective",
             Default = false,
         }):AddColorPicker("ObjectiveEspColor", {
             Default = Color3.new(0, 1, 0),
         })
     
         ESPTab:AddToggle("EntityESP", {
-            Text = "Sinh vật(quái)",
+            Text = "Entity",
             Default = false,
         }):AddColorPicker("EntityEspColor", {
             Default = Color3.new(1, 0, 0),
         })
     
         ESPTab:AddToggle("ItemESP", {
-            Text = "Vật phẩm",
+            Text = "Item",
             Default = false,
         }):AddColorPicker("ItemEspColor", {
             Default = Color3.new(1, 0, 1),
         })
     
         ESPTab:AddToggle("ChestESP", {
-            Text = "Rương",
+            Text = "Chest",
             Default = false,
         }):AddColorPicker("ChestEspColor", {
             Default = Color3.new(1, 1, 0),
         })
     
         ESPTab:AddToggle("PlayerESP", {
-            Text = "Người chơi",
+            Text = "Player",
             Default = false,
         }):AddColorPicker("PlayerEspColor", {
             Default = Color3.new(1, 1, 1),
@@ -2802,7 +2827,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPTab:AddToggle("GoldESP", {
-            Text = "Vàng",
+            Text = "Gold",
             Default = false,
         }):AddColorPicker("GoldEspColor", {
             Default = Color3.new(1, 1, 0),
@@ -2818,27 +2843,27 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
 
     local ESPSettingsTab = ESPTabBox:AddTab("Settings") do
         ESPSettingsTab:AddToggle("ESPHighlight", {
-            Text = "Tạo đường phác thảo trên vật thể",
+            Text = "Enable Highlight",
             Default = true,
         })
 
         ESPSettingsTab:AddToggle("ESPTracer", {
-            Text = "Tạo đường kẻ",
+            Text = "Enable Tracer",
             Default = true,
         })
     
         ESPSettingsTab:AddToggle("ESPRainbow", {
-            Text = "Đường kẻ cầu vồng",
+            Text = "Rainbow ESP",
             Default = false,
         })
     
         ESPSettingsTab:AddToggle("ESPDistance", {
-            Text = "Hiển thị khoảng cách",
+            Text = "Show Distance",
             Default = true
         })
     
         ESPSettingsTab:AddSlider("ESPFillTransparency", {
-            Text = "Độ trong suốt",
+            Text = "Fill Transparency",
             Default = 0.75,
             Min = 0,
             Max = 1,
@@ -2846,7 +2871,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPSettingsTab:AddSlider("ESPOutlineTransparency", {
-            Text = "độ dày phác thảo vật thể",
+            Text = "Outline Transparency",
             Default = 0,
             Min = 0,
             Max = 1,
@@ -2854,7 +2879,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPSettingsTab:AddSlider("ESPTextSize", {
-            Text = "Kích cỡ chữ",
+            Text = "Text Size",
             Default = 22,
             Min = 16,
             Max = 26,
@@ -2867,14 +2892,14 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
             Default = "Bottom",
             Multi = false,
 
-            Text = "Vị trí đánh dấu"
+            Text = "Tracer Start Position"
         })
     end
 end
 
-local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Chức năng") do
+local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
     AmbientGroupBox:AddSlider("Brightness", {
-        Text = "Độ sáng",
+        Text = "Brightness",
         Default = 0,
         Min = 0,
         Max = 3,
@@ -2882,17 +2907,17 @@ local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Chức năng") do
     })
 
     AmbientGroupBox:AddToggle("Fullbright", {
-        Text = "Làm sáng map",
+        Text = "Fullbright",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("NoFog", {
-        Text = "Không có sương mù",
+        Text = "No Fog",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("AntiLag", {
-        Text = "Chống lag",
+        Text = "Anti-Lag",
         Default = false,
     })
 end
@@ -2905,36 +2930,36 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = {},
             Multi = true,
 
-            Text = "Cảnh báo quái vật"
+            Text = "Notify Entities"
         })
 
         NotifyTab:AddToggle("NotifyPadlock", {
-            Text = "Thông báo mã thu viện",
+            Text = "Notify Library Code",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyOxygen", {
-            Text = "Thông báo oxygen",
+            Text = "Notify Oxygen",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyHideTime", {
-            Text = "Thông báo thời gian ẩn",
+            Text = "Notify Hide Time",
             Default = false,
         })
     end
 
     local NotifySettingsTab = NotifyTabBox:AddTab("Settings") do
         NotifySettingsTab:AddToggle("NotifyChat", {
-            Text = "Cảnh báo trong chat",
+            Text = "Notify Chat",
             Tooltip = "Entity and Padlock Code",
-            Default = true,
+            Default = false,
         })
 
         NotifySettingsTab:AddDivider()
         
         NotifySettingsTab:AddToggle("NotifySound", {
-            Text = "Cảnh báo âm thanh",
+            Text = "Play Alert Sound",
             Default = true,
         })
 
@@ -2944,7 +2969,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Right",
             Multi = false,
 
-            Text = "Vị trí cảnh báo"
+            Text = "Notification Side"
         })
 
         NotifySettingsTab:AddDropdown("NotifyStyle", {
@@ -2953,48 +2978,54 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Linoria",
             Multi = false,
 
-            Text = "Hiệu ứng cảnh báo"
+            Text = "Notification Style"
         })
     end
 end
 
 local SelfGroupBox = Tabs.Visuals:AddRightGroupbox("Self") do
     SelfGroupBox:AddToggle("ThirdPerson", {
-        Text = "Góc nhìn thứ ba",
+        Text = "Third Person",
         Default = false
     }):AddKeyPicker("ThirdPersonKey", {
         Default = "V",
-        Text = "Góc nhìn thứ ba",
+        Text = "Third Person",
         Mode = "Toggle",
         SyncToggleState = not Library.IsMobile -- ????
     })
     
     SelfGroupBox:AddSlider("FOV", {
-        Text = "FOV",
+        Text = "Field of View",
         Default = 70,
         Min = 70,
         Max = 120,
         Rounding = 0
     })
     
+    SelfGroupBox:AddToggle("NoCamBob", {
+        Text = "No Camera Bobbing",
+        Default = false,
+        Visible = ExecutorSupport["require"]
+    })
+
     SelfGroupBox:AddToggle("NoCamShake", {
-        Text = "Chống rung camera",
+        Text = "No Camera Shake",
         Default = false,
         Visible = ExecutorSupport["require"]
     })
 
     SelfGroupBox:AddToggle("NoCutscenes", {
-        Text = "Không có đoạn cắt cảnh",
+        Text = "No Cutscenes",
         Default = false,
     })
 
     SelfGroupBox:AddToggle("TranslucentHidingSpot", {
-        Text = "Độ trong suốt của: " .. HidingPlaceName[floor.Value],
+        Text = "Translucent " .. HidingPlaceName[floor.Value],
         Default = false
     })
     
     SelfGroupBox:AddSlider("HidingTransparency", {
-        Text = "Nơi chú ẩn",
+        Text = "Hiding Transparency",
         Default = 0.5,
         Min = 0,
         Max = 1,
@@ -3008,14 +3039,14 @@ task.spawn(function()
     if isHotel then
         local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
             Hotel_AntiEntityGroupBox:AddToggle("AntiSeekObstructions", {
-                Text = "Xóa vật cản từ seek",
+                Text = "Anti-Seek Obstructions",
                 Default = false
             })
         end
 
         local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bypass") do
             Hotel_BypassGroupBox:AddToggle("AvoidRushAmbush", {
-                Text = "Né tránh Rush/Ambush",
+                Text = "Avoid Rush/Ambush",
                 Tooltip = "Doesn't work for greenhouse :(",
                 Default = false,
                 Risky = true
@@ -3024,12 +3055,12 @@ task.spawn(function()
 
         local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Modifiers") do
             Hotel_ModifiersGroupBox:AddToggle("AntiA90", {
-                Text = "Chống-A90",
+                Text = "Anti-A90",
                 Default = false
             })
 
             Hotel_ModifiersGroupBox:AddToggle("NoJammin", {
-                Text = "Không có jammin",
+                Text = "No Jammin",
                 Default = false
             })
         end
@@ -3067,12 +3098,12 @@ task.spawn(function()
     elseif isMines then
         local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Movement") do
             Mines_MovementGroupBox:AddToggle("FastLadder", {
-                Text = "Đi thang nhanh",
+                Text = "Fast Ladder",
                 Default = false
             })
 
             Mines_MovementGroupBox:AddSlider("MaxSlopeAngle", {
-                Text = "Độ nghiêng tối đa",
+                Text = "Max Floor Angle",
                 Default = 45,
                 Min = 0,
                 Max = 90,
@@ -3082,29 +3113,34 @@ task.spawn(function()
 
         local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
             Mines_AntiEntityGroupBox:AddToggle("AntiGiggle", {
-                Text = "Chặn-Giggle(floor 2)",
+                Text = "Anti-Giggle",
                 Default = false
             })
 
             Mines_AntiEntityGroupBox:AddToggle("AntiGloomEgg", {
-                Text = "chặn-Gloom Egg(floor 2)",
+                Text = "Anti-Gloom Egg",
                 Default = false
             })
 
             Mines_AntiEntityGroupBox:AddToggle("AntiBridgeFall", {
-                Text = "chặn-Bridge Fall(floor 2)",
+                Text = "Anti-Bridge Fall",
+                Default = false
+            })
+
+            Mines_AntiEntityGroupBox:AddToggle("AntiSeekFlood", {
+                Text = "Anti-Seek Flood",
                 Default = false
             })
         end
 
         local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
             Mines_AutomationGroupBox:AddButton({
-                Text = "Phá đảo cửa 200",
+                Text = "Beat Door 200",
                 Func = function()
                     if latestRoom.Value < 99 then
                         Script.Functions.Alert({
-                            Title = "Phá đảo cửa 200",
-                            Description = "Bạn vẫn chưa tới cửa 200...",
+                            Title = "Beat Door 200",
+                            Description = "You haven't reached door 200...",
                             Time = 5
                         })
 
@@ -3168,19 +3204,19 @@ task.spawn(function()
             })
 
             Mines_AutomationGroupBox:AddToggle("TheMinesAnticheatBypass", {
-                Text = "Bỏ qua chống gian lận",
+                Text = "Anticheat Bypass",
                 Default = false
             })
         end
 
         local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bypass") do
             Mines_BypassGroupBox:AddToggle("MinecartTeleport", {
-                Text = "Dịch chuyển xe mỏ",
+                Text = "Minecart Teleport",
                 Default = false
             })
 
             Mines_BypassGroupBox:AddToggle("MinecartTeleportDebug", {
-                Text = "Sửa lỗi dịch chuyển xe mỏ",
+                Text = "Minecart Teleport Debug",
                 Default = false,
                 Visible = false,
             })
@@ -3188,7 +3224,7 @@ task.spawn(function()
         
         local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visuals") do
             Mines_VisualGroupBox:AddToggle("MinecartPathVisualiser", {
-                Text = "hiển thị trực quan đường đi chính xác",
+                Text = "Visualize Correct Seek Path",
                 Default = false
             })
         end
@@ -3204,21 +3240,21 @@ task.spawn(function()
 
                 if Library.IsMobile then
                     Script.Functions.Alert({
-                        Title = "Bỏ qua chống gian lận",            -- Tiêu đề: Bỏ qua chống gian lận
-                        Description = "Để bỏ qua hệ thống chống gian lận, bạn phải tương tác với một cái thang.",  -- Mô tả: Để bỏ qua AC, bạn phải tương tác với một cái thang.
-                        Reason = "Chế độ Ladder ESP đã được bật, không di chuyển khi đang ở trên thang.",           -- Lý do: Chế độ Ladder ESP đã được bật, không di chuyển khi đang ở trên thang.
-                
-                        LinoriaMessage = "Để bỏ qua hệ thống chống gian lận, bạn phải tương tác với một cái thang. Chế độ Ladder ESP đã được bật.\nKhông di chuyển khi đang ở trên thang.",  -- Thông báo từ Linoria: Để bỏ qua hệ thống chống gian lận, bạn phải tương tác với một cái thang. Chế độ Ladder ESP đã được bật. Không di chuyển khi đang ở trên thang.
-                        Time = progressPart  -- Thời gian: progressPart
+                        Title = "Anticheat bypass",
+                        Description = "To bypass the ac, you must interact with a ladder.",
+                        Reason = "Ladder ESP has been enabled, do not move while on the ladder.",
+
+                        LinoriaMessage = "To bypass the anticheat, you must interact with a ladder. Ladder ESP has been enabled.\nDo not move while on the ladder.",
+                        Time = progressPart
                     })
                 else
                     Script.Functions.Alert({
-                        Title = "Bỏ qua chống gian lận",  -- Tiêu đề: Bỏ qua chống gian lận
-                        Description = "Để bỏ qua hệ thống chống gian lận, bạn phải tương tác với một cái thang.",  -- Mô tả: Để bỏ qua AC, bạn phải tương tác với một cái thang.
-                        Reason = "Chế độ Ladder ESP đã được bật, không di chuyển khi đang ở trên thang.",  -- Lý do: Chế độ Ladder ESP đã được bật, không di chuyển khi đang ở trên thang.
-                
-                        LinoriaMessage = "Để bỏ qua hệ thống chống gian lận, bạn phải tương tác với một cái thang. Chế độ Ladder ESP đã được bật.\nKhông di chuyển khi đang ở trên thang.",  -- Thông báo từ Linoria: Để bỏ qua hệ thống chống gian lận, bạn phải tương tác với một cái thang. Chế độ Ladder ESP đã được bật. Không di chuyển khi đang ở trên thang.
-                        Time = progressPart  -- Thời gian: progressPart
+                        Title = "Anticheat bypass",
+                        Description = "To bypass the ac, you must interact with a ladder.",
+                        Reason = "Ladder ESP has been enabled, do not move while on the ladder.",
+
+                        LinoriaMessage = "To bypass the anticheat, you must interact with a ladder. Ladder ESP has been enabled.\nDo not move while on the ladder.",
+                        Time = progressPart
                     })
                 end
                 
@@ -3312,6 +3348,17 @@ task.spawn(function()
             end
         end)
 
+        Toggles.AntiSeekFlood:OnChanged(function(value)
+            local room = workspace.CurrentRooms:FindFirstChild("100")
+            
+            if room and room:FindFirstChild("_DamHandler") then
+                local seekFlood = room._DamHandler:FindFirstChild("SeekFloodline")
+                if seekFlood then
+                    seekFlood.CanCollide = value
+                end
+            end
+        end)
+
         Toggles.MinecartPathVisualiser:OnChanged(function(value)
             Script.Functions.Minecart.DrawNodes()
         end)
@@ -3369,14 +3416,14 @@ task.spawn(function()
     elseif isRooms then
         local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
             Rooms_AntiEntityGroupBox:AddToggle("AntiA90", {
-                Text = "Chống-A90",
+                Text = "Anti-A90",
                 Default = false
             })
         end
 
         local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
             Rooms_AutomationGroupBox:AddToggle("AutoRooms", {
-                Text = "Tự động đến cửa 1000",
+                Text = "Auto Rooms",
                 Default = false
             })
 
@@ -3385,12 +3432,12 @@ task.spawn(function()
             Rooms_AutomationGroupBox:AddDivider()
 
             Rooms_AutomationGroupBox:AddToggle("AutoRoomsDebug", { 
-                Text = "Hiển thị lỗi vá",
+                Text = "Show Debug Info",
                 Default = false
             })
             
             Rooms_AutomationGroupBox:AddToggle("ShowAutoRoomsPathNodes", { 
-                Text = "Hiển thị đường đi",
+                Text = "Show Pathfinding Nodes",
                 Default = false
             })
 
@@ -3399,9 +3446,9 @@ task.spawn(function()
         Toggles.AntiA90:OnChanged(function(value)
             if Toggles.AutoRooms.Value and not value then
                 Script.Functions.Alert({
-                    Title = "Tự động đến cửa 1000",
-                    Description = "Cần bật chống A90 để hoạt động ổn định",
-                    Reason = "Chống A90 đã bật",
+                    Title = "Auto Rooms",
+                    Description = "Anti A-90 is required for Auto Rooms to work!",
+                    Reason = "Anti A-90 has been enabled",
                 })
                 
                 Toggles.AntiA90:SetValue(true)
@@ -3432,9 +3479,16 @@ task.spawn(function()
             _internal_mspaint_pathfinding_nodes.Name = "_internal_mspaint_pathfinding_nodes"
         end
 
+        local _internal_mspaint_pathfinding_block = Instance.new("Folder", Workspace) do
+            _internal_mspaint_pathfinding_block.Name = "_internal_mspaint_pathfinding_block"
+        end
+
         Toggles.ShowAutoRoomsPathNodes:OnChanged(function(value)
             for _, node in pairs(_internal_mspaint_pathfinding_nodes:GetChildren()) do
                 node.Transparency = value and 0.5 or 1
+            end
+            for _, nodeBlock in pairs(_internal_mspaint_pathfinding_block:GetChildren()) do
+                nodeBlock.Transparency = value and 0.9 or 1
             end
         end)
 
@@ -3458,44 +3512,100 @@ task.spawn(function()
         end))
 
         Toggles.AutoRooms:OnChanged(function(value)
+            local hasResetFailsafe = false
+
+            local function nodeCleanup()
+                _internal_mspaint_pathfinding_nodes:ClearAllChildren()
+                _internal_mspaint_pathfinding_block:ClearAllChildren()
+                hasResetFailsafe = true
+            end
+
             local function moveToCleanup()
                 if humanoid then
                     humanoid:Move(rootPart.Position)
                     humanoid.WalkToPart = nil
                     humanoid.WalkToPoint = rootPart.Position
                 end
+                nodeCleanup()
             end
 
             if value then
                 Toggles.AntiA90:SetValue(true)
+                local lastRoomValue = 0
+
+                local function createNewBlockedPoint(point: PathWaypoint)
+                    local block = Instance.new("Part", _internal_mspaint_pathfinding_block)
+                    local pathMod = Instance.new("PathfindingModifier", block)
+                    pathMod.Label = "_ms_pathBlock"
+
+                    block.Name = "_mspaint_blocked_path"
+                    block.Shape = Enum.PartType.Block
+
+                    local sizeY = 10
+                    
+                    block.Size = Vector3.new(1, sizeY, 1)
+                    block.Color = Color3.fromRGB(255, 130, 30)
+                    block.Material = Enum.Material.Neon
+                    block.Position = point.Position + Vector3.new(0, sizeY / 2, 0)
+                    block.Anchored = true
+                    block.CanCollide = false
+                    block.Transparency = Toggles.ShowAutoRoomsPathNodes.Value and 0.9 or 1
+                end
 
                 local function doAutoRooms()
                     local pathfindingGoal = Script.Functions.GetAutoRoomsPathfindingGoal()
 
+                    if latestRoom.Value ~= lastRoomValue then
+                        _internal_mspaint_pathfinding_block:ClearAllChildren()
+                        lastRoomValue = latestRoom.Value
+                    end
+                    
                     Script.Functions.Log({
-                        Title = "Hệ thống tự động",
-                        Description = "Tính toán thành công!\nMục tiêu: " .. pathfindingGoal.Parent.Name .. "\nCreating path...",
+                        Title = "Auto Rooms",
+                        Description = "Calculated Objective Successfully!\nObjective: " .. pathfindingGoal.Parent.Name .. "\nCreating path...",
                     }, Toggles.AutoRoomsDebug.Value)
 
                     local path = PathfindingService:CreatePath({
                         AgentCanJump = false,
                         AgentCanClimb = false,
                         WaypointSpacing = 2,
-                        AgentRadius = 1
+                        AgentRadius = 1,
+                        Costs = {
+                            _ms_pathBlock = 8 --cost will increase the more stuck you get.
+                        }
                     })
 
                     Script.Functions.Log({
-                        Title = "Hệ thống tự động",
-                        Description = "Tạo đường kẻ tới " .. pathfindingGoal.Parent.Name .. "...",
+                        Title = "Auto Rooms",
+                        Description = "Computing Path to " .. pathfindingGoal.Parent.Name .. "...",
                     }, Toggles.AutoRoomsDebug.Value)
 
                     path:ComputeAsync(rootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
                     local waypoints = path:GetWaypoints()
+                    local waypointAmount = #waypoints
 
                     if path.Status == Enum.PathStatus.Success then
+                        hasResetFailsafe = true
+                        task.spawn(function()
+                            task.wait(0.1)
+                            hasResetFailsafe = false
+                            if humanoid and collision then
+                                local checkFloor = humanoid.FloorMaterial
+                                local isStuck = checkFloor == Enum.Material.Air or checkFloor == Enum.Material.Concrete
+                                if isStuck then
+                                    repeat task.wait()
+                                        collision.CanCollide = false
+                                        collision.CollisionCrouch.CanCollide = true
+                                    until not isStuck or hasResetFailsafe
+                                    collision.CanCollide = true
+                                end
+                                hasResetFailsafe = true
+                            end
+                        end)
+
                         Script.Functions.Log({
-                            Title = "Hệ thống tự động",
-                            Description = "Tạo đường kẻ thành công với " .. #waypoints .. " Điểm chấm!",
+                            Title = "Auto Rooms",
+                            Description = "Computed path successfully with " .. waypointAmount .. " waypoints!",
                         }, Toggles.AutoRoomsDebug.Value)
 
                         _internal_mspaint_pathfinding_nodes:ClearAllChildren()
@@ -3513,11 +3623,11 @@ task.spawn(function()
                             end
                         end
 
+                        local lastWaypoint = nil
                         for i, waypoint in pairs(waypoints) do
                             local moveToFinished = false
                             local recalculate = false
                             local waypointConnection = humanoid.MoveToFinished:Connect(function() moveToFinished = true end)
-
                             if not moveToFinished or not Toggles.AutoRooms.Value then
                                 humanoid:MoveTo(waypoint.Position)
                                 
@@ -3528,7 +3638,7 @@ task.spawn(function()
                                     waypointConnection:Disconnect()
 
                                     if not Toggles.AutoRooms.Value then
-                                        _internal_mspaint_pathfinding_nodes:ClearAllChildren()
+                                        nodeCleanup()
                                         break
                                     else
                                         if _internal_mspaint_pathfinding_nodes:FindFirstChild("_internal_node_" .. i) then
@@ -3546,21 +3656,29 @@ task.spawn(function()
                                     repeat task.wait(.25) until (not character:GetAttribute("Hiding") and not character.PrimaryPart.Anchored)
 
                                     Script.Functions.Alert({
-                                        Title = "Hệ thống tự động",
-                                        Description = "Có vẻ bạn đang bị kẹt, đang tìm đường mới...",
-                                        Reason = "Tìm lối đi thất bại",
+                                        Title = "Auto Rooms",
+                                        Description = "Seems like you are stuck, trying to recalculate path...",
+                                        Reason = "Failed to move to waypoint",
                                     })
 
                                     recalculate = true
+                                    if lastWaypoint == nil and waypointAmount > 1 then
+                                        waypoint = waypoints[i+1]
+                                    else
+                                        waypoint = waypoints[i-1]
+                                    end
+
+                                    createNewBlockedPoint(waypoint)
                                 end)
                             end
 
                             repeat task.wait() until moveToFinished or not Toggles.AutoRooms.Value or recalculate or Library.Unloaded
+                            lastWaypoint = waypoint
 
                             waypointConnection:Disconnect()
 
                             if not Toggles.AutoRooms.Value then
-                                _internal_mspaint_pathfinding_nodes:ClearAllChildren()
+                                nodeCleanup()
                                 break
                             else
                                 if _internal_mspaint_pathfinding_nodes:FindFirstChild("_internal_node_" .. i) then
@@ -3572,8 +3690,8 @@ task.spawn(function()
                         end
                     else
                         Script.Functions.Log({
-                            Title = "Tự động đến cửa 1000",
-                            Description = "Tìm đường không thành công với trạng thái " .. tostring(path.Status)   
+                            Title = "Auto Rooms",
+                            Description = "Pathfinding failed with status " .. tostring(path.Status)   
                         }, Toggles.AutoRoomsDebug.Value)
                     end
                 end
@@ -3582,9 +3700,9 @@ task.spawn(function()
                 while Toggles.AutoRooms.Value and not Library.Unloaded do
                     if latestRoom.Value == 1000 then
                         Script.Functions.Alert({
-                            Title = "Tự động đến cửa 1000",
-                            Description = "Bạn đã tới A-1000",
-                            Reason = "A-1000 Auto made by Dương",
+                            Title = "Auto Rooms",
+                            Description = "You have reached A-1000",
+                            Reason = "A-1000 reached by mspaint autorooms",
                         })
 
                         break
@@ -3593,8 +3711,7 @@ task.spawn(function()
                     doAutoRooms()
                 end
                 
-                -- Unload Tự động đến cửa 1000
-                _internal_mspaint_pathfinding_nodes:ClearAllChildren()
+                -- Unload Auto Rooms
                 moveToCleanup()
             end
         end)
@@ -3958,45 +4075,33 @@ function Script.Functions.SpeedBypass()
     if speedBypassing then return end
     speedBypassing = true
 
-    local SpeedBypassMethod = Options.SpeedBypassMethod.Value
-
-    local function cleanup()
-        -- reset if changed speed bypass method
-        speedBypassing = false
-
-        if collisionClone then
-            if SpeedBypassMethod == "Massless" then
-                collisionClone.Massless = true
-            elseif SpeedBypassMethod == "Size" then
-                collisionClone.Size = Vector3.new(3, 5.5, 3)
-            end
-            
-            if Toggles.SpeedBypass.Value and Options.SpeedBypassMethod.Value ~= SpeedBypassMethod and not Script.FakeRevive.Enabled then
-                Script.Functions.SpeedBypass()
-            end
-        end
-    end
-
     task.spawn(function()
-        if SpeedBypassMethod == "Massless" then
-            while Toggles.SpeedBypass.Value and collisionClone and Options.SpeedBypassMethod.Value == SpeedBypassMethod and not Library.Unloaded and not Script.FakeRevive.Enabled do
+        while Toggles.SpeedBypass.Value and collisionClone and not Library.Unloaded and not Script.FakeRevive.Enabled do
+            if Options.SpeedBypassMethod.Value == "Massless" then
                 collisionClone.Massless = not collisionClone.Massless
+            elseif Options.SpeedBypassMethod.Value == "Size" then
+                collisionClone.Size = Script.Temp.CollisionSize / 2
                 task.wait(Options.SpeedBypassDelay.Value)
+                collisionClone.Size = Script.Temp.CollisionSize
             end
-    
-            cleanup()
-        elseif SpeedBypassMethod == "Size" then
-            while Toggles.SpeedBypass.Value and collisionClone and Options.SpeedBypassMethod.Value == SpeedBypassMethod and not Library.Unloaded and not Script.FakeRevive.Enabled do
-                collisionClone.Size = Vector3.new(3, 5.5, 3)
-                task.wait(Options.SpeedBypassDelay.Value)
-                collisionClone.Size = Vector3.new(1.5, 2.75, 1.5)
-                task.wait(Options.SpeedBypassDelay.Value)
-            end
-    
-            cleanup()
+
+            task.wait(Options.SpeedBypassDelay.Value)
+        end
+
+        speedBypassing = false
+        if collisionClone then
+            collisionClone.Massless = true
+            collisionClone.Size = Script.Temp.CollisionSize
         end
     end)
 end
+
+Options.SpeedBypassMethod:OnChanged(function()
+    if collisionClone then
+        collisionClone.Massless = true
+        collisionClone.Size = Script.Temp.CollisionSize
+    end
+end)
 
 Toggles.SpeedBypass:OnChanged(function(value)
     if value then
@@ -5174,7 +5279,7 @@ Library:GiveSignal(workspace.ChildAdded:Connect(function(child)
                     if Options.NotifyEntity.Value[shortName] then
                         Script.Functions.Alert({
                             Title = "ENTITIES",
-                            Description = shortName .. " đã xuất hiện!",
+                            Description = shortName .. " has spawned!",
                             Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Go find a hiding place!" or nil),
                             Image = EntityTable.NotifyReason[child.Name].Image,
 
@@ -5182,7 +5287,7 @@ Library:GiveSignal(workspace.ChildAdded:Connect(function(child)
                         })
 
                         if Toggles.NotifyChat.Value then
-                            RBXGeneral:SendAsync(shortName .. " đã xuất hiện!")
+                            RBXGeneral:SendAsync(shortName .. " has spawned!")
                         end
                     end
                 end
@@ -5190,8 +5295,8 @@ Library:GiveSignal(workspace.ChildAdded:Connect(function(child)
         elseif EntityTable.NotifyMessage[child.Name] and Options.NotifyEntity.Value[shortName] then
             Script.Functions.Alert({
                 Title = "ENTITIES",
-                Description = shortName .. " đã xuất hiện!",
-                Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Hãy tìm nơi để ẩn!" or nil),
+                Description = shortName .. " has spawned!",
+                Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Go find a hiding place!" or nil),
                 Image = EntityTable.NotifyReason[child.Name].Image,
 
                 Warning = true
@@ -5413,7 +5518,8 @@ Library:GiveSignal(localPlayer.CharacterAdded:Connect(function(newCharacter)
 end))
 
 Library:GiveSignal(localPlayer.OnTeleport:Connect(function(state)
-    if (state == Enum.TeleportState.RequestedFromServer or state == state == Enum.TeleportState.Started) and Toggles.ExecuteOnTeleport.Value then
+    if (state == Enum.TeleportState.RequestedFromServer or state == Enum.TeleportState.Started) and Toggles.ExecuteOnTeleport.Value and not getgenv().queued_to_teleport then
+        getgenv().queued_to_teleport = true
         queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/mspaint/main/main.lua"))()]])
     end
 end))
@@ -5657,6 +5763,11 @@ Library:GiveSignal(RunService.RenderStepped:Connect(function()
         end
         mainGameSrc.fovtarget = Options.FOV.Value
 
+        if Toggles.NoCamBob.Value then
+            mainGameSrc.bobspring.Position = Vector3.new()
+            mainGameSrc.spring.Position = Vector3.new()
+        end
+
         if Toggles.NoCamShake.Value then
             mainGameSrc.csgo = CFrame.new()
         end
@@ -5716,19 +5827,19 @@ Library:GiveSignal(RunService.RenderStepped:Connect(function()
 
         if Toggles.AutoInteract.Value and (Library.IsMobile or Options.AutoInteractKey:GetState()) then
             local prompts = Script.Functions.GetAllPromptsWithCondition(function(prompt)
-                if isRetro and prompt.Parent.Parent.Name == "RetroWardrobe" then
-                    return false
-                end
+                if not prompt.parent then return false end
+
+                if prompt.Parent:GetAttribute("JeffShop") then return false end
+                if prompt.Parent:GetAttribute("PropType") == "Battery" and ((character:FindFirstChildOfClass("Tool") and character:FindFirstChildOfClass("Tool"):GetAttribute("RechargeProp") ~= "Battery") or character:FindFirstChildOfClass("Tool") == nil) then return false end 
+                if prompt.Parent:GetAttribute("PropType") == "Heal" and humanoid and humanoid.Health == humanoid.MaxHealth then return false end
+                if prompt.Parent.Name == "MinesAnchor" then return false end
+
+                if isRetro and prompt.Parent.Parent.Name == "RetroWardrobe" then return false end
 
                 return PromptTable.Aura[prompt.Name] ~= nil
             end)
 
             for _, prompt: ProximityPrompt in pairs(prompts) do
-                if not prompt.Parent then continue end
-                if prompt.Parent:GetAttribute("JeffShop") then continue end
-                if prompt.Parent:GetAttribute("PropType") == "Battery" and ((character:FindFirstChildOfClass("Tool") and character:FindFirstChildOfClass("Tool"):GetAttribute("RechargeProp") ~= "Battery") or character:FindFirstChildOfClass("Tool") == nil) then continue end 
-                if prompt.Parent:GetAttribute("PropType") == "Heal" and humanoid and humanoid.Health == humanoid.MaxHealth then continue end
-
                 task.spawn(function()
                     -- checks if distance can interact with prompt and if prompt can be interacted again
                     if Script.Functions.DistanceFromCharacter(prompt.Parent) < prompt.MaxActivationDistance and (not prompt:GetAttribute("Interactions" .. localPlayer.Name) or PromptTable.Aura[prompt.Name] or table.find(PromptTable.AuraObjects, prompt.Parent.Name)) then
@@ -5996,6 +6107,9 @@ Library:OnUnload(function()
     if isRooms then
         if workspace:FindFirstChild("_internal_mspaint_pathfinding_nodes") then
             workspace:FindFirstChild("_internal_mspaint_pathfinding_nodes"):Destroy()
+        end
+        if workspace:FindFirstChild("_internal_mspaint_pathfinding_block") then
+            workspace:FindFirstChild("_internal_mspaint_pathfinding_block"):Destroy()
         end
     end
 
