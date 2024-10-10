@@ -532,19 +532,19 @@ MenuGroup:AddToggle("KeybindMenuOpen", { Default = false, Text = "Open Keybind M
 MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) Library.ShowCustomCursor = Value end})
 MenuGroup:AddDivider()
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-MenuGroup:AddButton("Join Discord", function()
+MenuGroup:AddButton("Gia nhập discord", function()
     local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-    Inviter.Join("https://discord.com/invite/cfyMptntHr")
+    Inviter.Join("https://discord.com/invite/gnsEKcEd")
     Inviter.Prompt({
-        name = "mspaint",
-        invite = "https://discord.com/invite/cfyMptntHr",
+        name = "Duong-Api",
+        invite = "https://discord.com/invite/gnsEKcEd",
     })
-end):AddButton("Copy Link", function()
+end):AddButton("Sao chép liên kết", function()
     if setclipboard then
-        setclipboard("https://discord.com/invite/cfyMptntHr")
-        Library:Notify("Copied discord link to clipboard!")
+        setclipboard("https://discord.com/invite/gnsEKcEd")
+        Library:Notify("Đã sao chép vào bộ nhớ tạm!")
     else
-        Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
+        Library:Notify("Discord link: https://discord.com/invite/gnsEKcEd", 10)
     end
 end)
 MenuGroup:AddButton("Unload", function() Library:Unload() end)
