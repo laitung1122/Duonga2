@@ -6084,3 +6084,8 @@ SaveManager:LoadAutoloadConfig()
 
 Script.Functions.UpdateRPC()
 getgenv().mspaint_loaded = true
+                                            game:GetService("StarterGui"):SetCore("SendNotification",{
+Title = "Đã tải script thành công!",
+Text = "Script by Dương Modder", 
+Duration = 4
+})
