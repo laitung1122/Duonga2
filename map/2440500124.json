@@ -1,7 +1,7 @@
 {
    "exclusions": {
-      "6516141723": "duong/d1.lua",
-      "12308344607": "duong/l2.lua"
+      "6516141723": "/duong/d1.lua",
+      "12308344607": "/duong/l2.lua"
    },
-   "main": "duong/d1.lua"
+   "main": "/duong/d1.lua"
 }
