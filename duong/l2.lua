@@ -122,7 +122,7 @@ local Options = getgenv().Linoria.Options
 local Toggles = getgenv().Linoria.Toggles
 
 local Window = Library:CreateWindow({
-    Title = "mspaint v2 | DOORS (Lobby)",
+    Title = "Dương Api V1 | DOORS (Sảnh)",
     Center = true,
     AutoShow = true,
     Resizable = true,
@@ -532,19 +532,19 @@ MenuGroup:AddToggle("KeybindMenuOpen", { Default = false, Text = "Open Keybind M
 MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) Library.ShowCustomCursor = Value end})
 MenuGroup:AddDivider()
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-MenuGroup:AddButton("Gia nhập discord", function()
+MenuGroup:AddButton("Join Discord", function()
     local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-    Inviter.Join("https://discord.com/invite/gnsEKcEd")
+    Inviter.Join("https://discord.com/invite/cfyMptntHr")
     Inviter.Prompt({
-        name = "Duong-Api",
-        invite = "https://discord.com/invite/gnsEKcEd",
+        name = "mspaint",
+        invite = "https://discord.com/invite/cfyMptntHr",
     })
-end):AddButton("Sao chép liên kết", function()
+end):AddButton("Copy Link", function()
     if setclipboard then
-        setclipboard("https://discord.com/invite/gnsEKcEd")
-        Library:Notify("Đã sao chép vào bộ nhớ tạm!")
+        setclipboard("https://discord.com/invite/cfyMptntHr")
+        Library:Notify("Copied discord link to clipboard!")
     else
-        Library:Notify("Discord link: https://discord.com/invite/gnsEKcEd", 10)
+        Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
     end
 end)
 MenuGroup:AddButton("Unload", function() Library:Unload() end)
