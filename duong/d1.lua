@@ -1,9 +1,9 @@
 --!native
 --!optimize 2
 
-print("[mspaint] Loading...")
-if not ExecutorSupport then print("[mspaint] Loading stopped, please use the official loadstring for mspaint. (ERROR: ExecutorSupport == nil)") return end
-if getgenv().mspaint_loaded then print("[mspaint] Loading stopped. (ERROR: Already loaded)") return end
+print("[Dương-Api] Dang tải...")
+if not ExecutorSupport then print("[mspaint] Đã dừng tải, vui lòng sử dụng chuỗi tải chính thức cho Dương Api. (LỖI: ExecutorSupport == nil)") return end
+if getgenv().mspaint_loaded then print("[Dương-Api] Đã dừng tải. (ERROR: Đã chạy main)") return end
 
 --// Services \\--
 local Lighting = game:GetService("Lighting")
@@ -21,7 +21,7 @@ local Workspace = game:GetService("Workspace")
 --// Loading Wait \\--
 if not game:IsLoaded() then game.Loaded:Wait() end
 if Players.LocalPlayer and Players.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and Players.LocalPlayer.PlayerGui.LoadingUI.Enabled then
-    print("[mspaint] Waiting for game to load...")
+    print("[Dương Api] Đang chờ tải trò chơi...")
     repeat task.wait() until not Players.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and true or not Players.LocalPlayer.PlayerGui.LoadingUI.Enabled
 end
 
@@ -420,7 +420,7 @@ local Toggles = getgenv().Linoria.Toggles
 local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/mstudio45/MS-ESP/refs/heads/main/source.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "mspaint v2 | DOORS",
+    Title = "Dương Api V1 | DOORS",
     Center = true,
     AutoShow = true,
     Resizable = true,
@@ -550,10 +550,10 @@ function Script.Functions.UpdateRPC()
     end
 
     BloxstrapRPC.SetRichPresence({
-        details = "Playing DOORS [ mspaint v2 ]",
+        details = "Đang chơi DOORS [ Dương Api V1 ]",
         state = roomNumberPrefix .. prettifiedRoomNumber .. " (" .. (PrettyFloorName[floor.Value] and PrettyFloorName[floor.Value] or ("The " .. floor.Value) ) .. ")",
         largeImage = {
-            hoverText = "Using mspaint v2"
+            hoverText = "Sử dụng Dương Api V1"
         },
         smallImage = {
             assetId = 6925817108,
@@ -843,13 +843,13 @@ do
             local opened = door:GetAttribute("Opened")
             local locked = room:GetAttribute("RequiresKey")
     
-            local doorState = if opened then "[Opened]" elseif locked then "[Locked]" else ""
+            local doorState = if opened then "[Mở]" elseif locked then "[Khóa]" else ""
             local doorIdx = Script.Functions.RandomString()
     
             local doorEsp = Script.Functions.ESP({
                 Type = "Door",
                 Object = door:WaitForChild("Door"),
-                Text = string.format("Door %s %s", doorNumber, doorState),
+                Text = string.format("Cửa %s %s", doorNumber, doorState),
                 Color = Options.DoorEspColor.Value,
     
                 OnDestroy = function()
@@ -858,7 +858,7 @@ do
             })
     
             Script.FeatureConnections.Door[doorIdx] = door:GetAttributeChangedSignal("Opened"):Connect(function()
-                if doorEsp then doorEsp.SetText(string.format("Door %s [Opened]", doorNumber)) end
+                if doorEsp then doorEsp.SetText(string.format("Cửa %s [Đã mở]", doorNumber)) end
                 if Script.FeatureConnections.Door[doorIdx] then Script.FeatureConnections.Door[doorIdx]:Disconnect() end
             end)
         end
@@ -870,7 +870,7 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = string.format("Timer Lever [+%s]", child.TakeTimer.TextLabel.Text),
+                Text = string.format("Đòn bẩy hẹn giờ [+%s]", child.TakeTimer.TextLabel.Text),
                 Color = Options.ObjectiveEspColor.Value
             })
         -- Backdoor + Hotel
@@ -878,7 +878,7 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Key",
+                Text = "Chìa khóa",
                 Color = Options.ObjectiveEspColor.Value
             })
         -- Hotel
@@ -886,28 +886,28 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Electrical Key",
+                Text = "Chìa khóa điện",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "LeverForGate" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Gate Lever",
+                Text = "Cần gạt",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "LiveHintBook" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Book",
+                Text = "Vở",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "LiveBreakerPolePickup" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Breaker",
+                Text = "Hộp cầu dao",
                 Color = Options.ObjectiveEspColor.Value
             })
         -- Mines
@@ -915,21 +915,21 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Generator",
+                Text = "Máy phát điện",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "MinesGateButton" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Gate Power Button",
+                Text = "Nút nguồn cổng",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "FuseObtain" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Fuse",
+                Text = "Cầu chì",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "MinesAnchor" then
@@ -939,7 +939,7 @@ do
                 Script.Functions.ESP({
                     Type = "Objective",
                     Object = child,
-                    Text = string.format("Anchor %s", sign.TextLabel.Text),
+                    Text = string.format("mỏ neo %s", sign.TextLabel.Text),
                     Color = Options.ObjectiveEspColor.Value
                 })
             end
@@ -953,7 +953,7 @@ do
                 local pumpEsp = Script.Functions.ESP({
                     Type = "Objective",
                     Object = wheel,
-                    Text = "Water Pump",
+                    Text = "Máy bơm nước",
                     Color = Options.ObjectiveEspColor.Value,
 
                     OnDestroy = function()
@@ -1046,7 +1046,7 @@ do
         Script.Functions.ESP({
             Type = "Gold",
             Object = gold,
-            Text = string.format("Gold [%s]", gold:GetAttribute("GoldValue")),
+            Text = string.format("Vàng [%s]", gold:GetAttribute("GoldValue")),
             Color = Options.GoldEspColor.Value
         })
     end
@@ -1411,9 +1411,9 @@ do
         task.spawn(function() 
             Script.Functions.Log({
                 Title = NotifPrefix,
-                Description = "Looking for a hiding place",
+                Description = "Đang tìm chỗ trốn",
         
-                LinoriaMessage = "[" .. NotifPrefix .. "] Looking for a hiding spot..."
+                LinoriaMessage = "[" .. NotifPrefix .. "] Đang tìm nơi ẩn náu..."
             }, Toggles.AutoWardrobeNotif.Value)
         end)
     
@@ -1453,9 +1453,9 @@ do
         task.spawn(function() 
             Script.Functions.Log({
                 Title = NotifPrefix,
-                Description = "Starting...",
+                Description = "Bắt đầu chạy...",
         
-                LinoriaMessage = "[" .. NotifPrefix .. "] Starting..."
+                LinoriaMessage = "[" .. NotifPrefix .. "] Bắt đầu chạy..."
             }, Toggles.AutoWardrobeNotif.Value)
         end)
         
@@ -1500,9 +1500,9 @@ do
                         task.spawn(function() 
                             Script.Functions.Log({
                                 Title = NotifPrefix,
-                                Description = "Exiting the locker, entity is far away.",
+                                Description = "Đang ra khỏi tủ, quái đã đi xa.",
                                 
-                                LinoriaMessage = "[" .. NotifPrefix .. "] Exiting the locker, entity is far away."
+                                LinoriaMessage = "[" .. NotifPrefix .. "] Đang ra khỏi tủ, quái đã đi xa."
                             }, Toggles.AutoWardrobeNotif.Value)
                         end)
     
@@ -1512,9 +1512,9 @@ do
                             task.spawn(function() 
                                 Script.Functions.Log({
                                     Title = NotifPrefix,
-                                    Description = "Exiting the locker, entity is deleted.",
+                                    Description = "đang ra khỏi tủ, quái đã bị xóa.",
                                     
-                                    LinoriaMessage = "[" .. NotifPrefix .. "] Exiting the locker, entity is deleted."
+                                    LinoriaMessage = "[" .. NotifPrefix .. "] đang ra khỏi tủ, quái đã bị xóa."
                                 }, Toggles.AutoWardrobeNotif.Value)
                             end)
     
@@ -1523,13 +1523,13 @@ do
                     end
     
                     if not alive then  
-                        if Toggles.AutoWardrobeNotif.Value then Script.Functions.Log("[" .. NotifPrefix .. "] Stopping (you died).") end             
+                        if Toggles.AutoWardrobeNotif.Value then Script.Functions.Log("[" .. NotifPrefix .. "] Đang dừng lại (Bạn đã hẹo).") end             
                         task.spawn(function() 
                             Script.Functions.Log({
                                 Title = NotifPrefix,
-                                Description = "Stopping (you died)",
+                                Description = "Đang dừng lại (Bạn đã hẹo)",
                                 
-                                LinoriaMessage = "[" .. NotifPrefix .. "] Stopping (you died)."
+                                LinoriaMessage = "[" .. NotifPrefix .. "] Đang dừng lại (Bạn đã hẹo)."
                             }, Toggles.AutoWardrobeNotif.Value)
                         end)
 
@@ -1569,9 +1569,9 @@ do
                 task.spawn(function() 
                     Script.Functions.Log({
                         Title = NotifPrefix,
-                        Description = "Waiting for Ambush to be close enough...",
+                        Description = "Đang chờ ambush đến gần để núp...",
         
-                        LinoriaMessage = "[" .. NotifPrefix .. "] Waiting for Ambush to be close enough...",
+                        LinoriaMessage = "[" .. NotifPrefix .. "] Đang chờ ambush đến gần để núp...",
                     }, Toggles.AutoWardrobeNotif.Value)
                 end)
     
@@ -1583,9 +1583,9 @@ do
                     task.spawn(function() 
                         Script.Functions.Log({
                             Title = NotifPrefix,
-                            Description = "Waiting for it to be safe to exit...",
+                            Description = "Đang chờ nó hết đến để an toàn...",
         
-                            LinoriaMessage = "[" .. NotifPrefix .. "] Waiting for it to be safe to exit...",
+                            LinoriaMessage = "[" .. NotifPrefix .. "] Đang chờ nó hết đến để an toàn...",
                         }, Toggles.AutoWardrobeNotif.Value)
                     end)
     
@@ -1614,9 +1614,9 @@ do
         task.spawn(function() 
             Script.Functions.Log({
                 Title = NotifPrefix,
-                Description = "Finished.",
+                Description = "Hoàn tất.",
         
-                LinoriaMessage = "[" .. NotifPrefix .. "] Finished.",
+                LinoriaMessage = "[" .. NotifPrefix .. "] Hoàn tất.",
             }, Toggles.AutoWardrobeNotif.Value)
         end)
     end
@@ -1650,7 +1650,7 @@ do
     
         Script.Functions.Alert({
             Title = "Auto Breaker Solver",
-            Description = "Solving the breaker box...",
+            Description = "Đang giải hộp cầu chì...",
             Reason = ""
         })
     
@@ -1685,7 +1685,7 @@ do
     
             Script.Functions.Alert({
                 Title = "Auto Breaker Solver",
-                Description = "The breaker box has been successfully solved.",
+                Description = "Đã giải cầu chì thành công.",
             })
         end
     end
@@ -2015,7 +2015,7 @@ do
                 end
                 Script.Functions.Alert({
                     Title = "Minecart Teleport",
-                    Description = "Minecart teleport is ready! Waiting for the minecart...",
+                    Description = "Dịch chuyển xe mỏ đã sẵn sàng! Đang chờ có xe mỏ...",
     
                     Time = progressPart
                 })
@@ -2105,7 +2105,7 @@ do
         if Options.NotifyEntity.Value["Halt Room"] and room:GetAttribute("RawName") == "HaltHallway" then
             Script.Functions.Alert({
                 Title = "ENTITIES",
-                Description = "Halt will spawn in next room!",
+                Description = "Halt sẽ có ở phòng tiếp theo!",
                 Image = EntityTable.NotifyReason["HaltRoom"].Image,
 
                 Warning = true
@@ -2172,11 +2172,11 @@ do
                     if Toggles.NotifyPadlock.Value and count < 5 then
                         Script.Functions.Alert({
                             Title = "Library Code",
-                            Description = string.format("Library Code: %s", output),
+                            Description = string.format("Mã thư viện: %s", output),
                         })
     
                         if Toggles.NotifyChat.Value and count == 0 then
-                            RBXGeneral:SendAsync(string.format("Library Code: %s", output))
+                            RBXGeneral:SendAsync(string.format("Mã thư viện: %s", output))
                         end
                     end
                 end
@@ -2325,7 +2325,7 @@ do
     
                         Script.Functions.Alert({
                             Title = "Lagback Detection",
-                            Description = "Fixing Lagback...",
+                            Description = "Đang sửa Lagback...",
                         })
                         Toggles.SpeedBypass:SetValue(false)
                         local cframeChanged = false
@@ -2341,7 +2341,7 @@ do
                         Script.Lagback.Detected = false
                         Script.Functions.Alert({
                             Title = "Lagback Detection",
-                            Description = "Fixed Lagback!"
+                            Description = "Đã sửa Lagback!"
                         })
                     end
                 end
@@ -2448,7 +2448,7 @@ end
 
 local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     PlayerGroupBox:AddSlider("SpeedSlider", {
-        Text = "Speed Boost",
+        Text = "Tăng tốc chạy",
         Default = 0,
         Min = 0,
         Max = 7,
@@ -2456,7 +2456,7 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddSlider("VelocityLimiter", {
-        Text = "Velocity Limiter",
+        Text = "Gia hạn tốc độ",
         Default = 25,
         Min = 0,
         Max = 25,
@@ -2464,50 +2464,50 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddToggle("NoAccel", {
-        Text = "No Acceleration",
+        Text = "Không tăng tốc",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("InstaInteract", {
-        Text = "Instant Interact",
+        Text = "Tương tác tức thì",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("FastClosetExit", {
-        Text = "Fast Closet Exit",
+        Text = "Thoát khỏi tủ nhanh(beta)",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("EnableJump", {
-        Text = "Enable Jump",
+        Text = "Nút Bật nhảy",
         Default = false,
         Visible = not isFools,
     })
 
     PlayerGroupBox:AddToggle("Noclip", {
-        Text = "Noclip",
+        Text = "Xuyên tường",
         Default = false
     }):AddKeyPicker("NoclipKey", {
         Mode = "Toggle",
         Default = "N",
-        Text = "Noclip",
+        Text = "Xuyên tườngp",
         SyncToggleState = true
     })
 
     PlayerGroupBox:AddToggle("Fly", {
-        Text = "Fly",
+        Text = "Bay",
         Default = false
     }):AddKeyPicker("FlyKey", {
         Mode = "Toggle",
         Default = "F",
-        Text = "Fly",
+        Text = "Bay",
         SyncToggleState = true
     })
     
     PlayerGroupBox:AddSlider("FlySpeed", {
-        Text = "Fly Speed",
+        Text = "Tốc độ bay",
         Default = 15,
         Min = 10,
         Max = 22,
@@ -2518,12 +2518,12 @@ end
 
 local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
     ReachGroupBox:AddToggle("DoorReach", {
-        Text = "Door Reach",
+        Text = "Khoảng cách mở cửa",
         Default = false
     })
 
     ReachGroupBox:AddToggle("PromptClip", {
-        Text = "Prompt Clip",
+        Text = "prompt clip",
         Default = false
     })
 
@@ -2538,12 +2538,12 @@ end
 
 local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
     AutomationGroupBox:AddToggle("AutoInteract", {
-        Text = "Auto Interact",
+        Text = "Tự động nhặt + mở",
         Default = false
     }):AddKeyPicker("AutoInteractKey", {
         Mode = Library.IsMobile and "Toggle" or "Hold",
         Default = "R",
-        Text = "Auto Interact",
+        Text = "Tự động nhặt + mở",
         SyncToggleState = Library.IsMobile
     })
 
