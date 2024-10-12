@@ -113,16 +113,16 @@ local createElevator = remotesFolder:WaitForChild("CreateElevator")
 local lobbyElevators = workspace:WaitForChild("Lobby"):WaitForChild("LobbyElevators")
 
 --// Library \\--
-local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/refs/heads/main/"
+local repo = "https://raw.githubusercontent.com/laitung1122/Duonga2/main/"
 
-local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+local Library = loadstring(game:HttpGet(repo .. "lib.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "add/thememana.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "add/mana.lua"))()
 local Options = getgenv().Linoria.Options
 local Toggles = getgenv().Linoria.Toggles
 
 local Window = Library:CreateWindow({
-    Title = "Dương Api V1 | DOORS (Sảnh)",
+    Title = "Dương Api | DOORS (Sảnh)",
     Center = true,
     AutoShow = true,
     Resizable = true,
@@ -287,7 +287,7 @@ end
 function Script.Functions.LoopAchievements()
     task.spawn(function()
         while Toggles.LoopAchievements.Value and not Library.Unloaded do
-            if Script.CurrentBadge >= #Script.Achievements then Script.CurrentBadge = 0 end
+            if Script.CurrentBadge >= #Script. then Script.CurrentBadge = 0 end
             Script.CurrentBadge += 1
 
             local random = Script.Achievements[Script.CurrentBadge]
@@ -326,8 +326,8 @@ local SniperGroupbox = Tabs.Main:AddLeftGroupbox("Sniper") do
 end
 
 local OtherGroupbox = Tabs.Main:AddRightGroupbox("Other") do
-    OtherGroupbox:AddToggle("LoopAchievements", {
-        Text = "Loop Achievements",
+    OtherGroupbox:AddToggle("Loop", {
+        Text = "Danh hiệu đổi lien tục",
         Default = false
     })
 
@@ -479,7 +479,7 @@ end
 
 --// Connections \\--
 
-Toggles.LoopAchievements:OnChanged(function(value)
+Toggles.Loop:OnChanged(function(value)
     if value then
         Script.Functions.LoopAchievements()
     end
@@ -534,17 +534,17 @@ MenuGroup:AddDivider()
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
 MenuGroup:AddButton("Join Discord", function()
     local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-    Inviter.Join("https://discord.com/invite/cfyMptntHr")
+    Inviter.Join("https://discord.com/invite/aRdzCVfF")
     Inviter.Prompt({
-        name = "mspaint",
-        invite = "https://discord.com/invite/cfyMptntHr",
+        name = "Dương Api",
+        invite = "https://discord.com/invite/aRdzCVfF",
     })
-end):AddButton("Copy Link", function()
+end):AddButton("Sao chép liên kết", function()
     if setclipboard then
-        setclipboard("https://discord.com/invite/cfyMptntHr")
+        setclipboard("https://discord.com/invite/aRdzCVfF")
         Library:Notify("Copied discord link to clipboard!")
     else
-        Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
+        Library:Notify("Liên kết discord: https://discord.com/invite/aRdzCVfF", 10)
     end
 end)
 MenuGroup:AddButton("Unload", function() Library:Unload() end)
