@@ -409,15 +409,15 @@ type tGroupTrack = {
 }
 
 --// Library \\--
-local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/refs/heads/main/"
+local repo = "https://raw.githubusercontent.com/laitung1122/Duonga2/main/"
 
-local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+local Library = loadstring(game:HttpGet(repo .. "lib.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "add/thememana.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "add/mana.lua"))()
 local Options = getgenv().Linoria.Options
 local Toggles = getgenv().Linoria.Toggles
 
-local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/mstudio45/MS-ESP/refs/heads/main/source.lua"))()
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/laitung1122/Duonga2/main/esp.lua"))()
 
 local Window = Library:CreateWindow({
     Title = "Dương Api V1 | DOORS",
@@ -455,7 +455,7 @@ local _mspaint_custom_captions = Instance.new("ScreenGui") do
     Frame.Size = UDim2.new(0, 200, 0, 75)
 
     TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.BackgroundTransparency = 0.5
+    TextLabel.BackgroundTransparency = 0.2
     TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel.BorderSizePixel = 0
     TextLabel.Size = UDim2.new(1, 0, 1, 0)
@@ -6208,4 +6208,32 @@ Title = "Door script load succesfully!",
 Text = "Script mod by Dương", 
 Duration = 5
 })
+
+local FrameTimer = tick()
+local FrameCounter = 0;
+local FPS = 60;
+
+local WatermarkConnection = game:GetService('RunService').RenderStepped:Connect(function()
+	FrameCounter += 1;
+
+	if (tick() - FrameTimer) >= 1 then
+		FPS = FrameCounter;
+		FrameTimer = tick();
+		FrameCounter = 0;
+	end;
+
+	Library:SetWatermark(('Dương-Api | %s fps | %s ms'):format(
+		math.floor(FPS),
+		math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
+	));
+end);
+
+Library.KeybindFrame.Visible = true; -- todo: add a function for this
+
+Library:OnUnload(function()
+	WatermarkConnection:Disconnect()
+
+	print('unloaded!')
+	Library.Unloaded = true
+end)
                                             
