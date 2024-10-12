@@ -432,9 +432,9 @@ local Window = Library:CreateWindow({
 
 local Tabs = {
     Main = Window:AddTab("Main"),
-    Exploits = Window:AddTab("Exploits"),
-    Visuals = Window:AddTab("Visuals"),
-    Floor = Window:AddTab("Floor"),
+    Exploits = Window:AddTab("Tính năng"),
+    Visuals = Window:AddTab("Tầm nhìn"),
+    Floor = Window:AddTab("Tự động"),
     ["UI Settings"] = Window:AddTab("UI Settings"),
 }
 
@@ -2549,14 +2549,14 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
 
     AutomationGroupBox:AddDivider()
     AutomationGroupBox:AddToggle("AutoWardrobeNotif", {
-        Text = "Tự động " .. HidingPlaceName[floor.Value] .. " Notifications",
+        Text = "Thông báo nơi núp gần",
         Default = false
     })
 
     AutomationGroupBox:AddToggle("AutoWardrobe", {
-        Text = "tự động " .. HidingPlaceName[floor.Value],
+        Text = "tự động núp vô tủ",
         Default = false,
-        Tooltip = "Might fail with multiple entities (Rush & Ambush, 3+ Rush spawns)",
+        Tooltip = "Có thể thất bại khi có nhiều quái spawm cùng lúc",
         Visible = not isRetro
     }):AddKeyPicker("AutoWardrobeKey", {
         Mode = "Toggle",
@@ -2598,7 +2598,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
         })
 
         AutomationGroupBox:AddToggle("AutoBreakerSolver", {
-            Text = "tự động giải mã cầu chì",
+            Text = "tự động giải mã cầu chì(cửa 100)",
             Default = false
         })
 
@@ -2630,7 +2630,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
         end)
     elseif isMines then
         AutomationGroupBox:AddToggle("AutoAnchorSolver", {
-            Text = "Tự động giải mã mỏ neo",
+            Text = " giải mã mỏ neo",
             Default = false
         })
     end
@@ -2725,7 +2725,7 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bỏ qua") do
     })
     
     BypassGroupBox:AddSlider("SpeedBypassDelay", {
-        Text = "Bỏ qua độ delay",
+        Text = "giảm độ delay",
         Default = 0.21,
         Min = 0.2,
         Max = 0.22,
@@ -2734,7 +2734,7 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bỏ qua") do
     })
 
     BypassGroupBox:AddToggle("SpeedBypass", {
-        Text = "Bỏ qua tốc độ",
+        Text = "Tăng thêm tốc độ chạy(khá rủi ro)",
         Default = false
     })
 
@@ -2820,7 +2820,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPTab:AddToggle("HidingSpotESP", {
-            Text = HidingPlaceName[floor.Value],
+            Text = "nơi ẩn nấp",
             Default = false,
         }):AddColorPicker("HidingSpotEspColor", {
             Default = Color3.new(0, 0.5, 0),
@@ -3421,7 +3421,7 @@ task.spawn(function()
             })
         end
 
-        local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
+        local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("") do
             Rooms_AutomationGroupBox:AddToggle("AutoRooms", {
                 Text = "Phá đảo A-1000",
                 Default = false
@@ -6158,7 +6158,7 @@ MenuGroup:AddToggle("KeybindMenuOpen", { Default = false, Text = "Open Keybind M
 MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) Library.ShowCustomCursor = Value end})
 MenuGroup:AddDivider()
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-MenuGroup:AddButton("Join Discord", function()
+MenuGroup:AddButton("Gia nhập discord", function()
     local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
     Inviter.Join("https://discord.com/invite/aRdzCVfF")
     Inviter.Prompt({
@@ -6180,6 +6180,7 @@ CreditsGroup:AddLabel("upio - owner")
 CreditsGroup:AddLabel("deividcomsono - main script dev")
 CreditsGroup:AddLabel("mstudio45")
 CreditsGroup:AddLabel("bacalhauz")
+CreditsGroup:AddLabel("Dương-Api")
 
 Library.ToggleKeybind = Options.MenuKeybind
 
@@ -6198,12 +6199,3 @@ SaveManager:LoadAutoloadConfig()
 
 Script.Functions.UpdateRPC()
 getgenv().mspaint_loaded = true
-
---[[
-	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
-]]
-game:GetService("StarterGui"):SetCore("SendNotification",{
-Title = "Tải script thành công!",
-Text = "Script mod by Dương", 
-Duration = 2 
-})                                            
