@@ -1,12 +1,5 @@
---[[
-	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
-]]
-game:GetService("StarterGui"):SetCore("SendNotification",{
-Title = "Dương Api",
-Text = "Hãy vô game để chạy script", 
-Duration = 15 
-})
-
+--!native
+--!optimize 2
 
 if not ExecutorSupport then print("[mspaint] Loading stopped, please use the official loadstring for mspaint. (ERROR: ExecutorSupport == nil)") return end
 if getgenv().mspaint_loaded then print("[mspaint] Loading stopped. (ERROR: Already loaded)") return end
@@ -129,7 +122,7 @@ local Options = getgenv().Linoria.Options
 local Toggles = getgenv().Linoria.Toggles
 
 local Window = Library:CreateWindow({
-    Title = "Dương Api V1 | DOORS (Sảnh)",
+    Title = "Dương Api | DOORS (Sảnh)",
     Center = true,
     AutoShow = true,
     Resizable = true,
@@ -541,17 +534,17 @@ MenuGroup:AddDivider()
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
 MenuGroup:AddButton("Join Discord", function()
     local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-    Inviter.Join("https://discord.com/invite/cfyMptntHr")
+    Inviter.Join("https://discord.com/invite/aRdzCVfF")
     Inviter.Prompt({
-        name = "mspaint",
-        invite = "https://discord.com/invite/cfyMptntHr",
+        name = "Dương Api",
+        invite = "https://discord.com/invite/aRdzCVfF",
     })
-end):AddButton("Copy Link", function()
+end):AddButton("Sao chép liên kết", function()
     if setclipboard then
-        setclipboard("https://discord.com/invite/cfyMptntHr")
+        setclipboard("https://discord.com/invite/aRdzCVfF")
         Library:Notify("Copied discord link to clipboard!")
     else
-        Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
+        Library:Notify("Liên kết discord: https://discord.com/invite/aRdzCVfF", 10)
     end
 end)
 MenuGroup:AddButton("Unload", function() Library:Unload() end)
