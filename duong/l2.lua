@@ -121,6 +121,14 @@ local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 local Options = getgenv().Linoria.Options
 local Toggles = getgenv().Linoria.Toggles
 
+--[[
+	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+]]
+game:GetService("StarterGui"):SetCore("SendNotification",{
+Title = "Chào mừng đến với Dương Api!",
+Text = "Cảm ơn vì đã sài dự án", 
+Duration = 5
+})
 local Window = Library:CreateWindow({
     Title = "Dương Api | DOORS (Sảnh)",
     Center = true,
