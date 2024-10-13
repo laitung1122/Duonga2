@@ -112,6 +112,12 @@ local createElevator = remotesFolder:WaitForChild("CreateElevator")
 
 local lobbyElevators = workspace:WaitForChild("Lobby"):WaitForChild("LobbyElevators")
 
+game:GetService("StarterGui"):SetCore("SendNotification",{
+Title = "Chào mừng đến với Dương Api!",
+Text = "Cảm ơn vì đã sài dự án", 
+Duration = 5
+})
+
 --// Library \\--
 local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/refs/heads/main/"
 
