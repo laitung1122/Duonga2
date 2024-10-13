@@ -113,14 +113,19 @@ local createElevator = remotesFolder:WaitForChild("CreateElevator")
 local lobbyElevators = workspace:WaitForChild("Lobby"):WaitForChild("LobbyElevators")
 
 --// Library \\--
-local repo = "https://raw.githubusercontent.com/laitung1122/Duonga2/main/"
+local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/refs/heads/main/"
 
-local Library = loadstring(game:HttpGet(repo .. "lib.lua"))()
-local ThemeManager = loadstring(game:HttpGet(repo .. "add/thememana.lua"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "add/mana.lua"))()
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 local Options = getgenv().Linoria.Options
 local Toggles = getgenv().Linoria.Toggles
 
+game:GetService("StarterGui"):SetCore("SendNotification",{
+Title = "Chào mừng đến với Dương Api!",
+Text = "Cảm ơn vì đã sài dự án", 
+Duration = 5
+})
 local Window = Library:CreateWindow({
     Title = "Dương Api | DOORS (Sảnh)",
     Center = true,
@@ -287,7 +292,7 @@ end
 function Script.Functions.LoopAchievements()
     task.spawn(function()
         while Toggles.LoopAchievements.Value and not Library.Unloaded do
-            if Script.CurrentBadge >= #Script. then Script.CurrentBadge = 0 end
+            if Script.CurrentBadge >= #Script.Achievements then Script.CurrentBadge = 0 end
             Script.CurrentBadge += 1
 
             local random = Script.Achievements[Script.CurrentBadge]
@@ -326,8 +331,8 @@ local SniperGroupbox = Tabs.Main:AddLeftGroupbox("Sniper") do
 end
 
 local OtherGroupbox = Tabs.Main:AddRightGroupbox("Other") do
-    OtherGroupbox:AddToggle("Loop", {
-        Text = "Danh hiệu đổi lien tục",
+    OtherGroupbox:AddToggle("LoopAchievements", {
+        Text = "Loop Achievements",
         Default = false
     })
 
@@ -479,7 +484,7 @@ end
 
 --// Connections \\--
 
-Toggles.Loop:OnChanged(function(value)
+Toggles.LoopAchievements:OnChanged(function(value)
     if value then
         Script.Functions.LoopAchievements()
     end
