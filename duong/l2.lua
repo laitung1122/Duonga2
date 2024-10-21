@@ -561,10 +561,7 @@ end)
 MenuGroup:AddButton("Unload", function() Library:Unload() end)
 
 CreditsGroup:AddLabel("Developers:")
-CreditsGroup:AddLabel("upio - owner")
-CreditsGroup:AddLabel("deividcomsono - main script dev")
-CreditsGroup:AddLabel("mstudio45")
-CreditsGroup:AddLabel("bacalhauz")
+CreditsGroup:AddLabel("Dương Modder")
 
 Library.ToggleKeybind = Options.MenuKeybind
 
