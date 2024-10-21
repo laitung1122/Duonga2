@@ -4627,7 +4627,7 @@ function Library:CreateWindow(...)
         
         LockUIButton.MouseButton1Down:Connect(function()
             Library.CantDragForced = not Library.CantDragForced;
-            LockUIButton.Text = Library.CantDragForced and "Mở khóa UI" or "Khóa UI";
+            LockUIButton.Text = Library.CantDragForced and "Unlock UI" or "Lock UI";
         end)
     end;
 
