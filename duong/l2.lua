@@ -119,7 +119,7 @@ Duration = 5
 })
 
 --// Library \\--
-local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/refs/heads/main/"
+local repo = "https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/"
 
 local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
