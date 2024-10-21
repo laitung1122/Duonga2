@@ -121,6 +121,11 @@ task.spawn(function()
             return LinoriaElement:AddDependencyBox()
         end
 
+        if typeof(Element.Name) ~= "string" then 
+            warn("[DuongApi] Element '" .. tostring(Element.Name) .. " (" .. tostring(Element.Type) .. ")' didn't load: Invalid name.")
+            return 
+            end
+
         -- Elements with Arguments
         if typeof(Element.Arguments) == "table" then
             if Element.Type == "Label" then
