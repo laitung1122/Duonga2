@@ -119,11 +119,11 @@ Duration = 5
 })
 
 --// Library \\--
-local repo = "https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/"
+local repo = "https://raw.githubusercontent.com/laitung1122/Duonga2/main/"
 
-local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+local Library = loadstring(game:HttpGet(repo .. "lib.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "add/thememana.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "add/mana.lua"))()
 local Options = getgenv().Linoria.Options
 local Toggles = getgenv().Linoria.Toggles
 
