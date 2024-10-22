@@ -1,9 +1,9 @@
 --!native
 --!optimize 2
 
-print("[mspaint] Loading...")
-if not ExecutorSupport then print("[mspaint] Loading stopped, please use the official loadstring for mspaint. (ERROR: ExecutorSupport == nil)") return end
-if getgenv().mspaint_loaded then print("[mspaint] Loading stopped. (ERROR: Already loaded)") return end
+print("[Dương-Api] Dang tải...")
+if not ExecutorSupport then print("[mspaint] Đã dừng tải, vui lòng sử dụng chuỗi tải chính thức cho Dương Api. (LỖI: ExecutorSupport == nil)") return end
+if getgenv().mspaint_loaded then print("[Dương-Api] Đã dừng tải. (ERROR: Đã chạy main)") return end
 
 --// Services \\--
 local Lighting = game:GetService("Lighting")
@@ -21,7 +21,7 @@ local Workspace = game:GetService("Workspace")
 --// Loading Wait \\--
 if not game:IsLoaded() then game.Loaded:Wait() end
 if Players.LocalPlayer and Players.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and Players.LocalPlayer.PlayerGui.LoadingUI.Enabled then
-    print("[mspaint] Waiting for game to load...")
+    print("[Dương Api] Đang chờ tải trò chơi...")
     repeat task.wait() until not Players.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and true or not Players.LocalPlayer.PlayerGui.LoadingUI.Enabled
 end
 
@@ -409,18 +409,18 @@ type tGroupTrack = {
 }
 
 --// Library \\--
-local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
+local repo = "https://raw.githubusercontent.com/grape-dev/LinoriaUi/main/LinoriaUi/"
 
-local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
-local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
-local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 local Options = getgenv().Linoria.Options
 local Toggles = getgenv().Linoria.Toggles
 
-local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/mstudio45/MS-ESP/refs/heads/main/source.lua"))()
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/laitung1122/Duonga2/main/esp.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "mspaint v2 | DOORS",
+    Title = "Dương Api V1 | DOORS",
     Center = true,
     AutoShow = true,
     Resizable = true,
@@ -432,11 +432,11 @@ local Window = Library:CreateWindow({
 
 local Tabs = {
     Main = Window:AddTab("Main"),
-    Exploits = Window:AddTab("Exploits"),
-    Visuals = Window:AddTab("Visuals"),
-    Floor = Window:AddTab("Floor"),
+    Exploits = Window:AddTab("Tính năng"),
+    Visuals = Window:AddTab("Tầm nhìn"),
+    Floor = Window:AddTab("Tự động"),
     ["UI Settings"] = Window:AddTab("UI Settings"),
-}
+}		
 
 --// Captions \\--
 local _mspaint_custom_captions = Instance.new("ScreenGui") do
@@ -455,7 +455,7 @@ local _mspaint_custom_captions = Instance.new("ScreenGui") do
     Frame.Size = UDim2.new(0, 200, 0, 75)
 
     TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.BackgroundTransparency = 1.000
+    TextLabel.BackgroundTransparency = 0.2
     TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel.BorderSizePixel = 0
     TextLabel.Size = UDim2.new(1, 0, 1, 0)
@@ -550,10 +550,10 @@ function Script.Functions.UpdateRPC()
     end
 
     BloxstrapRPC.SetRichPresence({
-        details = "Playing DOORS [ mspaint v2 ]",
+        details = "Đang chơi DOORS [ Dương Api V1 ]",
         state = roomNumberPrefix .. prettifiedRoomNumber .. " (" .. (PrettyFloorName[floor.Value] and PrettyFloorName[floor.Value] or ("The " .. floor.Value) ) .. ")",
         largeImage = {
-            hoverText = "Using mspaint v2"
+            hoverText = "Sử dụng Dương Api V1"
         },
         smallImage = {
             assetId = 6925817108,
@@ -843,13 +843,13 @@ do
             local opened = door:GetAttribute("Opened")
             local locked = room:GetAttribute("RequiresKey")
     
-            local doorState = if opened then "[Opened]" elseif locked then "[Locked]" else ""
+            local doorState = if opened then "[Mở]" elseif locked then "[Khóa]" else ""
             local doorIdx = Script.Functions.RandomString()
     
             local doorEsp = Script.Functions.ESP({
                 Type = "Door",
                 Object = door:WaitForChild("Door"),
-                Text = string.format("Door %s %s", doorNumber, doorState),
+                Text = string.format("Cửa %s %s", doorNumber, doorState),
                 Color = Options.DoorEspColor.Value,
     
                 OnDestroy = function()
@@ -858,7 +858,7 @@ do
             })
     
             Script.FeatureConnections.Door[doorIdx] = door:GetAttributeChangedSignal("Opened"):Connect(function()
-                if doorEsp then doorEsp.SetText(string.format("Door %s [Opened]", doorNumber)) end
+                if doorEsp then doorEsp.SetText(string.format("Cửa %s [Đã mở]", doorNumber)) end
                 if Script.FeatureConnections.Door[doorIdx] then Script.FeatureConnections.Door[doorIdx]:Disconnect() end
             end)
         end
@@ -870,7 +870,7 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = string.format("Timer Lever [+%s]", child.TakeTimer.TextLabel.Text),
+                Text = string.format("Đòn bẩy hẹn giờ [+%s]", child.TakeTimer.TextLabel.Text),
                 Color = Options.ObjectiveEspColor.Value
             })
         -- Backdoor + Hotel
@@ -878,7 +878,7 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Key",
+                Text = "Chìa khóa",
                 Color = Options.ObjectiveEspColor.Value
             })
         -- Hotel
@@ -886,28 +886,28 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Electrical Key",
+                Text = "Chìa khóa điện",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "LeverForGate" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Gate Lever",
+                Text = "Cần gạt",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "LiveHintBook" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Book",
+                Text = "Vở",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "LiveBreakerPolePickup" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Breaker",
+                Text = "Hộp cầu dao",
                 Color = Options.ObjectiveEspColor.Value
             })
         -- Mines
@@ -915,21 +915,21 @@ do
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Generator",
+                Text = "Máy phát điện",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "MinesGateButton" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Gate Power Button",
+                Text = "Nút nguồn cổng",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "FuseObtain" then
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = "Fuse",
+                Text = "Cầu chì",
                 Color = Options.ObjectiveEspColor.Value
             })
         elseif child.Name == "MinesAnchor" then
@@ -939,7 +939,7 @@ do
                 Script.Functions.ESP({
                     Type = "Objective",
                     Object = child,
-                    Text = string.format("Anchor %s", sign.TextLabel.Text),
+                    Text = string.format("mỏ neo %s", sign.TextLabel.Text),
                     Color = Options.ObjectiveEspColor.Value
                 })
             end
@@ -953,7 +953,7 @@ do
                 local pumpEsp = Script.Functions.ESP({
                     Type = "Objective",
                     Object = wheel,
-                    Text = "Water Pump",
+                    Text = "Máy bơm nước",
                     Color = Options.ObjectiveEspColor.Value,
 
                     OnDestroy = function()
@@ -1046,7 +1046,7 @@ do
         Script.Functions.ESP({
             Type = "Gold",
             Object = gold,
-            Text = string.format("Gold [%s]", gold:GetAttribute("GoldValue")),
+            Text = string.format("Vàng [%s]", gold:GetAttribute("GoldValue")),
             Color = Options.GoldEspColor.Value
         })
     end
@@ -1411,9 +1411,9 @@ do
         task.spawn(function() 
             Script.Functions.Log({
                 Title = NotifPrefix,
-                Description = "Looking for a hiding place",
+                Description = "Đang tìm chỗ trốn",
         
-                LinoriaMessage = "[" .. NotifPrefix .. "] Looking for a hiding spot..."
+                LinoriaMessage = "[" .. NotifPrefix .. "] Đang tìm nơi ẩn náu..."
             }, Toggles.AutoWardrobeNotif.Value)
         end)
     
@@ -1453,9 +1453,9 @@ do
         task.spawn(function() 
             Script.Functions.Log({
                 Title = NotifPrefix,
-                Description = "Starting...",
+                Description = "Bắt đầu chạy...",
         
-                LinoriaMessage = "[" .. NotifPrefix .. "] Starting..."
+                LinoriaMessage = "[" .. NotifPrefix .. "] Bắt đầu chạy..."
             }, Toggles.AutoWardrobeNotif.Value)
         end)
         
@@ -1500,9 +1500,9 @@ do
                         task.spawn(function() 
                             Script.Functions.Log({
                                 Title = NotifPrefix,
-                                Description = "Exiting the locker, entity is far away.",
+                                Description = "Đang ra khỏi tủ, quái đã đi xa.",
                                 
-                                LinoriaMessage = "[" .. NotifPrefix .. "] Exiting the locker, entity is far away."
+                                LinoriaMessage = "[" .. NotifPrefix .. "] Đang ra khỏi tủ, quái đã đi xa."
                             }, Toggles.AutoWardrobeNotif.Value)
                         end)
     
@@ -1512,9 +1512,9 @@ do
                             task.spawn(function() 
                                 Script.Functions.Log({
                                     Title = NotifPrefix,
-                                    Description = "Exiting the locker, entity is deleted.",
+                                    Description = "đang ra khỏi tủ, quái đã bị xóa.",
                                     
-                                    LinoriaMessage = "[" .. NotifPrefix .. "] Exiting the locker, entity is deleted."
+                                    LinoriaMessage = "[" .. NotifPrefix .. "] đang ra khỏi tủ, quái đã bị xóa."
                                 }, Toggles.AutoWardrobeNotif.Value)
                             end)
     
@@ -1523,13 +1523,13 @@ do
                     end
     
                     if not alive then  
-                        if Toggles.AutoWardrobeNotif.Value then Script.Functions.Log("[" .. NotifPrefix .. "] Stopping (you died).") end             
+                        if Toggles.AutoWardrobeNotif.Value then Script.Functions.Log("[" .. NotifPrefix .. "] Đang dừng lại (Bạn đã hẹo).") end             
                         task.spawn(function() 
                             Script.Functions.Log({
                                 Title = NotifPrefix,
-                                Description = "Stopping (you died)",
+                                Description = "Đang dừng lại (Bạn đã hẹo)",
                                 
-                                LinoriaMessage = "[" .. NotifPrefix .. "] Stopping (you died)."
+                                LinoriaMessage = "[" .. NotifPrefix .. "] Đang dừng lại (Bạn đã hẹo)."
                             }, Toggles.AutoWardrobeNotif.Value)
                         end)
 
@@ -1569,9 +1569,9 @@ do
                 task.spawn(function() 
                     Script.Functions.Log({
                         Title = NotifPrefix,
-                        Description = "Waiting for Ambush to be close enough...",
+                        Description = "Đang chờ ambush đến gần để núp...",
         
-                        LinoriaMessage = "[" .. NotifPrefix .. "] Waiting for Ambush to be close enough...",
+                        LinoriaMessage = "[" .. NotifPrefix .. "] Đang chờ ambush đến gần để núp...",
                     }, Toggles.AutoWardrobeNotif.Value)
                 end)
     
@@ -1583,9 +1583,9 @@ do
                     task.spawn(function() 
                         Script.Functions.Log({
                             Title = NotifPrefix,
-                            Description = "Waiting for it to be safe to exit...",
+                            Description = "Đang chờ nó hết đến để an toàn...",
         
-                            LinoriaMessage = "[" .. NotifPrefix .. "] Waiting for it to be safe to exit...",
+                            LinoriaMessage = "[" .. NotifPrefix .. "] Đang chờ nó hết đến để an toàn...",
                         }, Toggles.AutoWardrobeNotif.Value)
                     end)
     
@@ -1614,9 +1614,9 @@ do
         task.spawn(function() 
             Script.Functions.Log({
                 Title = NotifPrefix,
-                Description = "Finished.",
+                Description = "Hoàn tất.",
         
-                LinoriaMessage = "[" .. NotifPrefix .. "] Finished.",
+                LinoriaMessage = "[" .. NotifPrefix .. "] Hoàn tất.",
             }, Toggles.AutoWardrobeNotif.Value)
         end)
     end
@@ -1650,7 +1650,7 @@ do
     
         Script.Functions.Alert({
             Title = "Auto Breaker Solver",
-            Description = "Solving the breaker box...",
+            Description = "Đang giải hộp cầu chì...",
             Reason = ""
         })
     
@@ -1685,7 +1685,7 @@ do
     
             Script.Functions.Alert({
                 Title = "Auto Breaker Solver",
-                Description = "The breaker box has been successfully solved.",
+                Description = "Đã giải cầu chì thành công.",
             })
         end
     end
@@ -2015,7 +2015,7 @@ do
                 end
                 Script.Functions.Alert({
                     Title = "Minecart Teleport",
-                    Description = "Minecart teleport is ready! Waiting for the minecart...",
+                    Description = "Dịch chuyển xe mỏ đã sẵn sàng! Đang chờ có xe mỏ...",
     
                     Time = progressPart
                 })
@@ -2105,7 +2105,7 @@ do
         if Options.NotifyEntity.Value["Halt Room"] and room:GetAttribute("RawName") == "HaltHallway" then
             Script.Functions.Alert({
                 Title = "ENTITIES",
-                Description = "Halt will spawn in next room!",
+                Description = "Halt sẽ có ở phòng tiếp theo!",
                 Image = EntityTable.NotifyReason["HaltRoom"].Image,
 
                 Warning = true
@@ -2172,11 +2172,11 @@ do
                     if Toggles.NotifyPadlock.Value and count < 5 then
                         Script.Functions.Alert({
                             Title = "Library Code",
-                            Description = string.format("Library Code: %s", output),
+                            Description = string.format("Mã thư viện: %s", output),
                         })
     
                         if Toggles.NotifyChat.Value and count == 0 then
-                            RBXGeneral:SendAsync(string.format("Library Code: %s", output))
+                            RBXGeneral:SendAsync(string.format("Mã thư viện: %s", output))
                         end
                     end
                 end
@@ -2325,7 +2325,7 @@ do
     
                         Script.Functions.Alert({
                             Title = "Lagback Detection",
-                            Description = "Fixing Lagback...",
+                            Description = "Đang sửa Lagback...",
                         })
                         Toggles.SpeedBypass:SetValue(false)
                         local cframeChanged = false
@@ -2341,7 +2341,7 @@ do
                         Script.Lagback.Detected = false
                         Script.Functions.Alert({
                             Title = "Lagback Detection",
-                            Description = "Fixed Lagback!"
+                            Description = "Đã sửa Lagback!"
                         })
                     end
                 end
@@ -2446,9 +2446,9 @@ end
 
 --// Main \\--
 
-local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
+local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Người dùng") do
     PlayerGroupBox:AddSlider("SpeedSlider", {
-        Text = "Speed Boost",
+        Text = "Tăng tốc chạy",
         Default = 0,
         Min = 0,
         Max = 7,
@@ -2456,7 +2456,7 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddSlider("VelocityLimiter", {
-        Text = "Velocity Limiter",
+        Text = "Gia hạn tốc độ",
         Default = 25,
         Min = 0,
         Max = 25,
@@ -2464,50 +2464,50 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddToggle("NoAccel", {
-        Text = "No Acceleration",
+        Text = "Không tăng tốc",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("InstaInteract", {
-        Text = "Instant Interact",
+        Text = "Tương tác tức thì",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("FastClosetExit", {
-        Text = "Fast Closet Exit",
+        Text = "Thoát khỏi tủ nhanh(beta)",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("EnableJump", {
-        Text = "Enable Jump",
+        Text = "Nút Bật nhảy",
         Default = false,
         Visible = not isFools,
     })
 
     PlayerGroupBox:AddToggle("Noclip", {
-        Text = "Noclip",
+        Text = "Xuyên tường",
         Default = false
     }):AddKeyPicker("NoclipKey", {
         Mode = "Toggle",
         Default = "N",
-        Text = "Noclip",
+        Text = "Xuyên tườngp",
         SyncToggleState = true
     })
 
     PlayerGroupBox:AddToggle("Fly", {
-        Text = "Fly",
+        Text = "Bay",
         Default = false
     }):AddKeyPicker("FlyKey", {
         Mode = "Toggle",
         Default = "F",
-        Text = "Fly",
+        Text = "Bay",
         SyncToggleState = true
     })
     
     PlayerGroupBox:AddSlider("FlySpeed", {
-        Text = "Fly Speed",
+        Text = "Tốc độ bay",
         Default = 15,
         Min = 10,
         Max = 22,
@@ -2518,12 +2518,12 @@ end
 
 local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
     ReachGroupBox:AddToggle("DoorReach", {
-        Text = "Door Reach",
+        Text = "Khoảng cách mở cửa",
         Default = false
     })
 
     ReachGroupBox:AddToggle("PromptClip", {
-        Text = "Prompt Clip",
+        Text = "prompt clip",
         Default = false
     })
 
@@ -2536,50 +2536,50 @@ local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
     })
 end
 
-local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
+local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
     AutomationGroupBox:AddToggle("AutoInteract", {
-        Text = "Auto Interact",
+        Text = "Tự động nhặt + mở",
         Default = false
     }):AddKeyPicker("AutoInteractKey", {
         Mode = Library.IsMobile and "Toggle" or "Hold",
         Default = "R",
-        Text = "Auto Interact",
+        Text = "Tự động nhặt + mở",
         SyncToggleState = Library.IsMobile
     })
 
     AutomationGroupBox:AddDivider()
     AutomationGroupBox:AddToggle("AutoWardrobeNotif", {
-        Text = "Auto " .. HidingPlaceName[floor.Value] .. " Notifications",
+        Text = "Thông báo nơi núp gần",
         Default = false
     })
 
     AutomationGroupBox:AddToggle("AutoWardrobe", {
-        Text = "Auto " .. HidingPlaceName[floor.Value],
+        Text = "tự động núp vô tủ",
         Default = false,
-        Tooltip = "Might fail with multiple entities (Rush & Ambush, 3+ Rush spawns)",
+        Tooltip = "Có thể thất bại khi có nhiều quái spawm cùng lúc",
         Visible = not isRetro
     }):AddKeyPicker("AutoWardrobeKey", {
         Mode = "Toggle",
         Default = "Q",
-        Text = "Auto " .. HidingPlaceName[floor.Value],
+        Text = "Tự động " .. HidingPlaceName[floor.Value],
         SyncToggleState = true
     })
     AutomationGroupBox:AddDivider()
 
     AutomationGroupBox:AddToggle("AutoHeartbeat", {
-        Text = "Auto Heartbeat Minigame",
+        Text = "Tự động win mini game",
         Default = false,
         Visible = ExecutorSupport["getnamecallmethod"]
     })
 
     if isHotel or isFools then
         AutomationGroupBox:AddToggle("AutoLibrarySolver", {
-            Text = "Auto Library Code",
+            Text = "Tự động nhập mã thư viện",
             Default = false
         })
 
         AutomationGroupBox:AddSlider("AutoLibraryDistance", {
-            Text = "Unlock Distance",
+            Text = "Khoảng cách mở khóa",
             Default = 20,
             Min = 1,
             Max = 100,
@@ -2594,11 +2594,11 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
             Default = "Legit",
             Multi = false,
 
-            Text = "Auto Breaker Solver Method"
+            Text = "Tự động giải mã hộp cầu chì"
         })
 
         AutomationGroupBox:AddToggle("AutoBreakerSolver", {
-            Text = "Auto Breaker Box",
+            Text = "tự động giải mã cầu chì(cửa 100)",
             Default = false
         })
 
@@ -2630,15 +2630,15 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
         end)
     elseif isMines then
         AutomationGroupBox:AddToggle("AutoAnchorSolver", {
-            Text = "Auto Anchor Solver",
+            Text = " giải mã mỏ neo",
             Default = false
         })
     end
 end
 
-local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
+local MiscGroupBox = Tabs.Main:AddRightGroupbox("Tính năng khác") do
     MiscGroupBox:AddButton({
-        Text = "Revive",
+        Text = "Hồi trinh",
         Func = function()
             remotesFolder.Revive:FireServer()
         end,
@@ -2646,7 +2646,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Play Again",
+        Text = "Chơi lại",
         Func = function()
             remotesFolder.PlayAgain:FireServer()
         end,
@@ -2654,7 +2654,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Lobby",
+        Text = "Sảnh",
         Func = function()
             remotesFolder.Lobby:FireServer()
         end,
@@ -2664,34 +2664,34 @@ end
 
 --// Exploits \\--
 
-local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Anti-Entity") do
+local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Chống quái") do
     AntiEntityGroupBox:AddToggle("AntiHalt", {
-        Text = "Anti-Halt",
+        Text = "Chống-Halt",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiScreech", {
-        Text = "Anti-Screech",
+        Text = "Chống-Screech",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiDupe", {
-        Text = "Anti-" .. (isBackdoor and "Vacuum" or "Dupe"),
+        Text = "Chống-" .. (isBackdoor and "Vacuum" or "Dupe"),
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiEyes", {
-        Text = "Anti-" .. (isBackdoor and "Lookman" or "Eyes"),
+        Text = "Chống-" .. (isBackdoor and "Lookman" or "Eyes"),
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiSnare", {
-        Text = "Anti-Snare",
+        Text = "Chống-Snare",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiHearing", {
-        Text = "Anti-Figure Hearing",
+        Text = "Chống-Figure Hearing",
         Default = false,
         Visible = not isFools
     })
@@ -2699,11 +2699,11 @@ end
 
 local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
     TrollingGroupBox:AddToggle("SpamOtherTools", {
-        Text = "Spam Other Tools",
+        Text = "Tạo một số công cụ",
         Default = false
     }):AddKeyPicker("SpamOtherTools", {
         Default = "X",
-        Text = "Spam Other Tools",
+        Text = "Tạo một số công cụ",
         Mode = Library.IsMobile and "Toggle" or "Hold",
         SyncToggleState = Library.IsMobile
     })
@@ -2714,18 +2714,18 @@ local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
     })
 end
 
-local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
+local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bỏ qua") do
     BypassGroupBox:AddDropdown("SpeedBypassMethod", {
         AllowNull = false,
         Values = {"Massless", --[["Size"]]},
         Default = "Massless",
         Multi = false,
 
-        Text = "Speed Bypass Method"
+        Text = "Phương pháp bỏ qua tốc đọ"
     })
     
     BypassGroupBox:AddSlider("SpeedBypassDelay", {
-        Text = "Bypass Delay",
+        Text = "giảm độ delay",
         Default = 0.21,
         Min = 0.2,
         Max = 0.22,
@@ -2734,7 +2734,7 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
     })
 
     BypassGroupBox:AddToggle("SpeedBypass", {
-        Text = "Speed Bypass",
+        Text = "Tăng thêm tốc độ chạy(khá rủi ro)",
         Default = false
     })
 
@@ -2746,28 +2746,28 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
     BypassGroupBox:AddDivider()
     
     BypassGroupBox:AddToggle("InfItems", {
-        Text = "Infinite Items",
+        Text = "Vật phẩm vô hạn",
         Default = false,
         Visible = not isFools
     })
 
     BypassGroupBox:AddToggle("InfCrucifix", {
-        Text = "Infinite Crucifix",
+        Text = "Thánh giá vô hạn",
         Default = false,
         Visible = not isFools,
-        Tooltip = "Very risky, you might die/lose the crucifix",
+        Tooltip = "Rất rủi ro, bạn có thể chết/mất đồ",
         Risky = true
     })
 
     BypassGroupBox:AddDivider()
 
     BypassGroupBox:AddToggle("FakeRevive", {
-        Text = "Fake Revive",
+        Text = "Gỉa hồi sinh",
         Default = false
     })
 
     BypassGroupBox:AddToggle("DeleteSeek", {
-        Text = "Delete Seek (FE)",
+        Text = "Xóa seek (FE)",
         Default = false
     })
 end
@@ -2776,58 +2776,58 @@ end
 --// Visuals \\--
 
 local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
-    local ESPTab = ESPTabBox:AddTab("ESP") do
+    local ESPTab = ESPTabBox:AddTab("định vị") do
         ESPTab:AddToggle("DoorESP", {
-            Text = "Door",
+            Text = "Cửa",
             Default = false,
         }):AddColorPicker("DoorEspColor", {
             Default = Color3.new(0, 1, 1),
         })
     
         ESPTab:AddToggle("ObjectiveESP", {
-            Text = "Objective",
+            Text = "đồ xung quanh",
             Default = false,
         }):AddColorPicker("ObjectiveEspColor", {
             Default = Color3.new(0, 1, 0),
         })
     
         ESPTab:AddToggle("EntityESP", {
-            Text = "Entity",
+            Text = "quái",
             Default = false,
         }):AddColorPicker("EntityEspColor", {
             Default = Color3.new(1, 0, 0),
         })
     
         ESPTab:AddToggle("ItemESP", {
-            Text = "Item",
+            Text = "vật phẩm",
             Default = false,
         }):AddColorPicker("ItemEspColor", {
             Default = Color3.new(1, 0, 1),
         })
     
         ESPTab:AddToggle("ChestESP", {
-            Text = "Chest",
+            Text = "rương",
             Default = false,
         }):AddColorPicker("ChestEspColor", {
             Default = Color3.new(1, 1, 0),
         })
     
         ESPTab:AddToggle("PlayerESP", {
-            Text = "Player",
+            Text = "người chơi",
             Default = false,
         }):AddColorPicker("PlayerEspColor", {
             Default = Color3.new(1, 1, 1),
         })
     
         ESPTab:AddToggle("HidingSpotESP", {
-            Text = HidingPlaceName[floor.Value],
+            Text = "nơi ẩn nấp",
             Default = false,
         }):AddColorPicker("HidingSpotEspColor", {
             Default = Color3.new(0, 0.5, 0),
         })
     
         ESPTab:AddToggle("GoldESP", {
-            Text = "Gold",
+            Text = "vàng",
             Default = false,
         }):AddColorPicker("GoldEspColor", {
             Default = Color3.new(1, 1, 0),
@@ -2841,29 +2841,29 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     end
 
-    local ESPSettingsTab = ESPTabBox:AddTab("Settings") do
+    local ESPSettingsTab = ESPTabBox:AddTab("Cài đặt") do
         ESPSettingsTab:AddToggle("ESPHighlight", {
-            Text = "Enable Highlight",
+            Text = "Đường kẻ sáng",
             Default = true,
         })
 
         ESPSettingsTab:AddToggle("ESPTracer", {
-            Text = "Enable Tracer",
+            Text = "Đường đánh dấu",
             Default = true,
         })
     
         ESPSettingsTab:AddToggle("ESPRainbow", {
-            Text = "Rainbow ESP",
+            Text = "Định vị màu cầu vồng",
             Default = false,
         })
     
         ESPSettingsTab:AddToggle("ESPDistance", {
-            Text = "Show Distance",
+            Text = "Hiển thị khoảng cách",
             Default = true
         })
     
         ESPSettingsTab:AddSlider("ESPFillTransparency", {
-            Text = "Fill Transparency",
+            Text = "Độ trong suốt",
             Default = 0.75,
             Min = 0,
             Max = 1,
@@ -2871,7 +2871,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPSettingsTab:AddSlider("ESPOutlineTransparency", {
-            Text = "Outline Transparency",
+            Text = "Độ trong suốt đường kẻ",
             Default = 0,
             Min = 0,
             Max = 1,
@@ -2879,7 +2879,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPSettingsTab:AddSlider("ESPTextSize", {
-            Text = "Text Size",
+            Text = "Kích cỡ chữ",
             Default = 22,
             Min = 16,
             Max = 26,
@@ -2892,14 +2892,14 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
             Default = "Bottom",
             Multi = false,
 
-            Text = "Tracer Start Position"
+            Text = "Vị trí đường kẻ"
         })
     end
 end
 
-local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
+local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Môi trường xung quanh") do
     AmbientGroupBox:AddSlider("Brightness", {
-        Text = "Brightness",
+        Text = "Độ sáng",
         Default = 0,
         Min = 0,
         Max = 3,
@@ -2907,51 +2907,51 @@ local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
     })
 
     AmbientGroupBox:AddToggle("Fullbright", {
-        Text = "Fullbright",
+        Text = "Độ sáng cao",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("NoFog", {
-        Text = "No Fog",
+        Text = "Không sương mù",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("AntiLag", {
-        Text = "Anti-Lag",
+        Text = "Chống lag",
         Default = false,
     })
 end
 
 local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
-    local NotifyTab = NotifyTabBox:AddTab("Notifier") do
+    local NotifyTab = NotifyTabBox:AddTab("Cảnh báo") do
         NotifyTab:AddDropdown("NotifyEntity", {
             AllowNull = true,
             Values = {"Blitz", "Lookman", "Rush", "Ambush", "Eyes", "Halt Room", "A60", "A120", "Jeff The Killer", "Gloombat Swarm"},
             Default = {},
             Multi = true,
 
-            Text = "Notify Entities"
+            Text = "Cảnh báo quái đến gần"
         })
 
         NotifyTab:AddToggle("NotifyPadlock", {
-            Text = "Notify Library Code",
+            Text = "Hiện mã thư viện",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyOxygen", {
-            Text = "Notify Oxygen",
+            Text = "Cảnh báo oxygen(door2)",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyHideTime", {
-            Text = "Notify Hide Time",
+            Text = "Cảnh báo thời gian ẩn",
             Default = false,
         })
     end
 
-    local NotifySettingsTab = NotifyTabBox:AddTab("Settings") do
+    local NotifySettingsTab = NotifyTabBox:AddTab("Cài đặt") do
         NotifySettingsTab:AddToggle("NotifyChat", {
-            Text = "Notify Chat",
+            Text = "Cảnh báo trong đoạn chat",
             Tooltip = "Entity and Padlock Code",
             Default = false,
         })
@@ -2959,7 +2959,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         NotifySettingsTab:AddDivider()
         
         NotifySettingsTab:AddToggle("NotifySound", {
-            Text = "Play Alert Sound",
+            Text = "Cảnh báo âm thanh",
             Default = true,
         })
 
@@ -2969,7 +2969,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Right",
             Multi = false,
 
-            Text = "Notification Side"
+            Text = "Vị trí cảnh báo"
         })
 
         NotifySettingsTab:AddDropdown("NotifyStyle", {
@@ -2978,24 +2978,24 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Linoria",
             Multi = false,
 
-            Text = "Notification Style"
+            Text = "Kiểu cảnh báo"
         })
     end
 end
 
-local SelfGroupBox = Tabs.Visuals:AddRightGroupbox("Self") do
+local SelfGroupBox = Tabs.Visuals:AddRightGroupbox("Bản thân") do
     SelfGroupBox:AddToggle("ThirdPerson", {
-        Text = "Third Person",
+        Text = "Góc nhìn thứ ba",
         Default = false
     }):AddKeyPicker("ThirdPersonKey", {
         Default = "V",
-        Text = "Third Person",
+        Text = "Góc nhìn thứ ba",
         Mode = "Toggle",
         SyncToggleState = not Library.IsMobile -- ????
     })
     
     SelfGroupBox:AddSlider("FOV", {
-        Text = "Field of View",
+        Text = "Độ cong tầm nhìn",
         Default = 70,
         Min = 70,
         Max = 120,
@@ -3003,29 +3003,29 @@ local SelfGroupBox = Tabs.Visuals:AddRightGroupbox("Self") do
     })
     
     SelfGroupBox:AddToggle("NoCamBob", {
-        Text = "No Camera Bobbing",
+        Text = "Không lắc lư màn hình",
         Default = false,
         Visible = ExecutorSupport["require"]
     })
 
     SelfGroupBox:AddToggle("NoCamShake", {
-        Text = "No Camera Shake",
+        Text = "Không rung màn hình",
         Default = false,
         Visible = ExecutorSupport["require"]
     })
 
     SelfGroupBox:AddToggle("NoCutscenes", {
-        Text = "No Cutscenes",
+        Text = "Không có đoạn cắt cảnh",
         Default = false,
     })
 
     SelfGroupBox:AddToggle("TranslucentHidingSpot", {
-        Text = "Translucent " .. HidingPlaceName[floor.Value],
+        Text = "độ trong suốt " .. HidingPlaceName[floor.Value],
         Default = false
     })
     
     SelfGroupBox:AddSlider("HidingTransparency", {
-        Text = "Hiding Transparency",
+        Text = "Độ trong suốt của nơi ẩn nấp",
         Default = 0.5,
         Min = 0,
         Max = 1,
@@ -3039,15 +3039,15 @@ task.spawn(function()
     if isHotel then
         local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
             Hotel_AntiEntityGroupBox:AddToggle("AntiSeekObstructions", {
-                Text = "Anti-Seek Obstructions",
+                Text = "Loại bỏ vật cản từ seek",
                 Default = false
             })
         end
 
         local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bypass") do
             Hotel_BypassGroupBox:AddToggle("AvoidRushAmbush", {
-                Text = "Avoid Rush/Ambush",
-                Tooltip = "Doesn't work for greenhouse :(",
+                Text = "Bất tử trước rush/ambush",
+                Tooltip = "Không hoạt động ở greenhouse :(",
                 Default = false,
                 Risky = true
             })
@@ -3055,12 +3055,12 @@ task.spawn(function()
 
         local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Modifiers") do
             Hotel_ModifiersGroupBox:AddToggle("AntiA90", {
-                Text = "Anti-A90",
+                Text = "Chống-A90",
                 Default = false
             })
 
             Hotel_ModifiersGroupBox:AddToggle("NoJammin", {
-                Text = "No Jammin",
+                Text = "không có Jammin",
                 Default = false
             })
         end
@@ -3096,14 +3096,14 @@ task.spawn(function()
             if jamminEffect then jamminEffect.Enabled = not value end
         end)
     elseif isMines then
-        local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Movement") do
+        local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Chuyển động") do
             Mines_MovementGroupBox:AddToggle("FastLadder", {
-                Text = "Fast Ladder",
+                Text = "Đi trên thang nhanh",
                 Default = false
             })
 
             Mines_MovementGroupBox:AddSlider("MaxSlopeAngle", {
-                Text = "Max Floor Angle",
+                Text = "Góc độ đi lên",
                 Default = 45,
                 Min = 0,
                 Max = 90,
@@ -3111,36 +3111,36 @@ task.spawn(function()
             })
         end
 
-        local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+        local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
             Mines_AntiEntityGroupBox:AddToggle("AntiGiggle", {
-                Text = "Anti-Giggle",
+                Text = "Chống-Giggle",
                 Default = false
             })
 
             Mines_AntiEntityGroupBox:AddToggle("AntiGloomEgg", {
-                Text = "Anti-Gloom Egg",
+                Text = "Chống-Gloom Egg",
                 Default = false
             })
 
             Mines_AntiEntityGroupBox:AddToggle("AntiBridgeFall", {
-                Text = "Anti-Bridge Fall",
+                Text = "Chống-Bridge Fall",
                 Default = false
             })
 
             Mines_AntiEntityGroupBox:AddToggle("AntiSeekFlood", {
-                Text = "Anti-Seek Flood",
+                Text = "Chống-Seek Flood",
                 Default = false
             })
         end
 
-        local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
+        local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
             Mines_AutomationGroupBox:AddButton({
-                Text = "Beat Door 200",
+                Text = "Phá đảo cửa 200",
                 Func = function()
                     if latestRoom.Value < 99 then
                         Script.Functions.Alert({
-                            Title = "Beat Door 200",
-                            Description = "You haven't reached door 200...",
+                            Title = "Phá đảo cửa 200",
+                            Description = "Bạn chua tới cửa 200...",
                             Time = 5
                         })
 
@@ -3414,30 +3414,30 @@ task.spawn(function()
             end
         end))
     elseif isRooms then
-        local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+        local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống-quái") do
             Rooms_AntiEntityGroupBox:AddToggle("AntiA90", {
-                Text = "Anti-A90",
+                Text = "Chống-A90",
                 Default = false
             })
         end
 
-        local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
+        local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("") do
             Rooms_AutomationGroupBox:AddToggle("AutoRooms", {
-                Text = "Auto Rooms",
+                Text = "Phá đảo A-1000",
                 Default = false
             })
 
-            Rooms_AutomationGroupBox:AddLabel("Recommended Settings:\nSpeed Bypass and Noclip disabled", true)
+            Rooms_AutomationGroupBox:AddLabel("Cài đặt khuyên dùng:\nTắt xuyên tường và bỏ qua tốc độ", true)
 
             Rooms_AutomationGroupBox:AddDivider()
 
             Rooms_AutomationGroupBox:AddToggle("AutoRoomsDebug", { 
-                Text = "Show Debug Info",
+                Text = "Hiển thị vá lỗi",
                 Default = false
             })
             
             Rooms_AutomationGroupBox:AddToggle("ShowAutoRoomsPathNodes", { 
-                Text = "Show Pathfinding Nodes",
+                Text = "Hiện thị ghi chú",
                 Default = false
             })
 
@@ -3446,9 +3446,9 @@ task.spawn(function()
         Toggles.AntiA90:OnChanged(function(value)
             if Toggles.AutoRooms.Value and not value then
                 Script.Functions.Alert({
-                    Title = "Auto Rooms",
-                    Description = "Anti A-90 is required for Auto Rooms to work!",
-                    Reason = "Anti A-90 has been enabled",
+                    Title = "Phá đảo A-1000",
+                    Description = "Cần bật chống A-90 để chạy ổn định!",
+                    Reason = "Đã bật chống A-90",
                 })
                 
                 Toggles.AntiA90:SetValue(true)
@@ -3561,8 +3561,8 @@ task.spawn(function()
                     end
                     
                     Script.Functions.Log({
-                        Title = "Auto Rooms",
-                        Description = "Calculated Objective Successfully!\nObjective: " .. pathfindingGoal.Parent.Name .. "\nCreating path...",
+                        Title = "Dương-Api",
+                        Description = "Xác định thành công!\nđiểm đến: " .. pathfindingGoal.Parent.Name .. "\ntạo diểm chấm...",
                     }, Toggles.AutoRoomsDebug.Value)
 
                     local path = PathfindingService:CreatePath({
@@ -3576,8 +3576,8 @@ task.spawn(function()
                     })
 
                     Script.Functions.Log({
-                        Title = "Auto Rooms",
-                        Description = "Computing Path to " .. pathfindingGoal.Parent.Name .. "...",
+                        Title = "Dương-Api",
+                        Description = "Đang tạo đường dẫn " .. pathfindingGoal.Parent.Name .. "...",
                     }, Toggles.AutoRoomsDebug.Value)
 
                     path:ComputeAsync(rootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
@@ -3604,8 +3604,8 @@ task.spawn(function()
                         end)
 
                         Script.Functions.Log({
-                            Title = "Auto Rooms",
-                            Description = "Computed path successfully with " .. waypointAmount .. " waypoints!",
+                            Title = "Dương-Api",
+                            Description = "Tính toán thành công với " .. waypointAmount .. " điểm!",
                         }, Toggles.AutoRoomsDebug.Value)
 
                         _internal_mspaint_pathfinding_nodes:ClearAllChildren()
@@ -3656,9 +3656,9 @@ task.spawn(function()
                                     repeat task.wait(.25) until (not character:GetAttribute("Hiding") and not character.PrimaryPart.Anchored)
 
                                     Script.Functions.Alert({
-                                        Title = "Auto Rooms",
-                                        Description = "Seems like you are stuck, trying to recalculate path...",
-                                        Reason = "Failed to move to waypoint",
+                                        Title = "Dương-Api",
+                                        Description = "Có vẻ bạn đang bị kẹt, đang tính toán đường đi khác...",
+                                        Reason = "Tạo đường kẻ thất bại",
                                     })
 
                                     recalculate = true
@@ -3690,8 +3690,8 @@ task.spawn(function()
                         end
                     else
                         Script.Functions.Log({
-                            Title = "Auto Rooms",
-                            Description = "Pathfinding failed with status " .. tostring(path.Status)   
+                            Title = "Dương-Api",
+                            Description = "Tính toán thất bại với lỗi " .. tostring(path.Status)   
                         }, Toggles.AutoRoomsDebug.Value)
                     end
                 end
@@ -3700,9 +3700,9 @@ task.spawn(function()
                 while Toggles.AutoRooms.Value and not Library.Unloaded do
                     if latestRoom.Value == 1000 then
                         Script.Functions.Alert({
-                            Title = "Auto Rooms",
-                            Description = "You have reached A-1000",
-                            Reason = "A-1000 reached by mspaint autorooms",
+                            Title = "Dương-Api",
+                            Description = "Bạn đã tới cửa A-1000",
+                            Reason = "A-1000 sửa lại bởi Dương modder",
                         })
 
                         break
@@ -5279,15 +5279,15 @@ Library:GiveSignal(workspace.ChildAdded:Connect(function(child)
                     if Options.NotifyEntity.Value[shortName] then
                         Script.Functions.Alert({
                             Title = "ENTITIES",
-                            Description = shortName .. " has spawned!",
-                            Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Go find a hiding place!" or nil),
+                            Description = shortName .. " đã xuất hiện!",
+                            Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Hãy tìm nơi ẩn náu!" or nil),
                             Image = EntityTable.NotifyReason[child.Name].Image,
 
                             Warning = true
                         })
 
                         if Toggles.NotifyChat.Value then
-                            RBXGeneral:SendAsync(shortName .. " has spawned!")
+                            RBXGeneral:SendAsync(shortName .. " đã xuất hiện!")
                         end
                     end
                 end
@@ -5295,8 +5295,8 @@ Library:GiveSignal(workspace.ChildAdded:Connect(function(child)
         elseif EntityTable.NotifyMessage[child.Name] and Options.NotifyEntity.Value[shortName] then
             Script.Functions.Alert({
                 Title = "ENTITIES",
-                Description = shortName .. " has spawned!",
-                Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Go find a hiding place!" or nil),
+                Description = shortName .. " đã xuất hiện!",
+                Reason = (not EntityTable.NotifyReason[child.Name].Spawned and "Hãy tìm nơi ẩn náu!" or nil),
                 Image = EntityTable.NotifyReason[child.Name].Image,
 
                 Warning = true
@@ -6158,19 +6158,19 @@ MenuGroup:AddToggle("KeybindMenuOpen", { Default = false, Text = "Open Keybind M
 MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) Library.ShowCustomCursor = Value end})
 MenuGroup:AddDivider()
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-MenuGroup:AddButton("Join Discord", function()
+MenuGroup:AddButton("Gia nhập discord", function()
     local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-    Inviter.Join("https://discord.com/invite/cfyMptntHr")
+    Inviter.Join("https://discord.com/invite/aRdzCVfF")
     Inviter.Prompt({
-        name = "mspaint",
-        invite = "https://discord.com/invite/cfyMptntHr",
+        name = "Dương-Api",
+        invite = "https://discord.com/invite/aRdzCVfF",
     })
-end):AddButton("Copy Link", function()
+end):AddButton("Sao chép liên kết", function()
     if setclipboard then
-        setclipboard("https://discord.com/invite/cfyMptntHr")
-        Library:Notify("Copied discord link to clipboard!")
+        setclipboard("https://discord.com/invite/aRdzCVfF")
+        Library:Notify("Đã sao chép vào bộ nhớ tạm!")
     else
-        Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
+        Library:Notify("Discord link: https://discord.com/invite/aRdzCVfF", 10)
     end
 end)
 MenuGroup:AddButton("Unload", function() Library:Unload() end)
@@ -6180,6 +6180,7 @@ CreditsGroup:AddLabel("upio - owner")
 CreditsGroup:AddLabel("deividcomsono - main script dev")
 CreditsGroup:AddLabel("mstudio45")
 CreditsGroup:AddLabel("bacalhauz")
+CreditsGroup:AddLabel("Dương-Api")
 
 Library.ToggleKeybind = Options.MenuKeybind
 
@@ -6198,3 +6199,10 @@ SaveManager:LoadAutoloadConfig()
 
 Script.Functions.UpdateRPC()
 getgenv().mspaint_loaded = true
+                                            
+game:GetService("StarterGui"):SetCore("SendNotification",{
+Title = "Door script load succesfully!",
+Text = "Script mod by Dương", 
+Duration = 5
+})
+                                            
