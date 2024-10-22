@@ -140,12 +140,9 @@ local ThemeManager = {} do
 		if (not name) then
 			return false, 'no config file is selected'
 		end
-
+		
 		local file = self.Folder .. '/themes/' .. name .. '.json'
-		if not isfile(file) then
-			file = self.Folder .. '/themes/' .. name
-			if not isfile(file) then return false, 'invalid file' end
-		end
+		if not isfile(file) then return false, 'invalid file' end
 
 		local success, decoded = pcall(delfile, file)
 		if not success then return false, 'delete file error' end
@@ -154,12 +151,40 @@ local ThemeManager = {} do
 	end
 	
 	function ThemeManager:CreateThemeManager(groupbox)
-		groupbox:AddLabel('Background color'):AddColorPicker('Màu giao diện', { Default = self.Library.BackgroundColor });
-		groupbox:AddLabel('Main color')	:AddColorPicker('Màu nền chính', { Default = self.Library.MainColor });
-		groupbox:AddLabel('Accent color'):AddColorPicker('Màu viền ngoài', { Default = self.Library.AccentColor });
-		groupbox:AddLabel('Outline color'):AddColorPicker('Màu viền trong', { Default = self.Library.OutlineColor });
-		groupbox:AddLabel('Font color')	:AddColorPicker('Màu chữ', { Default = self.Library.FontColor });
-		groupbox:AddInput('VideoLink', { Text = 'Link video để làm nền', Default = self.Library.VideoLink });
+		groupbox:AddLabel('Background color'):AddColorPicker('BackgroundColor', { Default = self.Library.BackgroundColor });
+		groupbox:AddLabel('Main color')	:AddColorPicker('MainColor', { Default = self.Library.MainColor });
+		groupbox:AddLabel('Accent color'):AddColorPicker('AccentColor', { Default = self.Library.AccentColor });
+		groupbox:AddLabel('Outline color'):AddColorPicker('OutlineColor', { Default = self.Library.OutlineColor });
+		groupbox:AddLabel('Font color')	:AddColorPicker('FontColor', { Default = self.Library.FontColor });
+		groupbox:AddToggle('Rainbow', { Text = 'Rainbow accent color' }):OnChanged(function(Value)
+			if Value then
+				self.Library:GiveSignal(game:GetService('RunService').RenderStepped:Connect(function(Delta)
+					if Toggles.Rainbow.Value then
+						for Idx, Object in next, self.Library.Registry do
+							for Property, ColorIdx in next, Object.Properties do
+								if ColorIdx == 'AccentColor' or ColorIdx == 'AccentColorDark' then
+									local Instance = Object.Instance;
+									local yPos = Instance.AbsolutePosition.Y;
+			
+									local Mapped = self.Library:MapValue(yPos, 0, 1080, 0, 0.5) * 1.5;
+									local Color = Color3.fromHSV((self.Library.CurrentRainbowHue - Mapped) % 1, 0.8, 1);
+			
+									if ColorIdx == 'AccentColorDark' then
+										Color = self.Library:GetDarkerColor(Color);
+									end;
+			
+									Instance[Property] = Color;
+								end;
+							end;
+						end;
+					end;
+				end))
+				RainbowFunctionIndex = #self.Library.Signals
+			elseif RainbowFunctionIndex then
+				table.remove(self.Library.Signals, RainbowFunctionIndex):Disconnect();
+				self:ThemeUpdate();
+			end;
+		end);
 		
 		local ThemesArray = {}
 		for Name, Theme in next, self.BuiltInThemes do
@@ -170,10 +195,10 @@ local ThemeManager = {} do
 
 		groupbox:AddDivider()
 
-		groupbox:AddDropdown('ThemeManager_ThemeList', { Text = 'Danh sách giao diện', Values = ThemesArray, Default = 1 })
-		groupbox:AddButton('Đặt thành mặc định', function()
+		groupbox:AddDropdown('ThemeManager_ThemeList', { Text = 'Theme list', Values = ThemesArray, Default = 1 })
+		groupbox:AddButton('Set as default', function()
 			self:SaveDefault(getgenv().Linoria.Options.ThemeManager_ThemeList.Value)
-			self.Library:Notify(string.format('Đã đổi giao diện mặc định thành %q', getgenv().Linoria.Options.ThemeManager_ThemeList.Value))
+			self.Library:Notify(string.format('Set default theme to %q', getgenv().Linoria.Options.ThemeManager_ThemeList.Value))
 		end)
 
 		getgenv().Linoria.Options.ThemeManager_ThemeList:OnChanged(function()
@@ -183,7 +208,7 @@ local ThemeManager = {} do
 		groupbox:AddDivider()
 
 		groupbox:AddInput('ThemeManager_CustomThemeName', { Text = 'Custom theme name' })
-		groupbox:AddButton('Tạo giao diện', function() 
+		groupbox:AddButton('Create theme', function() 
 			self:SaveCustomTheme(getgenv().Linoria.Options.ThemeManager_CustomThemeName.Value)
 
 			getgenv().Linoria.Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
@@ -193,41 +218,41 @@ local ThemeManager = {} do
 		groupbox:AddDivider()
 
 		groupbox:AddDropdown('ThemeManager_CustomThemeList', { Text = 'Custom themes', Values = self:ReloadCustomThemes(), AllowNull = true, Default = 1 })
-		groupbox:AddButton('Tải giao diện', function() 
+		groupbox:AddButton('Load theme', function() 
 			self:ApplyTheme(getgenv().Linoria.Options.ThemeManager_CustomThemeList.Value) 
 		end)
 		groupbox:AddButton('Overwrite theme', function()
-			self:SaveCustomTheme(getgenv().Linoria.Options.ThemeManager_CustomThemeList.Value)
+			self:SaveCustomTheme(getgenv().Linoria.Options.ThemeManager_CustomThemeName.Value)
 		end)
-		groupbox:AddButton('Xóa giao diện', function()
-			local name = getgenv().Linoria.Options.ThemeManager_CustomThemeList.Value
+		groupbox:AddButton('Delete theme', function()
+			local name = getgenv().Linoria.Options.ThemeManager_CustomThemeName.Value
 
 			local success, err = self:Delete(name)
 			if not success then
-				return self.Library:Notify('Thất bại khi xóa giao diện: ' .. err)
+				return self.Library:Notify('Failed to delete theme: ' .. err)
 			end
 
-			self.Library:Notify(string.format('Đã xóa giao diện %q', name))
+			self.Library:Notify(string.format('Deleted theme %q', name))
 			getgenv().Linoria.Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
 			getgenv().Linoria.Options.ThemeManager_CustomThemeList:SetValue(nil)
 		end)
-		groupbox:AddButton('Làm mới danh sách', function()
+		groupbox:AddButton('Refresh list', function()
 			getgenv().Linoria.Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
 			getgenv().Linoria.Options.ThemeManager_CustomThemeList:SetValue(nil)
 		end)
-		groupbox:AddButton('Đặt làm mặc định', function()
+		groupbox:AddButton('Set as default', function()
 			if getgenv().Linoria.Options.ThemeManager_CustomThemeList.Value ~= nil and getgenv().Linoria.Options.ThemeManager_CustomThemeList.Value ~= '' then
 				self:SaveDefault(getgenv().Linoria.Options.ThemeManager_CustomThemeList.Value)
-				self.Library:Notify(string.format('Đặt mặc định thành %q', getgenv().Linoria.Options.ThemeManager_CustomThemeList.Value))
+				self.Library:Notify(string.format('Set default theme to %q', getgenv().Linoria.Options.ThemeManager_CustomThemeList.Value))
 			end
 		end)
-		groupbox:AddButton('Khôi phục cài đặt gốc', function()
+		groupbox:AddButton('Reset default', function()
 			local success = pcall(delfile, self.Folder .. '/themes/default.txt')
 			if not success then 
-				return self.Library:Notify('Thất bại khi khôi phục cài đặt gốc: không xóa file được')
+				return self.Library:Notify('Failed to reset default: delete file error')
 			end
 				
-			self.Library:Notify('Đặt giao diện thành mặc định')
+			self.Library:Notify('Set default theme to nothing')
 			getgenv().Linoria.Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
 			getgenv().Linoria.Options.ThemeManager_CustomThemeList:SetValue(nil)
 		end)
@@ -355,5 +380,4 @@ local ThemeManager = {} do
 	ThemeManager:BuildFolderTree()
 end
 
-getgenv().LinoriaThemeManager = ThemeManager
 return ThemeManager
