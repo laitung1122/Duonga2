@@ -36,7 +36,7 @@ local ThemeManager = {} do
 				}
 			else
 				VideoData = httprequest({
-					Url = 'https://raw.githubusercontent.com/Duongbeta1/D-ng/main/b.webm',
+					Url = tostring(webmLink),
 					Method = 'GET'
 				})
 			end
@@ -156,6 +156,7 @@ local ThemeManager = {} do
 		groupbox:AddLabel('Accent color'):AddColorPicker('Màu phím giữ', { Default = self.Library.AccentColor });
 		groupbox:AddLabel('Outline color'):AddColorPicker('Màu viền bao quanh', { Default = self.Library.OutlineColor });
 		groupbox:AddLabel('Font color')	:AddColorPicker('Màu chữ', { Default = self.Library.FontColor });
+		groupbox:AddInput('VideoLink', { Text = 'Link video để làm nền', Default = self.Library.VideoLink });
 		groupbox:AddToggle('Rainbow', { Text = 'Viền cầu vồng' }):OnChanged(function(Value)
 			if Value then
 				self.Library:GiveSignal(game:GetService('RunService').RenderStepped:Connect(function(Delta)
