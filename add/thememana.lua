@@ -36,7 +36,7 @@ local ThemeManager = {} do
 				}
 			else
 				VideoData = httprequest({
-					Url = tostring(webmLink),
+					Url = 'https://raw.githubusercontent.com/Duongbeta1/D-ng/main/b.webm',
 					Method = 'GET'
 				})
 			end
@@ -151,7 +151,6 @@ local ThemeManager = {} do
 	end
 	
 	function ThemeManager:CreateThemeManager(groupbox)
-	    groupbox:AddInput('VideoLink', { Text = 'Link video để làm nền', Default = self.Library.VideoLink });
 		groupbox:AddLabel('Background color'):AddColorPicker('Màu nền', { Default = self.Library.BackgroundColor });
 		groupbox:AddLabel('Main color')	:AddColorPicker('Màu chính', { Default = self.Library.MainColor });
 		groupbox:AddLabel('Accent color'):AddColorPicker('Màu phím giữ', { Default = self.Library.AccentColor });
