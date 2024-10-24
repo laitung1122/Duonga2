@@ -151,12 +151,13 @@ local ThemeManager = {} do
 	end
 	
 	function ThemeManager:CreateThemeManager(groupbox)
-		groupbox:AddLabel('Background color'):AddColorPicker('BackgroundColor', { Default = self.Library.BackgroundColor });
-		groupbox:AddLabel('Main color')	:AddColorPicker('MainColor', { Default = self.Library.MainColor });
-		groupbox:AddLabel('Accent color'):AddColorPicker('AccentColor', { Default = self.Library.AccentColor });
-		groupbox:AddLabel('Outline color'):AddColorPicker('OutlineColor', { Default = self.Library.OutlineColor });
-		groupbox:AddLabel('Font color')	:AddColorPicker('FontColor', { Default = self.Library.FontColor });
-		groupbox:AddToggle('Rainbow', { Text = 'Rainbow accent color' }):OnChanged(function(Value)
+	    groupbox:AddInput('VideoLink', { Text = 'Link video để làm nền', Default = self.Library.VideoLink });
+		groupbox:AddLabel('Background color'):AddColorPicker('Màu nền', { Default = self.Library.BackgroundColor });
+		groupbox:AddLabel('Main color')	:AddColorPicker('Màu chính', { Default = self.Library.MainColor });
+		groupbox:AddLabel('Accent color'):AddColorPicker('Màu phím giữ', { Default = self.Library.AccentColor });
+		groupbox:AddLabel('Outline color'):AddColorPicker('Màu viền bao quanh', { Default = self.Library.OutlineColor });
+		groupbox:AddLabel('Font color')	:AddColorPicker('Màu chữ', { Default = self.Library.FontColor });
+		groupbox:AddToggle('Rainbow', { Text = 'Viền cầu vồng' }):OnChanged(function(Value)
 			if Value then
 				self.Library:GiveSignal(game:GetService('RunService').RenderStepped:Connect(function(Delta)
 					if Toggles.Rainbow.Value then
