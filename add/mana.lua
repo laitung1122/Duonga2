@@ -1,28 +1,26 @@
 local cloneref = cloneref or function(o) return o end
 local httpService = cloneref(game:GetService('HttpService'))
+local isfolder, isfile, listfiles = isfolder, isfile, listfiles
 
-if copyfunction and isfolder then -- fix for mobile executors :/
+if typeof(copyfunction) == "function" then -- fix for shitsploits
 	local isfolder_, isfile_, listfiles_ = copyfunction(isfolder), copyfunction(isfile), copyfunction(listfiles);
-	local success_, error_ = pcall(function() return isfolder_(tostring(math.random(999999999, 999999999999))) end);
+	local success_, error_ = pcall(function() return isfolder_(tostring(math.random(9999, 9999999))) end);
 
 	if success_ == false or (tostring(error_):match("not") and tostring(error_):match("found")) then
-		getgenv().isfolder = function(folder)
-			local s, data = pcall(function() return isfolder_(folder) end)
-			if s == false then return nil end
-			return data
-		end
+		isfolder = function(folder)
+			local success, data = pcall(isfolder_, folder)
+			return (if success then data else false)
+		end;
 	
-		getgenv().isfile = function(file)
-			local s, data = pcall(function() return isfile_(file) end)
-			if s == false then return nil end
-			return data
-		end
+		isfile = function(file)
+			local success, data = pcall(isfile_, file)
+			return (if success then data else false)
+		end;
 	
-		getgenv().listfiles = function(folder)
-			local s, data = pcall(function() return listfiles_(folder) end)
-			if s == false then return {} end
-			return data
-		end
+		listfiles = function(folder)
+			local success, data = pcall(listfiles_, folder)
+			return (if success then data else {})
+		end;
 	end
 end
 
@@ -93,13 +91,26 @@ local SaveManager = {} do
 		},
 	}
 
-	function SaveManager:CheckFolderTree()
-		pcall(function()
-			if not isfolder(self.Folder) then -- who tought that isfolder should error when the folder is not found 😭
-				SaveManager:BuildFolderTree()
-				task.wait()
+	function SaveManager:BuildFolderTree()
+		local paths = {
+			self.Folder,
+			self.Folder .. '/themes',
+			self.Folder .. '/settings'
+		}
+
+		for i = 1, #paths do
+			local str = paths[i]
+			if not isfolder(str) then
+				makefolder(str)
 			end
-		end)
+		end
+	end
+
+	function SaveManager:CheckFolderTree()
+		if not isfolder(self.Folder) then
+			SaveManager:BuildFolderTree()
+			task.wait()
+		end
 	end
 	
 	function SaveManager:SetIgnoreIndexes(list)
@@ -189,47 +200,40 @@ local SaveManager = {} do
 		})
 	end
 
-	function SaveManager:BuildFolderTree()
-		local paths = {
-			self.Folder,
-			self.Folder .. '/themes',
-			self.Folder .. '/settings'
-		}
-
-		for i = 1, #paths do
-			local str = paths[i]
-			if not isfolder(str) then
-				makefolder(str)
-			end
-		end
-	end
-
 	function SaveManager:RefreshConfigList()
-		SaveManager:CheckFolderTree()
-		local list = listfiles(self.Folder .. '/settings')
-
-		local out = {}
-		for i = 1, #list do
-			local file = list[i]
-			if file:sub(-5) == '.json' then
-				-- i hate this but it has to be done ...
-
-				local pos = file:find('.json', 1, true)
-				local start = pos
-
-				local char = file:sub(pos, pos)
-				while char ~= '/' and char ~= '\\' and char ~= '' do
-					pos = pos - 1
-					char = file:sub(pos, pos)
-				end
-
-				if char == '/' or char == '\\' then
-					table.insert(out, file:sub(pos + 1, start - 1))
+		local success, data = pcall(function()
+			SaveManager:CheckFolderTree()
+			local list = listfiles(self.Folder .. '/settings')
+	
+			local out = {}
+			for i = 1, #list do
+				local file = list[i]
+				if file:sub(-5) == '.json' then
+					-- i hate this but it has to be done ...
+	
+					local pos = file:find('.json', 1, true)
+					local start = pos
+	
+					local char = file:sub(pos, pos)
+					while char ~= '/' and char ~= '\\' and char ~= '' do
+						pos = pos - 1
+						char = file:sub(pos, pos)
+					end
+	
+					if char == '/' or char == '\\' then
+						table.insert(out, file:sub(pos + 1, start - 1))
+					end
 				end
 			end
+			return out
+		end)
+
+		if (not success) then
+			if self.Library then self.Library:Notify('Failed to load config list: ' .. tostring(data)) end
+			return {}
 		end
-		
-		return out
+					
+		return data
 	end
 
 	function SaveManager:SetLibrary(library)
@@ -250,7 +254,6 @@ local SaveManager = {} do
 			self.Library:Notify(string.format('Auto loaded config %q', name))
 		end
 	end
-
 
 	function SaveManager:BuildConfigSection(tab)
 		assert(self.Library, 'Must set SaveManager.Library')
