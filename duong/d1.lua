@@ -565,7 +565,7 @@ end
 --// Notification Functions \\--
 do
     function Script.Functions.Warn(message: string)
-        warn("WARN - mspaint:", message)
+        warn("WARN - DuongApi:", message)
     end
 
     function Script.Functions.Notifs.Doors.Notify(unsafeOptions)
@@ -2975,7 +2975,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         NotifySettingsTab:AddDropdown("NotifyStyle", {
             AllowNull = false,
             Values = {"Linoria", "Doors"},
-            Default = "Linoria",
+            Default = "Doors",
             Multi = false,
 
             Text = "Kiểu cảnh báo"
@@ -3711,14 +3711,14 @@ task.spawn(function()
                     doAutoRooms()
                 end
                 
-                -- Unload Auto Rooms
+                -- Dừng chạy Tự động A1000
                 moveToCleanup()
             end
         end)
     elseif isFools then
         local Fools_TrollingGroupBox = Tabs.Floor:AddLeftGroupbox("Trolling") do
             Fools_TrollingGroupBox:AddToggle("GrabBananaJeffToggle",{
-                Text = "Grab Banana / Jeff",
+                Text = "Grab banana / Jeff",
                 Default = false
             }):AddKeyPicker("GrabBananaJeff", {
                 Default = "H",
