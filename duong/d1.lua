@@ -3281,7 +3281,7 @@ task.spawn(function()
                     remotesFolder.ClimbLadder:FireServer()
                     bypassed = false
                     
-                    Options.SpeedSlider:SetMax(Toggles.SpeedBypass.Value and 45 or (Toggles.EnableJump.Value and 3 or 7))
+                    Options.SpeedSlider:SetMax(Toggles.SpeedBypass.Value and 25 or (Toggles.EnableJump.Value and 3 or 7))
                     Options.FlySpeed:SetMax(Toggles.SpeedBypass.Value and 75 or 22)
                 end
             end
@@ -5158,7 +5158,7 @@ if isBackdoor then
 
             Script.Functions.Alert({
                 Title = "ENTITIES",
-                Description = "Haste is incoming, please find a lever ASAP!",
+                Description = "Haste đang đến, vui lòng tìm cần gạt càng sớm càng tốt!",
                 Time = haste_incoming_progress,
 
                 Warning = true
