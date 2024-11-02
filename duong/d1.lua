@@ -2072,7 +2072,7 @@ do
     --If ESP Toggle is changed, you can call this function directly.
     function Script.Functions.Minecart.DrawNodes()
         local pathESP_enabled = Toggles.MinecartPathVisualiser.Value
-        local espRealColor = pathESP_enabled and MinecartPathNodeColor.LightBlue or MinecartPathNodeColor.Disabled
+        local espRealColor = pathESP_enabled and MinecartPathNodeColor.Green or MinecartPathNodeColor.Disabled
         
         for idx, path: tPathfind in ipairs(MinecartPathfind) do
             if path.esp and pathESP_enabled then continue end -- if status is unchanged.
@@ -3249,34 +3249,35 @@ task.spawn(function()
         end
 
         Toggles.TheMinesAnticheatBypass:OnChanged(function(value)
-            if value then
-                local progressPart = Instance.new("Part", Workspace) do
-                    progressPart.Anchored = true
-                    progressPart.CanCollide = false
-                    progressPart.Name = "_internal_mspaint_acbypassprogress"
-                    progressPart.Transparency = 1
-                end
+    if value then
+        local progressPart = Instance.new("Part", Workspace) do
+            progressPart.Anchored = true
+            progressPart.CanCollide = false
+            progressPart.Name = "_internal_mspaint_acbypassprogress"
+            progressPart.Transparency = 1
+        end
 
-                if Library.IsMobile then
-                    Script.Functions.Alert({
-                        Title = "Anticheat bypass",
-                        Description = "To bypass the ac, you must interact with a ladder.",
-                        Reason = "Ladder ESP has been enabled, do not move while on the ladder.",
+        if Library.IsMobile then
+            Script.Functions.Alert({
+                Title = "Vượt qua chống gian lận",
+                Description = "Để vượt qua hệ thống chống gian lận, bạn phải tương tác với cầu thang.",
+                Reason = "Ladder ESP đã được kích hoạt, không di chuyển khi ở trên cầu thang.",
 
-                        LinoriaMessage = "To bypass the anticheat, you must interact with a ladder. Ladder ESP has been enabled.\nDo not move while on the ladder.",
-                        Time = progressPart
-                    })
-                else
-                    Script.Functions.Alert({
-                        Title = "Anticheat bypass",
-                        Description = "To bypass the ac, you must interact with a ladder.",
-                        Reason = "Ladder ESP has been enabled, do not move while on the ladder.",
+                LinoriaMessage = "Để vượt qua hệ thống chống gian lận, bạn phải tương tác với cầu thang. Ladder ESP đã được kích hoạt.\nKhông di chuyển khi ở trên cầu thang.",
+                Time = progressPart
+            })
+        else
+            Script.Functions.Alert({
+                Title = "Vượt qua chống gian lận",
+                Description = "Để vượt qua hệ thống chống gian lận, bạn phải tương tác với cầu thang.",
+                Reason = "Ladder ESP đã được kích hoạt, không di chuyển khi ở trên cầu thang.",
 
-                        LinoriaMessage = "To bypass the anticheat, you must interact with a ladder. Ladder ESP has been enabled.\nDo not move while on the ladder.",
-                        Time = progressPart
-                    })
-                end
-                
+                LinoriaMessage = "Để vượt qua hệ thống chống gian lận, bạn phải tương tác với cầu thang. Ladder ESP đã được kích hoạt.\nKhông di chuyển khi ở trên cầu thang.",
+                Time = progressPart
+            })
+        end
+    end
+end)
 
                 -- Ladder ESP
                 for _, v in pairs(workspace.CurrentRooms:GetDescendants()) do
