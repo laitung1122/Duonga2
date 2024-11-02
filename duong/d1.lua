@@ -2844,12 +2844,12 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     local ESPSettingsTab = ESPTabBox:AddTab("Cài đặt") do
         ESPSettingsTab:AddToggle("ESPHighlight", {
             Text = "Đường kẻ sáng",
-            Default = false,
+            Default = true,
         })
 
         ESPSettingsTab:AddToggle("ESPTracer", {
             Text = "Đường đánh dấu",
-            Default = true,
+            Default = false,
         })
     
         ESPSettingsTab:AddToggle("ESPRainbow", {
