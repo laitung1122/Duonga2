@@ -375,25 +375,6 @@ local MinecartPathNodeColor = {
     Cyan = Color3.new(0, 1, 1),
     Orange = Color3.new(1, 0.5, 0),
     White = Color3.new(1, 1, 1),
-    Black = Color3.new(0, 0, 0),
-    Blue = Color3.new(0, 0, 1),
-    Pink = Color3.new(1, 0.75, 0.8),
-    Brown = Color3.new(0.6, 0.4, 0.2),
-    Grey = Color3.new(0.5, 0.5, 0.5),
-    LightGrey = Color3.new(0.75, 0.75, 0.75),
-    DarkGrey = Color3.new(0.25, 0.25, 0.25),
-    Lime = Color3.new(0.5, 1, 0),
-    Magenta = Color3.new(1, 0, 1),
-    Maroon = Color3.new(0.5, 0, 0),
-    Navy = Color3.new(0, 0, 0.5),
-    Olive = Color3.new(0.5, 0.5, 0),
-    Teal = Color3.new(0, 0.5, 0.5),
-    Lavender = Color3.new(0.9, 0.6, 1),
-    Beige = Color3.new(0.96, 0.96, 0.86),
-    Peach = Color3.new(1, 0.85, 0.7),
-    Mint = Color3.new(0.6, 1, 0.6),
-    Coral = Color3.new(1, 0.5, 0.31),
-    LightBlue = Color3.new(0.68, 0.85, 0.9), -- Xanh nước biển nhạt
 }
 
 local MinecartPathfind = {
@@ -1339,16 +1320,16 @@ do
             
             if collision:IsDescendantOf(workspace) and (collision.Parent and collision.Parent.Name == "TriggerEventCollision") then
                 Script.Functions.Alert({
-                    Title = "Delete Seek FE",
-                    Description = "Deleting Seek trigger...",
+                    Title = "Dương-Api",
+                    Description = "Đang xóa seek...",
                     Reason = "",
                 })
     
                 task.delay(4, function()
                     if collision:IsDescendantOf(workspace) then
                         Script.Functions.Alert({
-                            Title = "Delete Seek FE",
-                            Description = "Failed to delete Seek trigger!",
+                            Title = "Dương-Api",
+                            Description = "Xóa seek không thành công!",
                             Reason = "",
                         })
                     end
@@ -1373,8 +1354,8 @@ do
                 
                 if not collision:IsDescendantOf(workspace) then
                     Script.Functions.Log({
-                        Title = "Delete Seek FE",
-                        Description = "Deleted Seek trigger successfully!",
+                        Title = "Dương-Api",
+                        Description = "Đã xóa seek thành công!",
                     })
                 end
             end
@@ -2033,7 +2014,7 @@ do
                     progressPart.Transparency = 1
                 end
                 Script.Functions.Alert({
-                    Title = "Minecart Teleport",
+                    Title = "Hệ thống tự động",
                     Description = "Dịch chuyển xe mỏ đã sẵn sàng! Đang chờ lên xe mỏ...",
     
                     Time = progressPart
@@ -3223,61 +3204,60 @@ task.spawn(function()
             })
 
             Mines_AutomationGroupBox:AddToggle("TheMinesAnticheatBypass", {
-                Text = "Bỏ qua chống gian lận",
+                Text = "Anticheat Bypass",
                 Default = false
             })
         end
 
         local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bypass") do
             Mines_BypassGroupBox:AddToggle("MinecartTeleport", {
-                Text = "Dịch chuyển xe mỏ(floor2)",
+                Text = "Dịch chuyển xe mỏ",
                 Default = false
             })
 
             Mines_BypassGroupBox:AddToggle("MinecartTeleportDebug", {
-                Text = "Vá lỗi dịch chuyển xe(floor2)",
+                Text = "Vá lỗi dịch chuyển",
                 Default = false,
                 Visible = false,
             })
         end
         
-        local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Hỗ trợ") do
+        local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visuals") do
             Mines_VisualGroupBox:AddToggle("MinecartPathVisualiser", {
-                Text = "Hiển thị đúng đường cần chạy(Floor2)",
+                Text = "Hiển thị đường đi chính xác(seek)",
                 Default = false
             })
         end
 
         Toggles.TheMinesAnticheatBypass:OnChanged(function(value)
-    if value then
-        local progressPart = Instance.new("Part", Workspace) do
-            progressPart.Anchored = true
-            progressPart.CanCollide = false
-            progressPart.Name = "_internal_mspaint_acbypassprogress"
-            progressPart.Transparency = 1
-        end
+            if value then
+                local progressPart = Instance.new("Part", Workspace) do
+                    progressPart.Anchored = true
+                    progressPart.CanCollide = false
+                    progressPart.Name = "_internal_mspaint_acbypassprogress"
+                    progressPart.Transparency = 1
+                end
 
-        if Library.IsMobile then
-            Script.Functions.Alert({
-                Title = "Vượt qua chống gian lận",
-                Description = "Để vượt qua hệ thống chống gian lận, bạn phải tương tác với cầu thang.",
-                Reason = "Ladder ESP đã được kích hoạt, không di chuyển khi ở trên cầu thang.",
+                if Library.IsMobile then
+                    Script.Functions.Alert({
+                        Title = "Anticheat bypass",
+                        Description = "To bypass the ac, you must interact with a ladder.",
+                        Reason = "Ladder ESP has been enabled, do not move while on the ladder.",
 
-                LinoriaMessage = "Để vượt qua hệ thống chống gian lận, bạn phải tương tác với cầu thang. Ladder ESP đã được kích hoạt.\nKhông di chuyển khi ở trên cầu thang.",
-                Time = progressPart
-            })
-        else
-            Script.Functions.Alert({
-                Title = "Vượt qua chống gian lận",
-                Description = "Để vượt qua hệ thống chống gian lận, bạn phải tương tác với cầu thang.",
-                Reason = "Ladder ESP đã được kích hoạt, không di chuyển khi ở trên cầu thang.",
+                        LinoriaMessage = "To bypass the anticheat, you must interact with a ladder. Ladder ESP has been enabled.\nDo not move while on the ladder.",
+                        Time = progressPart
+                    })
+                else
+                    Script.Functions.Alert({
+                        Title = "Anticheat bypass",
+                        Description = "To bypass the ac, you must interact with a ladder.",
+                        Reason = "Ladder ESP has been enabled, do not move while on the ladder.",
 
-                LinoriaMessage = "Để vượt qua hệ thống chống gian lận, bạn phải tương tác với cầu thang. Ladder ESP đã được kích hoạt.\nKhông di chuyển khi ở trên cầu thang.",
-                Time = progressPart
-            })
-        end
-    end
-end)
+                        LinoriaMessage = "To bypass the anticheat, you must interact with a ladder. Ladder ESP has been enabled.\nDo not move while on the ladder.",
+                        Time = progressPart
+                    })
+                end
+                
 
                 -- Ladder ESP
                 for _, v in pairs(workspace.CurrentRooms:GetDescendants()) do
@@ -3385,7 +3365,7 @@ end)
     elseif isBackdoor then
         local Backdoors_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
             Backdoors_AntiEntityGroupBox:AddToggle("AntiHasteJumpscare", {
-                Text = "Chặn haste dọa",
+                Text = "Anti Haste Jumpscare",
                 Default = false
             })
         end
@@ -4143,17 +4123,17 @@ Toggles.FakeRevive:OnChanged(function(value)
     if value and alive and character and not Script.FakeRevive.Enabled then
         if latestRoom and latestRoom.Value == 0 then
             Script.Functions.Alert({
-                Title = "Fake Revive",
-                Description = "You have to open the next door to use fake revive",
-                Reason = "You are in the first room"
+                Title = "Giá hồi sinh",
+                Description = "Bạn cần phải sang cửa tiếp theo để sử dụng tính năng này",
+                Reason = "Bạn đang ở phòng đầu tiên"
             })
             repeat task.wait() until latestRoom.Value > 0
         end
 
         Script.Functions.Alert({
-            Title = "Fake Revive",
-            Description = "Please find a way to die or wait for around 20 seconds\nfor fake revive to work.",
-            Reason = "You are not yet dead",
+            Title = "Giả hồi sinh",
+            Description = "Bạn phải tìm đường hẹo hoặc chờ 20 giây để tính năng này hoạt động",
+            Reason = "Bạn vẫn chưa hẹo",
             Time = 20
         })
         
@@ -4179,9 +4159,9 @@ Toggles.FakeRevive:OnChanged(function(value)
         if alive and not Toggles.FakeRevive.Value then
             remotesFolder.Underwater:FireServer(false)
             Script.Functions.Alert({
-                Title = "Fake Revive",
-                Description = "Fake revive has been disabled, was unable to kill player.",
-                Reason = "You are not yet dead",
+                Title = "Giả hồi sinh",
+                Description = "Đã tắt tính năng, hệ thống sẽ không xóa bạn",
+                Reason = "Bạn vẫn chưa chết",
             })
             oxygenModule.Enabled = true
             healthModule.Enabled = true
@@ -4189,7 +4169,7 @@ Toggles.FakeRevive:OnChanged(function(value)
         end
 
         Toggles.SpeedBypass:SetValue(false)
-        Options.SpeedSlider:SetMax(25)
+        Options.SpeedSlider:SetValue(25))
         Options.FlySpeed:SetMax(75)
 
         Script.FakeRevive.Enabled = true
