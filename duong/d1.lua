@@ -459,7 +459,7 @@ local _mspaint_custom_captions = Instance.new("ScreenGui") do
     TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel.BorderSizePixel = 0
     TextLabel.Size = UDim2.new(1, 0, 1, 0)
-    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.Font = Enum.Font.Code
     TextLabel.Text = ""
     TextLabel.TextColor3 = Library.FontColor
     TextLabel.TextScaled = true
@@ -6189,7 +6189,7 @@ SaveManager:SetLibrary(Library)
 
 SaveManager:IgnoreThemeSettings()
 
-SaveManager:SetFolder("mspaint/doors")
+SaveManager:SetFolder("Duong/doors")
 
 SaveManager:BuildConfigSection(Tabs["UI Settings"])
 
@@ -6201,6 +6201,6 @@ Script.Functions.UpdateRPC()
 getgenv().mspaint_loaded = true
 
 Script.Functions.Alert({
-Title = "Doors",
-Description = "Chào mừng bạn đến với Dương Api",
+Title = "Doors-Dương Api",
+Description = "Cảm ơn vì đã sài dự án",
 })
