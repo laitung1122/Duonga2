@@ -1320,16 +1320,16 @@ do
             
             if collision:IsDescendantOf(workspace) and (collision.Parent and collision.Parent.Name == "TriggerEventCollision") then
                 Script.Functions.Alert({
-                    Title = "Dương-Api",
-                    Description = "Đang xóa seek...",
+                    Title = "Delete Seek FE",
+                    Description = "Deleting Seek trigger...",
                     Reason = "",
                 })
     
                 task.delay(4, function()
                     if collision:IsDescendantOf(workspace) then
                         Script.Functions.Alert({
-                            Title = "Dương-Api",
-                            Description = "Xóa seek không thành công!",
+                            Title = "Delete Seek FE",
+                            Description = "Failed to delete Seek trigger!",
                             Reason = "",
                         })
                     end
@@ -1354,8 +1354,8 @@ do
                 
                 if not collision:IsDescendantOf(workspace) then
                     Script.Functions.Log({
-                        Title = "Dương-Api",
-                        Description = "Đã xóa seek thành công!",
+                        Title = "Delete Seek FE",
+                        Description = "Deleted Seek trigger successfully!",
                     })
                 end
             end
@@ -2014,8 +2014,8 @@ do
                     progressPart.Transparency = 1
                 end
                 Script.Functions.Alert({
-                    Title = "Hệ thống tự động",
-                    Description = "Dịch chuyển xe mỏ đã sẵn sàng! Đang chờ lên xe mỏ...",
+                    Title = "Minecart Teleport",
+                    Description = "Dịch chuyển xe mỏ đã sẵn sàng! Đang chờ có xe mỏ...",
     
                     Time = progressPart
                 })
@@ -3216,7 +3216,7 @@ task.spawn(function()
             })
 
             Mines_BypassGroupBox:AddToggle("MinecartTeleportDebug", {
-                Text = "Vá lỗi dịch chuyển",
+                Text = "Minecart Teleport Debug",
                 Default = false,
                 Visible = false,
             })
@@ -3224,7 +3224,7 @@ task.spawn(function()
         
         local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visuals") do
             Mines_VisualGroupBox:AddToggle("MinecartPathVisualiser", {
-                Text = "Hiển thị đường đi chính xác(seek)",
+                Text = "Hiển thị đúng đường cần chạy(seek)",
                 Default = false
             })
         end
@@ -3281,7 +3281,7 @@ task.spawn(function()
                     remotesFolder.ClimbLadder:FireServer()
                     bypassed = false
                     
-                    Options.SpeedSlider:SetMax(Toggles.SpeedBypass.Value and 25 or (Toggles.EnableJump.Value and 3 or 7))
+                    Options.SpeedSlider:SetMax(Toggles.SpeedBypass.Value and 45 or (Toggles.EnableJump.Value and 3 or 7))
                     Options.FlySpeed:SetMax(Toggles.SpeedBypass.Value and 75 or 22)
                 end
             end
@@ -4105,14 +4105,14 @@ end)
 
 Toggles.SpeedBypass:OnChanged(function(value)
     if value then
-        Options.SpeedSlider:SetMax(25)
+        Options.SpeedSlider:SetMax(45)
         Options.FlySpeed:SetMax(75)
         
         Script.Functions.SpeedBypass()
     else
         if Script.FakeRevive.Enabled then return end
 
-        local speed = if bypassed then 25 elseif Toggles.EnableJump.Value then 3 else 7
+        local speed = if bypassed then 45 elseif Toggles.EnableJump.Value then 3 else 7
 
         Options.SpeedSlider:SetMax(speed)
         Options.FlySpeed:SetMax((isMines and Toggles.TheMinesAnticheatBypass.Value and bypassed) and 75 or 22)
@@ -4123,17 +4123,17 @@ Toggles.FakeRevive:OnChanged(function(value)
     if value and alive and character and not Script.FakeRevive.Enabled then
         if latestRoom and latestRoom.Value == 0 then
             Script.Functions.Alert({
-                Title = "Giá hồi sinh",
-                Description = "Bạn cần phải sang cửa tiếp theo để sử dụng tính năng này",
-                Reason = "Bạn đang ở phòng đầu tiên"
+                Title = "Fake Revive",
+                Description = "You have to open the next door to use fake revive",
+                Reason = "You are in the first room"
             })
             repeat task.wait() until latestRoom.Value > 0
         end
 
         Script.Functions.Alert({
-            Title = "Giả hồi sinh",
-            Description = "Bạn phải tìm đường hẹo hoặc chờ 20 giây để tính năng này hoạt động",
-            Reason = "Bạn vẫn chưa hẹo",
+            Title = "Fake Revive",
+            Description = "Please find a way to die or wait for around 20 seconds\nfor fake revive to work.",
+            Reason = "You are not yet dead",
             Time = 20
         })
         
@@ -4159,9 +4159,9 @@ Toggles.FakeRevive:OnChanged(function(value)
         if alive and not Toggles.FakeRevive.Value then
             remotesFolder.Underwater:FireServer(false)
             Script.Functions.Alert({
-                Title = "Giả hồi sinh",
-                Description = "Đã tắt tính năng, hệ thống sẽ không xóa bạn",
-                Reason = "Bạn vẫn chưa chết",
+                Title = "Fake Revive",
+                Description = "Fake revive has been disabled, was unable to kill player.",
+                Reason = "You are not yet dead",
             })
             oxygenModule.Enabled = true
             healthModule.Enabled = true
@@ -4169,7 +4169,7 @@ Toggles.FakeRevive:OnChanged(function(value)
         end
 
         Toggles.SpeedBypass:SetValue(false)
-        Options.SpeedSlider:SetValue(25))
+        Options.SpeedSlider:SetMax(45)
         Options.FlySpeed:SetMax(75)
 
         Script.FakeRevive.Enabled = true
@@ -5158,7 +5158,7 @@ if isBackdoor then
 
             Script.Functions.Alert({
                 Title = "ENTITIES",
-                Description = "Haste đang đến, vui lòng tìm cần gạt càng sớm càng tốt!",
+                Description = "Haste is incoming, please find a lever ASAP!",
                 Time = haste_incoming_progress,
 
                 Warning = true
@@ -5555,7 +5555,7 @@ Library:GiveSignal(localPlayer:GetAttributeChangedSignal("CurrentRoom"):Connect(
             LinoriaMessage = "Halt has broken anticheat bypass, please go on a ladder again to fix it.",
         })
 
-        Options.SpeedSlider:SetMax(Toggles.SpeedBypass.Value and 25 or (Toggles.EnableJump.Value and 3 or 7))
+        Options.SpeedSlider:SetMax(Toggles.SpeedBypass.Value and 45 or (Toggles.EnableJump.Value and 3 or 7))
         Options.FlySpeed:SetMax(Toggles.SpeedBypass.Value and 75 or 22)
     end
 
