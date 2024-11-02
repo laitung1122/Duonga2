@@ -375,6 +375,25 @@ local MinecartPathNodeColor = {
     Cyan = Color3.new(0, 1, 1),
     Orange = Color3.new(1, 0.5, 0),
     White = Color3.new(1, 1, 1),
+    Black = Color3.new(0, 0, 0),
+    Blue = Color3.new(0, 0, 1),
+    Pink = Color3.new(1, 0.75, 0.8),
+    Brown = Color3.new(0.6, 0.4, 0.2),
+    Grey = Color3.new(0.5, 0.5, 0.5),
+    LightGrey = Color3.new(0.75, 0.75, 0.75),
+    DarkGrey = Color3.new(0.25, 0.25, 0.25),
+    Lime = Color3.new(0.5, 1, 0),
+    Magenta = Color3.new(1, 0, 1),
+    Maroon = Color3.new(0.5, 0, 0),
+    Navy = Color3.new(0, 0, 0.5),
+    Olive = Color3.new(0.5, 0.5, 0),
+    Teal = Color3.new(0, 0.5, 0.5),
+    Lavender = Color3.new(0.9, 0.6, 1),
+    Beige = Color3.new(0.96, 0.96, 0.86),
+    Peach = Color3.new(1, 0.85, 0.7),
+    Mint = Color3.new(0.6, 1, 0.6),
+    Coral = Color3.new(1, 0.5, 0.31),
+    LightBlue = Color3.new(0.68, 0.85, 0.9), -- Xanh nước biển nhạt
 }
 
 local MinecartPathfind = {
@@ -2015,7 +2034,7 @@ do
                 end
                 Script.Functions.Alert({
                     Title = "Minecart Teleport",
-                    Description = "Dịch chuyển xe mỏ đã sẵn sàng! Đang chờ có xe mỏ...",
+                    Description = "Dịch chuyển xe mỏ đã sẵn sàng! Đang chờ lên xe mỏ...",
     
                     Time = progressPart
                 })
@@ -2053,7 +2072,7 @@ do
     --If ESP Toggle is changed, you can call this function directly.
     function Script.Functions.Minecart.DrawNodes()
         local pathESP_enabled = Toggles.MinecartPathVisualiser.Value
-        local espRealColor = pathESP_enabled and MinecartPathNodeColor.Green or MinecartPathNodeColor.Disabled
+        local espRealColor = pathESP_enabled and MinecartPathNodeColor.LightBlue or MinecartPathNodeColor.Disabled
         
         for idx, path: tPathfind in ipairs(MinecartPathfind) do
             if path.esp and pathESP_enabled then continue end -- if status is unchanged.
@@ -3204,27 +3223,27 @@ task.spawn(function()
             })
 
             Mines_AutomationGroupBox:AddToggle("TheMinesAnticheatBypass", {
-                Text = "Anticheat Bypass",
+                Text = "Bỏ qua chống gian lận",
                 Default = false
             })
         end
 
         local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bypass") do
             Mines_BypassGroupBox:AddToggle("MinecartTeleport", {
-                Text = "Minecart Teleport",
+                Text = "Dịch chuyển xe mỏ(floor2)",
                 Default = false
             })
 
             Mines_BypassGroupBox:AddToggle("MinecartTeleportDebug", {
-                Text = "Minecart Teleport Debug",
+                Text = "Vá lỗi dịch chuyển xe(floor2)",
                 Default = false,
                 Visible = false,
             })
         end
         
-        local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visuals") do
+        local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Hỗ trợ") do
             Mines_VisualGroupBox:AddToggle("MinecartPathVisualiser", {
-                Text = "Visualize Correct Seek Path",
+                Text = "Hiển thị đúng đường cần chạy(Floor2)",
                 Default = false
             })
         end
@@ -3365,7 +3384,7 @@ task.spawn(function()
     elseif isBackdoor then
         local Backdoors_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
             Backdoors_AntiEntityGroupBox:AddToggle("AntiHasteJumpscare", {
-                Text = "Anti Haste Jumpscare",
+                Text = "Chặn haste dọa",
                 Default = false
             })
         end
