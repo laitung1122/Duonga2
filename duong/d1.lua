@@ -4124,14 +4124,14 @@ end)
 
 Toggles.SpeedBypass:OnChanged(function(value)
     if value then
-        Options.SpeedSlider:SetMax(45)
+        Options.SpeedSlider:SetMax(25)
         Options.FlySpeed:SetMax(75)
         
         Script.Functions.SpeedBypass()
     else
         if Script.FakeRevive.Enabled then return end
 
-        local speed = if bypassed then 45 elseif Toggles.EnableJump.Value then 3 else 7
+        local speed = if bypassed then 25 elseif Toggles.EnableJump.Value then 3 else 7
 
         Options.SpeedSlider:SetMax(speed)
         Options.FlySpeed:SetMax((isMines and Toggles.TheMinesAnticheatBypass.Value and bypassed) and 75 or 22)
@@ -4188,7 +4188,7 @@ Toggles.FakeRevive:OnChanged(function(value)
         end
 
         Toggles.SpeedBypass:SetValue(false)
-        Options.SpeedSlider:SetMax(45)
+        Options.SpeedSlider:SetMax(25)
         Options.FlySpeed:SetMax(75)
 
         Script.FakeRevive.Enabled = true
@@ -5574,7 +5574,7 @@ Library:GiveSignal(localPlayer:GetAttributeChangedSignal("CurrentRoom"):Connect(
             LinoriaMessage = "Halt has broken anticheat bypass, please go on a ladder again to fix it.",
         })
 
-        Options.SpeedSlider:SetMax(Toggles.SpeedBypass.Value and 45 or (Toggles.EnableJump.Value and 3 or 7))
+        Options.SpeedSlider:SetMax(Toggles.SpeedBypass.Value and 25 or (Toggles.EnableJump.Value and 3 or 7))
         Options.FlySpeed:SetMax(Toggles.SpeedBypass.Value and 75 or 22)
     end
 
