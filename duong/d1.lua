@@ -2844,7 +2844,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     local ESPSettingsTab = ESPTabBox:AddTab("Cài đặt") do
         ESPSettingsTab:AddToggle("ESPHighlight", {
             Text = "Đường kẻ sáng",
-            Default = true,
+            Default = false,
         })
 
         ESPSettingsTab:AddToggle("ESPTracer", {
@@ -6199,10 +6199,8 @@ SaveManager:LoadAutoloadConfig()
 
 Script.Functions.UpdateRPC()
 getgenv().mspaint_loaded = true
-                                            
-game:GetService("StarterGui"):SetCore("SendNotification",{
-Title = "Door script load succesfully!",
-Text = "Script mod by Dương", 
-Duration = 5
+
+Script.Functions.Alert({
+Title = "Doors",
+Description = "Chào mừng bạn đến với Dương Api",
 })
-                                            
