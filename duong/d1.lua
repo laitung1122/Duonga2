@@ -815,8 +815,14 @@ do
             OutlineTransparency = Options.ESPOutlineTransparency.Value,
     
             Tracer = {
-                Enabled = Toggles.ESPTracer.Value,
+                Enabled = true,
                 From = Options.ESPTracerStart.Value,
+                Color = ESPManager.Color
+            },
+        
+            Arrow = {
+                Enabled = true,
+                CenterOffset = Options.ESPArrowCenterOffset.Value,
                 Color = ESPManager.Color
             },
     
