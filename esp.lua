@@ -1,4 +1,3 @@
-
 -- local getgenvFunc = typeof(getgenv) == "function" and getgenv;
 local global = getgenv; -- function() return getgenvFunc and getgenvFunc() or _G; end
 
@@ -13,19 +12,19 @@ local __PREFIX = "mstudio45's ESP"
 local Library = {
     -- // Loggin // --
     Print = function(...)
-        if __LOG ~= true then return end;
+        if __LOG ~= true then return end; 
         print("[💭 INFO] " .. __PREFIX .. ":", ...);
     end,
     Warn = function(...)
-        if __LOG ~= true then return end;
+        if __LOG ~= true then return end; 
         warn("[⚠ WARN] " .. __PREFIX .. ":", ...);
     end,
     Error = function(...)
-        if __LOG ~= true then return end;
+        if __LOG ~= true then return end; 
         error("[🆘 ERROR] " .. __PREFIX .. ":", ...);
     end,
-    Debug = function(...)
-        if __DEBUG ~= true or __LOG ~= true then return end;
+    Debug = function(...) 
+        if __DEBUG ~= true or __LOG ~= true then return end; 
         print("[🛠 DEBUG] " .. __PREFIX .. ":", ...);
     end,
 
@@ -36,11 +35,11 @@ local Library = {
     -- // Storage // --
     ESP = {
         Billboards = {},
+        Arrows = {},
+
         Adornments = {},
         Highlights = {},
         Outlines = {},
-
-        Arrows = {},
         Tracers = {}
     },
 
@@ -52,7 +51,7 @@ function Library.Connections.Add(connection, keyName, stopWhenKey)
     local totalCount = 0; for _, v in pairs(Library.Connections.List) do totalCount = totalCount + 1; end
     local key = table.find({ "string", "number" }, typeof(keyName)) and tostring(keyName) or totalCount + 1;
 
-    if table.find(Library.Connections.List, key) or typeof(Library.Connections.List[key]) == "RBXScriptConnection" then
+    if table.find(Library.Connections.List, key) or typeof(Library.Connections.List[key]) == "RBXScriptConnection" then 
         Library.Warn(key, "already exists in Connections!")
         if stopWhenKey then return; end
 
@@ -75,111 +74,58 @@ function Library.Connections.Remove(key)
     end
 end;
 
---// Global Toggles \\--
-Library.Adornments = {
-    Enabled = true,
-
-    Set = function(bool)
-        if typeof(bool) == "boolean" then
-            Library.Adornments.Enabled = bool;
-        end;
-    end,
-    Enable = function() Library.Adornments.Enabled = true; end,
-    Disable = function() Library.Adornments.Enabled = false; end,
-    Toggle = function() Library.Adornments.Enabled = not Library.Adornments.Enabled; end
-};
-
-Library.Billboards = {
-    Enabled = true,
-
-    Set = function(bool)
-        if typeof(bool) == "boolean" then
-            Library.Billboards.Enabled = bool;
-        end;
-    end,
-    Enable = function() Library.Billboards.Enabled = true; end,
-    Disable = function() Library.Billboards.Enabled = false; end,
-    Toggle = function() Library.Billboards.Enabled = not Library.Billboards.Enabled; end
-};
-
-Library.Highlights = {
-    Enabled = true,
-
-    Set = function(bool)
-        if typeof(bool) == "boolean" then
-            Library.Highlights.Enabled = bool;
-        end;
-    end,
-    Enable = function() Library.Highlights.Enabled = true; end,
-    Disable = function() Library.Highlights.Enabled = false; end,
-    Toggle = function() Library.Highlights.Enabled = not Library.Highlights.Enabled; end
-};
-
-Library.Outlines = {
-    Enabled = true,
-
-    Set = function(bool)
-        if typeof(bool) == "boolean" then
-            Library.Outlines.Enabled = bool;
-        end;
-    end,
-    Enable = function() Library.Outlines.Enabled = true; end,
-    Disable = function() Library.Outlines.Enabled = false; end,
-    Toggle = function() Library.Outlines.Enabled = not Library.Outlines.Enabled; end
-};
-
 Library.Distance = {
     Enabled = true,
 
-    Set = function(bool)
-        if typeof(bool) == "boolean" then
+    Set = function(bool) 
+        if (bool == true or bool == false) then
             Library.Distance.Enabled = bool;
-        end;
+        end; 
     end,
     Enable = function() Library.Distance.Enabled = true; end,
     Disable = function() Library.Distance.Enabled = false; end,
-    Toggle = function() Library.Distance.Enabled = not Library.Distance.Enabled; end
-};
+    Toggle = function() Library.Distance.Enabled = not Library.Enabled; end
+}
 
 Library.Tracers = {
     Enabled = true,
 
-    Set = function(bool)
-        if typeof(bool) == "boolean" then
+    Set = function(bool) 
+        if (bool == true or bool == false) then
             Library.Tracers.Enabled = bool;
-        end;
+        end; 
     end,
     Enable = function() Library.Tracers.Enabled = true; end,
     Disable = function() Library.Tracers.Enabled = false; end,
-    Toggle = function() Library.Tracers.Enabled = not Library.Tracers.Enabled; end
-};
+    Toggle = function() Library.Tracers.Enabled = not Library.Enabled; end
+}
 
 Library.Arrows = {
     Enabled = true,
 
-    Set = function(bool)
-        if typeof(bool) == "boolean" then
+    Set = function(bool) 
+        if (bool == true or bool == false) then
             Library.Arrows.Enabled = bool;
-        end;
+        end; 
     end,
     Enable = function() Library.Arrows.Enabled = true; end,
     Disable = function() Library.Arrows.Enabled = false; end,
-    Toggle = function() Library.Arrows.Enabled = not Library.Arrows.Enabled; end
-};
+    Toggle = function() Library.Arrows.Enabled = not Library.Enabled; end
+}
 
 Library.Rainbow = {
     HueSetup = 0, Hue = 0, Step = 0,
     Color = Color3.new(),
     Enabled = false,
 
-    Set = function(bool)
-        if typeof(bool) == "boolean" then
+    Set = function(bool) 
+        if (bool == true or bool == false) then
             Library.Rainbow.Enabled = bool;
-        end;
+        end; 
     end,
     Enable = function() Library.Rainbow.Enabled = true; end,
     Disable = function() Library.Rainbow.Enabled = false; end,
-    Toggle = function() Library.Rainbow.Enabled = not Library.Rainbow.Enabled; end
+    Toggle = function() Library.Rainbow.Enabled = not Library.Enabled; end
 };
 
 -- // Services // --
@@ -365,13 +311,13 @@ local function createDeleteFunction(TableName, TableIndex, Table)
                         Library.Debug("Removing tracer...");
                         deleteTracer(uiTable.TracerInstance)
                     end
-
+        
                     local tracerTable = getTracerTable(uiTable);
                     if tracerTable ~= nil then
                         Library.Debug("Removing tracer (#2)...");
                         deleteTracer(tracerTable.TracerInstance)
                     end
-
+        
                     Library.Debug("Tracer deleted!");
                 else
                     if uiTable.TracerInstance ~= nil then
@@ -427,9 +373,8 @@ Library.Folders.GUI.IgnoreGuiInset = true;
 -- // ESP Templates // --
 local Templates = {
     Billboard = {
-        Name = "Instance",
+        Name = "Instance", 
         Model = nil,
-        TextModel = nil,
         Visible = true,
         MaxDistance = 5000,
         StudsOffset = Vector3.new(),
@@ -438,7 +383,6 @@ local Templates = {
         Color = Color3.new(),
         WasCreatedWithDifferentESP = false,
 
-        Hidden = false,
         OnDestroy = nil,
     },
 
@@ -452,7 +396,6 @@ local Templates = {
         WasCreatedWithDifferentESP = false,
 
         FlipOnScreenCheck = false,
-        Hidden = false,
         OnDestroy = nil,
     },
 
@@ -470,15 +413,12 @@ local Templates = {
         Thickness = 2,
         Transparency = 0.65,
 
-        Hidden = false,
         OnDestroy = nil,
     },
 
     Highlight = {
-        Name = "Instance",
+        Name = "Instance", 
         Model = nil,
-        TextModel = nil,
-
         Visible = true,
         MaxDistance = 5000,
         StudsOffset = Vector3.new(),
@@ -491,15 +431,12 @@ local Templates = {
         FillTransparency = 0.65,
         OutlineTransparency = 0,
 
-        Hidden = false,
         OnDestroy = nil,
     },
 
     Adornment = {
-        Name = "Instance",
+        Name = "Instance", 
         Model = nil,
-        TextModel = nil,
-
         Visible = true,
         MaxDistance = 5000,
         StudsOffset = Vector3.new(),
@@ -511,15 +448,12 @@ local Templates = {
         Transparency = 0.65,
         Type = "Box", -- // Box, Cylinder, Sphere // --
 
-        Hidden = false,
         OnDestroy = nil,
     },
 
     Outline = {
-        Name = "Instance",
+        Name = "Instance", 
         Model = nil,
-        TextModel = nil,
-
         Visible = true,
         MaxDistance = 5000,
         StudsOffset = Vector3.new(),
@@ -532,7 +466,6 @@ local Templates = {
         Thickness = 0.04, -- 2
         Transparency = 0.65,
 
-        Hidden = false,
         OnDestroy = nil,
     }
 }
@@ -562,10 +495,10 @@ function Library.ESP.Clear()
         if typeof(uiTable) ~= "table" then continue; end
 
         Library.Debug("Clearing '" .. tostring(_) .. "' ESP...")
-        for _, uiElement in pairs(uiTable) do
+        for _, uiElement in pairs(uiTable) do 
             if not uiElement then continue; end
             -- task.spawn(function()
-            if typeof(uiElement) == "table" and typeof(uiElement.Destroy) == "function" then
+            if typeof(uiElement) == "table" and typeof(uiElement.Destroy) == "function" then 
                 local success, errorMessage = pcall(function()
                     uiElement.Destroy()
                 end);
@@ -592,7 +525,6 @@ function Library.ESP.Billboard(args)
     assert(typeof(args) == "table", "args must be a table.");
     args = Library.Validate(args, Templates.Billboard);
     assert(typeof(args.Model) == "Instance", "args.Model must be an Instance.");
-    args.TextModel = typeof(args.TextModel) == "Instance" and args.TextModel or args.Model;
 
     Library.Debug("Creating Billboard '" .. tostring(args.Name) .. "'...")
     -- // Instances // --
@@ -607,7 +539,7 @@ function Library.ESP.Billboard(args)
         Size = UDim2.new(0, 200, 0, 50),
         StudsOffset = args.StudsOffset,
 
-        Adornee = args.TextModel
+        Adornee = args.Model
     });
 
     local Text = createInstance("TextLabel", {
@@ -644,7 +576,7 @@ function Library.ESP.Billboard(args)
 
         Settings = args,
         UIElements = {
-            GUI,
+            GUI, 
             Text
         },
         TracerInstance = nil
@@ -655,15 +587,10 @@ function Library.ESP.Billboard(args)
             if not parent then
                 BillboardTable.Destroy();
             end
-        end)),
-
-        Library.Connections.Add(args.Model.Destroying:Connect(function()
-            BillboardTable.Destroy();
         end))
     };
 
     -- // Delete Handler // --
-    BillboardTable.Hidden = args.Hidden;
     BillboardTable.Deleted = false;
     BillboardTable.Destroy = createDeleteFunction(TableName, TableIndex, BillboardTable);
     BillboardTable.OnDestroy = args.OnDestroy;
@@ -681,16 +608,13 @@ function Library.ESP.Billboard(args)
 
         local _Color = typeof(args.Color) == "Color3" and args.Color or BillboardTable.Settings.Color;
         local _TextSize = typeof(args.TextSize) == "number" and args.TextSize or BillboardTable.Settings.TextSize;
-        local _TextModel = typeof(args.TextModel) == "Instance" and args.TextModel or BillboardTable.Settings.TextModel;
 
         Text.TextColor3 = _Color;
-        Text.TextSize = _TextSize;
-        GUI.Adornee = _TextModel or BillboardTable.Settings.Model;
-
+        Text.TextSize = _TextSize
+        
         if updateVariables ~= false then
-            BillboardTable.Settings.Color       = _Color;
-            BillboardTable.Settings.TextSize    = _TextSize;
-            BillboardTable.Settings.TextModel   = _TextModel;
+            BillboardTable.Settings.Color = _Color;
+            BillboardTable.Settings.TextSize = _TextSize;
 
             BillboardTable.Settings.MaxDistance = typeof(args.MaxDistance) == "number" and args.MaxDistance or BillboardTable.Settings.MaxDistance;
         end
@@ -766,27 +690,22 @@ function Library.ESP.Arrow(args)
             if not parent then
                 ArrowTable.Destroy();
             end
-        end)),
-
-        Library.Connections.Add(args.Model.Destroying:Connect(function()
-            ArrowTable.Destroy();
         end))
     };
 
     -- // Delete Handler // --
-    ArrowTable.Hidden = args.Hidden;
     ArrowTable.Deleted = false;
     ArrowTable.Destroy = createDeleteFunction(TableName, TableIndex, ArrowTable);
     ArrowTable.OnDestroy = args.OnDestroy;
     --ArrowTable.Delete = ArrowTable.Destroy;
-
+    
     ArrowTable.Update = function(args, updateVariables)
         if ArrowTable.Deleted or not Arrow then return; end
         args = Library.Validate(args, ArrowTable.Settings);
 
-        local _Color = if typeof(args.Color) == "Color3" then args.Color else ArrowTable.Settings.Color;
-        Arrow.ImageColor3 = _Color;
-
+        local _Color = if typeof(args.Color) == "Color3" then args.Color else ArrowTable.Settings.Color;                         
+        Arrow.ImageColor3 = _Color;                      
+        
         if updateVariables ~= false then
             ArrowTable.Settings.Color = _Color;
             ArrowTable.Settings.CenterOffset = if typeof(args.CenterOffset) == "number" then args.CenterOffset else ArrowTable.Settings.CenterOffset;
@@ -863,22 +782,17 @@ function Library.ESP.Tracer(args)
         Settings = args,
         TracerInstance = TracerInstance,
         IsNormalTracer = true
-    };
+    }; 
 
     TracerTable.Connections = {
         Library.Connections.Add(args.Model.AncestryChanged:Connect(function(_, parent)
             if not parent then
                 TracerTable.Destroy();
             end
-        end)),
-
-        Library.Connections.Add(args.Model.Destroying:Connect(function()
-            TracerTable.Destroy();
         end))
     };
 
     -- // Delete Handler // --
-    TracerTable.Hidden = args.Hidden;
     TracerTable.Deleted = false;
     TracerTable.Destroy = createDeleteFunction(TableName, TableIndex, TracerTable);
     TracerTable.OnDestroy = args.OnDestroy;
@@ -899,7 +813,7 @@ function Library.ESP.Tracer(args)
         TracerTable.TracerInstance.Thickness = _Thickness
         TracerTable.TracerInstance.Transparency = _Transparency;
         TracerTable.TracerInstance.Visible = _Visible;
-
+        
         if updateVariables ~= false then
             TracerTable.Settings.Color         = _Color;
             TracerTable.Settings.Thickness     = _Thickness;
@@ -925,18 +839,18 @@ end
 function Library.ESP.Highlight(args)
     assert(typeof(args) == "table", "args must be a table.");
     args = Library.Validate(args, Templates.Highlight)
-
+    
     -- // Tracer // --
-    do
-        args.Tracer = Library.Validate(args.Tracer, Templates.Tracer);
-        args.Tracer.Enabled = typeof(args.Tracer.Enabled) ~= "boolean" and false or args.Tracer.Enabled;
+    do 
+        args.Tracer = Library.Validate(args.Tracer, Templates.Tracer); 
+        args.Tracer.Enabled = typeof(args.Tracer.Enabled) ~= "boolean" and false or args.Tracer.Enabled; 
         args.Tracer.Model = args.Model;
     end
 
     -- // Arrow // --
-    do
-        args.Arrow = Library.Validate(args.Arrow, Templates.Arrow);
-        args.Arrow.Enabled = typeof(args.Arrow.Enabled) ~= "boolean" and false or args.Arrow.Enabled;
+    do 
+        args.Arrow = Library.Validate(args.Arrow, Templates.Arrow); 
+        args.Arrow.Enabled = typeof(args.Arrow.Enabled) ~= "boolean" and false or args.Arrow.Enabled; 
         args.Arrow.Model = args.Model;
     end
 
@@ -944,14 +858,11 @@ function Library.ESP.Highlight(args)
 
     Library.Debug("Creating Highlight '" .. tostring(args.Name) .. "'...")
     local BillboardTable = Library.ESP.Billboard({
-        Name = args.Name,
+        Name = args.Name, 
         Model = args.Model,
-        TextModel = typeof(args.TextModel) == "Instance" and args.TextModel or nil,
-
         MaxDistance = args.MaxDistance,
         StudsOffset = args.StudsOffset,
         Color = args.TextColor,
-
         WasCreatedWithDifferentESP = true
     });
 
@@ -970,7 +881,7 @@ function Library.ESP.Highlight(args)
     local TableName = "Highlights";
     local TableIndex = randomString();
 
-    local HighlightTable = {
+    local HighlightTable = { 
         TableIndex = TableIndex, TableName = TableName,
 
         Settings = args,
@@ -978,21 +889,16 @@ function Library.ESP.Highlight(args)
         TracerInstance = args.Tracer.Enabled == true and Library.ESP.Tracer(args.Tracer) or nil,
         BillboardInstance = BillboardTable,
         ArrowInstance = args.Arrow.Enabled == true and Library.ESP.Arrow(args.Arrow) or nil
-    };
+    }; 
     HighlightTable.Connections = {
         Library.Connections.Add(args.Model.AncestryChanged:Connect(function(_, parent)
             if not parent then
                 HighlightTable.Destroy();
             end
-        end)),
-
-        Library.Connections.Add(args.Model.Destroying:Connect(function()
-            HighlightTable.Destroy();
         end))
     };
 
     -- // Delete Handler // --
-    HighlightTable.Hidden = args.Hidden;
     HighlightTable.Deleted = false;
     HighlightTable.Destroy = createDeleteFunction(TableName, TableIndex, HighlightTable);
     HighlightTable.OnDestroy = args.OnDestroy;
@@ -1002,13 +908,13 @@ function Library.ESP.Highlight(args)
 
     HighlightTable.Update = function(args, updateVariables)
         if HighlightTable.Deleted or (not Highlight and not BillboardTable) then return; end
-
-        if HighlightTable.TracerInstance ~= nil and typeof(args.Tracer) == "table" then
-            HighlightTable.TracerInstance.Update(args.Tracer, updateVariables);
+    
+        if HighlightTable.TracerInstance ~= nil and typeof(args.Tracer) == "table" then 
+            HighlightTable.TracerInstance.Update(args.Tracer, updateVariables); 
         end;
 
-        if HighlightTable.ArrowInstance ~= nil and typeof(args.Arrow) == "table" then
-            HighlightTable.ArrowInstance.Update(args.Arrow, updateVariables);
+        if HighlightTable.ArrowInstance ~= nil and typeof(args.Arrow) == "table" then 
+            HighlightTable.ArrowInstance.Update(args.Arrow, updateVariables); 
         end;
 
         local settings = HighlightTable.Settings; HighlightTable.Settings.Tracer = nil;
@@ -1016,31 +922,28 @@ function Library.ESP.Highlight(args)
 
         local _FillColor = typeof(args.FillColor) == "Color3" and args.FillColor or HighlightTable.Settings.FillColor;
         local _OutlineColor = typeof(args.OutlineColor) == "Color3" and args.OutlineColor or HighlightTable.Settings.OutlineColor;
+        local _TextColor = typeof(args.TextColor) == "Color3" and args.TextColor or HighlightTable.Settings.TextColor;
 
         local _FillTransparency = typeof(args.FillTransparency) == "number" and args.FillTransparency or HighlightTable.Settings.FillTransparency;
         local _OutlineTransparency = typeof(args.OutlineTransparency) == "number" and args.OutlineTransparency or HighlightTable.Settings.OutlineTransparency;
 
-        local _TextColor = typeof(args.TextColor) == "Color3" and args.TextColor or HighlightTable.Settings.TextColor;
         local _TextSize = typeof(args.TextSize) == "number" and args.TextSize or HighlightTable.Settings.TextSize;
-        local _TextModel = typeof(args.TextModel) == "Instance" and args.TextModel or HighlightTable.Settings.TextModel;
 
         Highlight.FillColor = _FillColor;
         Highlight.OutlineColor = _OutlineColor;
-        BillboardTable.Update({ Color = _TextColor, TextSize = _TextSize, TextModel = _TextModel }, updateVariables);
+        BillboardTable.Update({ Color = _TextColor, TextSize = _TextSize }, updateVariables);
 
-        Highlight.FillTransparency = _FillTransparency;
-        Highlight.OutlineTransparency = _OutlineTransparency;
+        Highlight.FillTransparency = _FillTransparency
+        Highlight.OutlineTransparency = _OutlineTransparency
 
         if updateVariables ~= false then
             HighlightTable.Settings.FillColor           = _FillColor;
             HighlightTable.Settings.OutlineColor        = _OutlineColor;
+            HighlightTable.Settings.TextColor           = _TextColor;
 
             HighlightTable.Settings.FillTransparency    = _FillTransparency;
             HighlightTable.Settings.OutlineTransparency = _OutlineTransparency;
-
-            HighlightTable.Settings.TextColor           = _TextColor;
-            HighlightTable.Settings.TextSize            = _TextSize;
-            HighlightTable.Settings.TextModel           = _TextModel;
+            HighlightTable.Settings.TextSize = _TextSize
 
             HighlightTable.Settings.MaxDistance = typeof(args.MaxDistance) == "number" and args.MaxDistance or HighlightTable.Settings.MaxDistance;
         end
@@ -1071,18 +974,18 @@ end
 function Library.ESP.Adornment(args)
     assert(typeof(args) == "table", "args must be a table.")
     args = Library.Validate(args, Templates.Adornment);
-
+    
     -- // Tracer // --
-    do
-        args.Tracer = Library.Validate(args.Tracer, Templates.Tracer);
-        args.Tracer.Enabled = typeof(args.Tracer.Enabled) ~= "boolean" and false or args.Tracer.Enabled;
+    do 
+        args.Tracer = Library.Validate(args.Tracer, Templates.Tracer); 
+        args.Tracer.Enabled = typeof(args.Tracer.Enabled) ~= "boolean" and false or args.Tracer.Enabled; 
         args.Tracer.Model = args.Model;
     end
 
     -- // Arrow // --
-    do
-        args.Arrow = Library.Validate(args.Arrow, Templates.Arrow);
-        args.Arrow.Enabled = typeof(args.Arrow.Enabled) ~= "boolean" and false or args.Arrow.Enabled;
+    do 
+        args.Arrow = Library.Validate(args.Arrow, Templates.Arrow); 
+        args.Arrow.Enabled = typeof(args.Arrow.Enabled) ~= "boolean" and false or args.Arrow.Enabled; 
         args.Arrow.Model = args.Model;
     end
 
@@ -1092,14 +995,11 @@ function Library.ESP.Adornment(args)
 
     Library.Debug("Creating Adornment '" .. tostring(args.Name) .. "'...")
     local BillboardTable = Library.ESP.Billboard({
-        Name = args.Name,
+        Name = args.Name, 
         Model = args.Model,
-        TextModel = typeof(args.TextModel) == "Instance" and args.TextModel or nil,
-
         MaxDistance = args.MaxDistance,
         StudsOffset = args.StudsOffset,
         Color = args.TextColor,
-
         WasCreatedWithDifferentESP = true
     });
 
@@ -1111,18 +1011,18 @@ function Library.ESP.Adornment(args)
     end
 
     local Adornment; do
-        if args.Type == "sphere" then
+        if args.Type == "sphere" then 
             Adornment = createInstance("SphereHandleAdornment", {
                 Radius = ModelSize.X * 1.085,
                 CFrame = CFrame.new() * CFrame.Angles(math.rad(90), 0, 0)
             });
-        elseif args.Type == "cylinder" then
+        elseif args.Type == "cylinder" then 
             Adornment = createInstance("CylinderHandleAdornment", {
                 Height = ModelSize.Y * 2,
                 Radius = ModelSize.X * 1.085,
                 CFrame = CFrame.new() * CFrame.Angles(math.rad(90), 0, 0)
             });
-        else
+        else 
             Adornment = createInstance("BoxHandleAdornment", {
                 Size = ModelSize
             });
@@ -1153,15 +1053,10 @@ function Library.ESP.Adornment(args)
             if not parent then
                 AdornmentTable.Destroy();
             end
-        end)),
-
-        Library.Connections.Add(args.Model.Destroying:Connect(function()
-            AdornmentTable.Destroy();
         end))
     };
 
     -- // Delete Handler // --
-    AdornmentTable.Hidden = args.Hidden;
     AdornmentTable.Deleted = false;
     AdornmentTable.Destroy = createDeleteFunction(TableName, TableIndex, AdornmentTable);
     AdornmentTable.OnDestroy = args.OnDestroy;
@@ -1172,32 +1067,28 @@ function Library.ESP.Adornment(args)
     AdornmentTable.Update = function(args, updateVariables)
         if AdornmentTable.Deleted or (not Adornment and not BillboardTable) then return; end
 
-        if AdornmentTable.TracerInstance ~= nil and typeof(args.Tracer) == "table" then
-            AdornmentTable.TracerInstance.Update(args.Tracer, updateVariables);
+        if AdornmentTable.TracerInstance ~= nil and typeof(args.Tracer) == "table" then 
+            AdornmentTable.TracerInstance.Update(args.Tracer, updateVariables); 
         end;
 
-        if AdornmentTable.ArrowInstance ~= nil and typeof(args.Arrow) == "table" then
-            AdornmentTable.ArrowInstance.Update(args.Arrow, updateVariables);
+        if AdornmentTable.ArrowInstance ~= nil and typeof(args.Arrow) == "table" then 
+            AdornmentTable.ArrowInstance.Update(args.Arrow, updateVariables); 
         end;
 
         local settings = AdornmentTable.Settings; AdornmentTable.Settings.Tracer = nil;
         args = Library.Validate(args, settings);
 
         local _Color = typeof(args.Color) == "Color3" and args.Color or AdornmentTable.Settings.Color;
-
         local _TextColor = typeof(args.TextColor) == "Color3" and args.TextColor or AdornmentTable.Settings.TextColor;
-        local _TextSize = typeof(args.TextSize) == "number" and args.TextSize or AdornmentTable.Settings.TextSize;
-        local _TextModel = typeof(args.TextModel) == "Instance" and args.TextModel or AdornmentTable.Settings.TextModel;
+
+        local _TextSize = typeof(args.TextSize) == "number" and args.TextSize or HighlightTable.Settings.TextSize;
 
         Adornment.Color3 = _Color;
-        BillboardTable.Update({ Color = _TextColor, TextSize = _TextSize, TextModel = _TextModel }, updateVariables);
+        BillboardTable.Update({ Color = _TextColor, TextSize = _TextSize }, updateVariables);
 
         if updateVariables ~= false then
             AdornmentTable.Settings.Color     = _Color;
-
-            AdornmentTable.Settings.TextSize  = _TextSize;
             AdornmentTable.Settings.TextColor = _TextColor;
-            AdornmentTable.Settings.TextModel = _TextModel;
 
             AdornmentTable.Settings.MaxDistance = typeof(args.MaxDistance) == "number" and args.MaxDistance or AdornmentTable.Settings.MaxDistance;
         end
@@ -1228,18 +1119,18 @@ end
 function Library.ESP.Outline(args)
     assert(typeof(args) == "table", "args must be a table.")
     args = Library.Validate(args, Templates.Outline);
-
+    
     -- // Tracer // --
-    do
-        args.Tracer = Library.Validate(args.Tracer, Templates.Tracer);
-        args.Tracer.Enabled = typeof(args.Tracer.Enabled) ~= "boolean" and false or args.Tracer.Enabled;
+    do 
+        args.Tracer = Library.Validate(args.Tracer, Templates.Tracer); 
+        args.Tracer.Enabled = typeof(args.Tracer.Enabled) ~= "boolean" and false or args.Tracer.Enabled; 
         args.Tracer.Model = args.Model;
     end
 
     -- // Arrow // --
-    do
-        args.Arrow = Library.Validate(args.Arrow, Templates.Arrow);
-        args.Arrow.Enabled = typeof(args.Arrow.Enabled) ~= "boolean" and false or args.Arrow.Enabled;
+    do 
+        args.Arrow = Library.Validate(args.Arrow, Templates.Arrow); 
+        args.Arrow.Enabled = typeof(args.Arrow.Enabled) ~= "boolean" and false or args.Arrow.Enabled; 
         args.Arrow.Model = args.Model;
     end
 
@@ -1247,14 +1138,11 @@ function Library.ESP.Outline(args)
 
     Library.Debug("Creating Outline '" .. tostring(args.Name) .. "'...")
     local BillboardTable = Library.ESP.Billboard({
-        Name = args.Name,
+        Name = args.Name, 
         Model = args.Model,
-        TextModel = typeof(args.TextModel) == "Instance" and args.TextModel or nil,
-
         MaxDistance = args.MaxDistance,
         StudsOffset = args.StudsOffset,
         Color = args.TextColor,
-
         WasCreatedWithDifferentESP = true
     });
 
@@ -1276,7 +1164,7 @@ function Library.ESP.Outline(args)
         TableIndex = TableIndex, TableName = TableName,
 
         Settings = args,
-        UIElements = { Outline },
+        UIElements = { Adornment },
         TracerInstance = args.Tracer.Enabled == true and Library.ESP.Tracer(args.Tracer) or nil,
         BillboardInstance = BillboardTable,
         ArrowInstance = args.Arrow.Enabled == true and Library.ESP.Arrow(args.Arrow) or nil
@@ -1287,15 +1175,10 @@ function Library.ESP.Outline(args)
             if not parent then
                 OutlineTable.Destroy();
             end
-        end)),
-
-        Library.Connections.Add(args.Model.Destroying:Connect(function()
-            OutlineTable.Destroy();
         end))
     };
 
     -- // Delete Handler // --
-    OutlineTable.Hidden = args.Hidden;
     OutlineTable.Deleted = false;
     OutlineTable.Destroy = createDeleteFunction(TableName, TableIndex, OutlineTable);
     OutlineTable.OnDestroy = args.OnDestroy;
@@ -1306,12 +1189,12 @@ function Library.ESP.Outline(args)
     OutlineTable.Update = function(args, updateVariables)
         if OutlineTable.Deleted or (not Outline and not BillboardTable) then return; end
 
-        if OutlineTable.TracerInstance ~= nil and typeof(args.Tracer) == "table" then
-            OutlineTable.TracerInstance.Update(args.Tracer, updateVariables);
+        if OutlineTable.TracerInstance ~= nil and typeof(args.Tracer) == "table" then 
+            OutlineTable.TracerInstance.Update(args.Tracer, updateVariables); 
         end;
 
-        if OutlineTable.ArrowInstance ~= nil and typeof(args.Arrow) == "table" then
-            OutlineTable.ArrowInstance.Update(args.Arrow, updateVariables);
+        if OutlineTable.ArrowInstance ~= nil and typeof(args.Arrow) == "table" then 
+            OutlineTable.ArrowInstance.Update(args.Arrow, updateVariables); 
         end;
 
         local settings = OutlineTable.Settings; OutlineTable.Settings.Tracer = nil;
@@ -1321,26 +1204,20 @@ function Library.ESP.Outline(args)
         local _BorderColor = typeof(args.BorderColor) == "Color3" and args.BorderColor or OutlineTable.Settings.BorderColor;
         local _Thickness = typeof(args.Thickness) == "number" and args.Thickness or OutlineTable.Settings.Thickness;
         local _Transparency = typeof(args.Transparency) == "number" and args.Transparency or OutlineTable.Settings.Transparency;
-
         local _TextColor = typeof(args.TextColor) == "Color3" and args.TextColor or OutlineTable.Settings.TextColor;
-        local _TextSize = typeof(args.TextSize) == "number" and args.TextSize or OutlineTable.Settings.TextSize;
-        local _TextModel = typeof(args.TextModel) == "Instance" and args.TextModel or OutlineTable.Settings.TextModel;
 
         Outline.SurfaceColor3 = _SurfaceColor;
         Outline.Color3 = _BorderColor;
         Outline.LineThickness = _Thickness;
         Outline.SurfaceTransparency = _Transparency;
-        BillboardTable.Update({ Color = _TextColor, TextSize = _TextSize, TextModel = _TextModel }, updateVariables);
+        BillboardTable.Update(_TextColor, updateVariables);
 
         if updateVariables ~= false then
             OutlineTable.Settings.SurfaceColor  = _SurfaceColor;
             OutlineTable.Settings.BorderColor   = _BorderColor;
             OutlineTable.Settings.Thickness     = _Thickness;
             OutlineTable.Settings.Transparency  = _Transparency;
-
             OutlineTable.Settings.TextColor     = _TextColor;
-            OutlineTable.Settings.TextSize      = _TextSize;
-            OutlineTable.Settings.TextModel     = _TextModel;
 
             OutlineTable.Settings.MaxDistance = typeof(args.MaxDistance) == "number" and args.MaxDistance or OutlineTable.Settings.MaxDistance;
         end
@@ -1349,14 +1226,14 @@ function Library.ESP.Outline(args)
 
     OutlineTable.SetText = function(text)
         if OutlineTable.Deleted or not BillboardTable then return; end
-
+    
         OutlineTable.Settings.Name = (typeof(text) == "string" and text or OutlineTable.Settings.Name);
         BillboardTable.SetText(OutlineTable.Settings.Name);
     end
     OutlineTable.SetDistanceText = BillboardTable.SetDistanceText;
 
     OutlineTable.SetVisible = function(visible, tracer)
-        if OutlineTable.Deleted or not Outline then return; end
+        if OutlineTable.Deleted or not Highlight then return; end
 
         OutlineTable.Settings.Visible = if typeof(visible) == "boolean" then visible else OutlineTable.Settings.Visible;
         Outline.Adornee = OutlineTable.Settings.Visible and OutlineTable.Settings.Model or nil;
@@ -1386,7 +1263,7 @@ end), "RainbowStepped", true);
 local function checkUI(uiTable, TableName, TableIndex)
     if uiTable == nil and true or (
         typeof(uiTable) == "table" and uiTable.Deleted == true
-    ) then
+    ) then 
         if uiTable then
             if typeof(uiTable.Destroy) == "function" then uiTable.Destroy(); end
             Library.ESP[uiTable.TableName][uiTable.TableIndex] = nil;
@@ -1410,7 +1287,7 @@ local function checkVisibility(ui, root, skipOnScreen)
            ui.Hidden = true;
            ui.SetVisible(false);
        end
-
+    
        return pos, onScreen, false;
     end
 
@@ -1425,7 +1302,7 @@ local function checkVisibility(ui, root, skipOnScreen)
 
     return pos, onScreen, true;
 end
-
+                                                                                                            
 
 
 Library.Connections.Add(workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
@@ -1436,17 +1313,17 @@ Library.Connections.Add(localPlayer.CharacterAdded:Connect(function(newCharacter
     character = newCharacter;
     rootPart = character:WaitForChild("HumanoidRootPart", 5);
 end), "CharacterUpdate", true);
-
+                
 Library.Connections.Add(RunService.RenderStepped:Connect(function(dt)
     if not (character and rootPart and camera) then return; end;
 
     -- // Update Tracers // --
-    for _, tracerTable in pairs(Library.ESP.Tracers) do
+    for _, tracerTable in pairs(Library.ESP.Tracers) do 
         if not checkUI(tracerTable, "Tracers", tracerTable.TableIndex) then continue; end
 
-        if tracerTable.Deleted ~= true and tracerTable.TracerDeleted ~= true and tracerTable.TracerInstance ~= nil then
+        if tracerTable.Deleted ~= true and tracerTable.TracerDeleted ~= true and tracerTable.TracerInstance ~= nil and Library.Tracers.Enabled then
             local pos, onScreen, canContinue = checkVisibility(tracerTable, tracerTable.DistancePart)
-            if not (Library.Tracers.Enabled and canContinue) then tracerTable.TracerInstance.Visible = false; continue; end
+            if not canContinue then tracerTable.TracerInstance.Visible = false; continue; end
 
             if onScreen and tracerTable.Settings.Visible == true then
                 if tracerTable.Settings.From == "mouse" then
@@ -1473,58 +1350,55 @@ Library.Connections.Add(RunService.RenderStepped:Connect(function(dt)
                 end;
             end;
         end;
-    end;
-
+    end;        
+    
     -- // Update Arrows // --
-    for _, arrowTable in pairs(Library.ESP.Arrows) do
+    for _, arrowTable in pairs(Library.ESP.Arrows) do 
         if not checkUI(arrowTable, "Arrows", arrowTable.TableIndex) then continue; end
         if not (Library.Arrows.Enabled == true and arrowTable.Settings.Visible == true) then arrowTable.ArrowInstance.Visible = false; continue; end
-
+                                                                                                                                                
         local pos, onScreen, canContinue = checkVisibility(arrowTable, arrowTable.Settings.Model, true);
         if onScreen then arrowTable.ArrowInstance.Visible = false; continue; end
-
+                                                                                                            
         local screenSize = camera.ViewportSize;
         local centerPos = Vector2.new(screenSize.X / 2, screenSize.Y/2);
-
+                                                                                                                                    
         -- use aspect to make oval circle (it's more accurate)
         -- local aspectRatioX = screenSize.X / screenSize.Y;
         -- local aspectRatioY = screenSize.Y / screenSize.X;
         local arrowPosPixel = Vector2.new(arrowTable.ArrowInstance.Position.X.Scale, arrowTable.ArrowInstance.Position.Y.Scale) * 1000;
         local partPos = Vector2.new(pos.X, pos.Y);
-
+     
         local IsInverted = pos.Z <= 0;
         local invert = (IsInverted and -1 or 1);
-
+            
         local direction = (partPos - centerPos);
         local arctan = math.atan2(direction.Y, direction.X);
         local angle = math.deg(arctan) + 90;
         local distance = (arrowTable.Settings.CenterOffset * 0.001) * screenSize.Y;
-
+     
         arrowTable.UpdateArrow(
-            angle + 180 * (IsInverted and 0 or 1),
+            angle + 180 * (IsInverted and 0 or 1), 
             UDim2.new(
-                0, centerPos.X + (distance * math.cos(arctan) * invert),
+                0, centerPos.X + (distance * math.cos(arctan) * invert), 
                 0, centerPos.Y + (distance * math.sin(arctan) * invert)
             )
         );
         arrowTable.ArrowInstance.Visible = (onScreen == false);
-
+        
         arrowTable.Update({ Color = Library.Rainbow.Enabled and Library.Rainbow.Color or arrowTable.Settings.Color }, false);
-    end;
-
+    end;  
+                                                                                                                                       
     for uiName, uiTable in pairs(Library.ESP) do
         if typeof(uiTable) ~= "table" or uiName == "Tracers" or uiName == "Arrows" then continue; end
-
+         
         for _, ui in pairs(uiTable) do
             if not checkUI(ui, uiName, ui.TableIndex) then continue; end
-
+                                                                                                                                                         
             local pos, onScreen, canContinue = checkVisibility(ui, ui.Settings.Model);
-            if not canContinue then continue; end
-
-            local isVisible = (Library[uiName] == nil and true or Library[uiName].Enabled);
-            if isVisible == ui.Hidden then ui.Hidden = not isVisible; ui.SetVisible(isVisible); end
-            if not isVisible then continue; end
-
+            if not canContinue then continue end
+            if ui.Hidden == true then ui.Hidden = nil; ui.SetVisible(true); end
+            
             if uiName == "Billboards" then
                 ui.SetDistanceText(ui.GetDistance());
 
@@ -1532,20 +1406,20 @@ Library.Connections.Add(RunService.RenderStepped:Connect(function(dt)
                     ui.Update({ Color = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.Color }, false);
                 end
             elseif uiName == "Adornments" then
-                ui.Update({
-                    Color        = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.Color,
+                ui.Update({ 
+                    Color        = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.Color, 
                     TextColor    = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.TextColor
                 }, false);
             elseif uiName == "Highlights" then
-                ui.Update({
-                    FillColor    = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.FillColor,
-                    OutlineColor = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.OutlineColor,
+                ui.Update({ 
+                    FillColor    = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.FillColor, 
+                    OutlineColor = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.OutlineColor, 
                     TextColor    = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.TextColor
                 }, false);
             elseif uiName == "Outlines" then
-                ui.Update({
-                    SurfaceColor = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.SurfaceColor,
-                    OutlineColor = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.OutlineColor,
+                ui.Update({ 
+                    SurfaceColor = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.SurfaceColor, 
+                    OutlineColor = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.OutlineColor, 
                     TextColor    = Library.Rainbow.Enabled and Library.Rainbow.Color or ui.Settings.TextColor
                 }, false);
             end;
