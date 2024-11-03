@@ -819,12 +819,6 @@ do
                 From = Options.ESPTracerStart.Value,
                 Color = ESPManager.Color
             },
-        
-            Arrow = {
-                Enabled = Toggles.ESPTracer.Value,
-                CenterOffset = Options.ESPArrowCenterOffset.Value,
-                Color = ESPManager.Color
-            },
     
             OnDestroy = ESPManager.OnDestroy or function()
                 if ESPManager.Object.PrimaryPart and ESPManager.Invisible then ESPManager.Object.PrimaryPart.Transparency = 1 end
@@ -945,7 +939,7 @@ do
                 Script.Functions.ESP({
                     Type = "Objective",
                     Object = child,
-                    Text = string.format("Trạm điện %s", sign.TextLabel.Text),
+                    Text = string.format("mỏ neo %s", sign.TextLabel.Text),
                     Color = Options.ObjectiveEspColor.Value
                 })
             end
@@ -2636,7 +2630,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
         end)
     elseif isMines then
         AutomationGroupBox:AddToggle("AutoAnchorSolver", {
-            Text = " giải mã trạm điện",
+            Text = " giải mã mỏ neo",
             Default = false
         })
     end
@@ -2848,21 +2842,28 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     end
 
     local ESPSettingsTab = ESPTabBox:AddTab("Cài đặt") do
-        
-        ESPSettingsTab:AddDivider()
-        
-        ESPSettingsTab:AddToggle("ESPTracer", {
-            Text = "Đường đánh dấu",
-            Default = false,
-        })
-        
         ESPSettingsTab:AddToggle("ESPHighlight", {
             Text = "Đường kẻ sáng",
             Default = true,
         })
+
+        ESPSettingsTab:AddToggle("ESPTracer", {
+            Text = "Đường đánh dấu",
+            Default = false,
+        })
+    
+        ESPSettingsTab:AddToggle("ESPRainbow", {
+            Text = "Định vị màu cầu vồng",
+            Default = false,
+        })
+    
+        ESPSettingsTab:AddToggle("ESPDistance", {
+            Text = "Hiển thị khoảng cách",
+            Default = true
+        })
     
         ESPSettingsTab:AddSlider("ESPFillTransparency", {
-            Text = "Độ trong suốt vật thể",
+            Text = "Độ trong suốt",
             Default = 0.75,
             Min = 0,
             Max = 1,
@@ -2870,40 +2871,11 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPSettingsTab:AddSlider("ESPOutlineTransparency", {
-            Text = "Độ trong suốt đường viền",
+            Text = "Độ trong suốt đường kẻ",
             Default = 0,
             Min = 0,
             Max = 1,
             Rounding = 2
-        })
-    
-        ESPSettingsTab:AddDivider()
-        
-        ESPSettingsTab:AddToggle("ESPArrow", {
-            Text = "Hiển thị mũi tên",
-            Default = false
-        })
-
-        ESPSettingsTab:AddSlider("ESPArrowCenterOffset", {
-            Text = "Khoảng cách tâm với mũi tên",
-            Default = 300,
-            Min = 0,
-            Max = 500,
-            Rounding = 0
-        })
-        
-        ESPSettingsTab:AddDivider()
-    
-        ESPSettingsTab:AddToggle("ESPRainbow", {
-            Text = "Định vị màu cầu vồng",
-            Default = false,
-        })
-        
-        ESPSettingsTab:AddDivider()
-        
-        ESPSettingsTab:AddToggle("ESPDistance", {
-            Text = "Hiển thị khoảng cách",
-            Default = true
         })
     
         ESPSettingsTab:AddSlider("ESPTextSize", {
@@ -5002,18 +4974,6 @@ Toggles.ESPDistance:OnChanged(function(value)
     ESPLibrary.Distance.Set(value)
 end)
 
-Toggles.ESPArrow:OnChanged(function(value)
-    shared.ESPLibrary.Arrows.Set(value)
-end)
-
-Options.ESPArrowCenterOffset:OnChanged(function(value)
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.Update({ Arrow = { CenterOffset = value } })
-        end
-    end
-end)
-
 Options.ESPFillTransparency:OnChanged(function(value)
     for _, espType in pairs(Script.ESPTable) do
         for _, esp in pairs(espType) do
@@ -5956,9 +5916,9 @@ Library:GiveSignal(RunService.RenderStepped:Connect(function()
                         local result = Anchor:FindFirstChildOfClass("RemoteFunction"):InvokeServer(CurrentGameState.AnchorCode)
                         if result then
                             Script.Functions.Alert({
-                                Title = "Tự động giải mã",
-                                Description = "Đã giải mã thành công " .. CurrentAnchor .. " successfully!",
-                                Reason = "Code giải mã: " .. CurrentGameState.AnchorCode,
+                                Title = "Auto Anchor Solver",
+                                Description = "Solved Anchor " .. CurrentAnchor .. " successfully!",
+                                Reason = "Solved anchor with the code " .. CurrentGameState.AnchorCode,
                             })
                         end
                     end)
