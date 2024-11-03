@@ -6321,7 +6321,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         NotifySettingsTab:AddDropdown("NotifyStyle", {
             AllowNull = false,
             Values = {"Linoria", "Doors"},
-            Default = "Linoria",
+            Default = "Doors",
             Multi = false,
 
             Text = "Notification Style"
