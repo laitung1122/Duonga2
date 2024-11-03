@@ -1,3 +1,12 @@
+--[[
+    This script is NOT intended to be modified.
+    To view the source code, see the 'Src' folder on the official GitHub repository.
+
+    Authors: upio, deivid, mstudio45 & bacalhauz
+    GitHub: https://github.com/notpoiu/mspaint
+    Discord: https://discord.gg/mspaint
+--]]
+
 -- ++++++++ WAX BUNDLED DATA BELOW ++++++++ --
 
 -- Will be used later for getting flattened globals
@@ -2052,9 +2061,9 @@ shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
                         local result = Anchor:FindFirstChildOfClass("RemoteFunction"):InvokeServer(CurrentGameState.AnchorCode)
                         if result then
                             shared.Notify:Alert({
-                                Title = "Auto Anchor Solver",
-                                Description = "Solved Anchor " .. CurrentAnchor .. " successfully!",
-                                Reason = "Solved anchor with the code " .. CurrentGameState.AnchorCode,
+                                Title = "Dương Api",
+                                Description = "Giải mã trụ điện " .. CurrentAnchor .. " thành công!",
+                                Reason = "Mã code: " .. CurrentGameState.AnchorCode,
                             })
                         end
                     end)
@@ -4775,43 +4784,43 @@ local Tabs = Script.Tabs
 
 --// Floor \\--
 if Script.IsHotel then
-    local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+    local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
         Hotel_AntiEntityGroupBox:AddToggle("AntiSeekObstructions", {
-            Text = "Anti-Seek Obstructions",
+            Text = "Xóa vật cản từ seek",
             Default = false
         })
     end
 
-    local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bypass") do
+    local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bỏ qua") do
         Hotel_BypassGroupBox:AddToggle("AvoidRushAmbush", {
-            Text = "Avoid Rush/Ambush",
-            Tooltip = "Doesn't work for greenhouse :(",
+            Text = "Né tránh rush/ambush",
+            Tooltip = "Không hoạt động từ cửa 90 trở đi :(",
             Default = false,
             Risky = true
         })
     end
 
-    local Hotel_FarmGroupBox = Tabs.Floor:AddLeftGroupbox("Farm") do
+    local Hotel_FarmGroupBox = Tabs.Floor:AddLeftGroupbox("Cày nguyên liệu") do
         Hotel_FarmGroupBox:AddToggle("KnobFarm", {
-            Text = "Knob Farm",
-            Tooltip = "Only works in Room 100 and figure is spawned",
+            Text = "Cày knob",
+            Tooltip = "Chỉ hoạt động ở cửa 100 và có figure xuất hiện",
             Default = false
         })
     end
 
-    local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Modifiers") do
+    local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Sửa đổi hệ thống") do
         Hotel_ModifiersGroupBox:AddToggle("NoVoiceActing", {
-            Text = "No Voice Acting",
+            Text = "Tắt âm thanh nền",
             Default = false
         })
 
         Hotel_ModifiersGroupBox:AddToggle("AntiA90", {
-            Text = "Anti-A90",
+            Text = "Chặn-A90",
             Default = false
         })
 
         Hotel_ModifiersGroupBox:AddToggle("NoJammin", {
-            Text = "No Jammin",
+            Text = "Không có Jammin",
             Default = false
         })
     end
@@ -4892,9 +4901,9 @@ if Script.IsHotel then
         if jamminEffect then jamminEffect.Enabled = not value end
     end)
 elseif Script.IsMines then
-    local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Movement") do
+    local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Di chuyển") do
         Mines_MovementGroupBox:AddSlider("MaxSlopeAngle", {
-            Text = "Max Floor Angle",
+            Text = "Góc sàn tối đa",
             Default = 45,
             Min = 0,
             Max = 90,
@@ -4902,41 +4911,41 @@ elseif Script.IsMines then
         })
     end
 
-    local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+    local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
         Mines_AntiEntityGroupBox:AddToggle("AntiGiggle", {
-            Text = "Anti-Giggle",
+            Text = "chống-Giggle",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiGloomEgg", {
-            Text = "Anti-Gloom Egg",
+            Text = "chống-Gloom Egg",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiBridgeFall", {
-            Text = "Anti-Bridge Fall",
+            Text = "chống-Bridge Fall",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiPipeGap", {
-            Text = "Anti-Pipe Gap",
+            Text = "chống-Pipe Gap",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiSeekFlood", {
-            Text = "Anti-Seek Flood",
+            Text = "chống-Seek Flood",
             Default = false
         })
     end
 
-    local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
+    local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
         Mines_AutomationGroupBox:AddButton({
-            Text = "Beat Door 200",
+            Text = "Phá đảo cửa 200",
             Func = function()
                 if Script.LatestRoom.Value < 99 then
                     shared.Notify:Alert({
-                        Title = "Beat Door 200",
-                        Description = "You haven't reached door 200...",
+                        Title = "Dương Api",
+                        Description = "Bạn vẫn chưa tới cửa 200...",
                         Time = 5
                     })
 
@@ -5000,19 +5009,19 @@ elseif Script.IsMines then
         })
 
         Mines_AutomationGroupBox:AddToggle("TheMinesAnticheatBypass", {
-            Text = "Anticheat Bypass",
+            Text = "Bỏ qua hệ thống chống gian lận",
             Default = false
         })
     end
 
     local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bypass") do
         Mines_BypassGroupBox:AddToggle("MinecartTeleport", {
-            Text = "Minecart Teleport",
+            Text = "Dịch chuyển xe mỏ",
             Default = false
         })
 
         Mines_BypassGroupBox:AddToggle("MinecartTeleportDebug", {
-            Text = "Minecart Teleport Debug",
+            Text = "Sửa lỗi khi dịch chuyển",
             Default = false,
             Visible = true,
         })
@@ -5020,7 +5029,7 @@ elseif Script.IsMines then
     
     local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visuals") do
         Mines_VisualGroupBox:AddToggle("MinecartPathVisualiser", {
-            Text = "Visualize Correct Seek Path",
+            Text = "Hiển thị đường đi đúng(seek)",
             Default = false
         })
     end
@@ -5036,20 +5045,20 @@ elseif Script.IsMines then
 
             if shared.Library.IsMobile then
                 shared.Notify:Alert({
-                    Title = "Anticheat bypass",
-                    Description = "To bypass the ac, you must interact with a ladder.",
-                    Reason = "Ladder ESP has been enabled, do not move while on the ladder.",
+                    Title = "Dương Api",
+                    Description = "Để bỏ qua , Bạn phải tương tác với thang.",
+                    Reason = "Hiển thi vị trí thang đã bật, vui lòng không di chuyển khi trên thang.",
 
-                    LinoriaMessage = "To bypass the anticheat, you must interact with a ladder. Ladder ESP has been enabled.\nDo not move while on the ladder.",
+                    LinoriaMessage = "Để bỏ qua , Bạn phải tương tác với thang. Hiển thi vị trí thang đã bật \n vui lòng không di chuyển khi trên thang.",
                     Time = progressPart
                 })
             else
                 shared.Notify:Alert({
-                    Title = "Anticheat bypass",
-                    Description = "To bypass the ac, you must interact with a ladder.",
-                    Reason = "Ladder ESP has been enabled, do not move while on the ladder.",
+                    Title = "Dương Api",
+                    Description = "Để bỏ qua , Bạn phải tương tác với thang.",
+                    Reason = "Hiển thi vị trí thang đã bật, vui lòng không di chuyển khi trên thang.",
 
-                    LinoriaMessage = "To bypass the anticheat, you must interact with a ladder. Ladder ESP has been enabled.\nDo not move while on the ladder.",
+                    LinoriaMessage = "Để bỏ qua , Bạn phải tương tác với thang. Hiển thi vị trí thang đã bật \n vui lòng không di chuyển khi trên thang.",
                     Time = progressPart
                 })
             end
@@ -5197,14 +5206,14 @@ elseif Script.IsMines then
 elseif Script.IsBackdoor then
     local Backdoors_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Backdoors_AntiEntityGroupBox:AddToggle("AntiHasteJumpscare", {
-            Text = "Anti Haste Jumpscare",
+            Text = "Chặn haste dọa",
             Default = false
         })
     end
 
     local Backdoors_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visual") do
         Backdoors_VisualGroupBox:AddToggle("HasteClock", {
-            Text = "Haste Clock",
+            Text = "Bộ đếm giờ haste",
             Default = true
         })
     end
@@ -5246,30 +5255,30 @@ elseif Script.IsBackdoor then
         end
     end))
 elseif Script.IsRooms then
-    local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+    local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
         Rooms_AntiEntityGroupBox:AddToggle("AntiA90", {
-            Text = "Anti-A90",
+            Text = "Chặn-A90",
             Default = false
         })
     end
 
-    local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
+    local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
         Rooms_AutomationGroupBox:AddToggle("AutoRooms", {
-            Text = "Auto Rooms",
+            Text = "Tự động A-1000",
             Default = false
         })
 
-        Rooms_AutomationGroupBox:AddLabel("Recommended Settings:\nSpeed Bypass and Noclip disabled", true)
+        Rooms_AutomationGroupBox:AddLabel("Cài đặt khuyên dùng:\nTăng tốc và xuyên tường nên tắt", true)
 
         Rooms_AutomationGroupBox:AddDivider()
 
         Rooms_AutomationGroupBox:AddToggle("AutoRoomsDebug", { 
-            Text = "Show Debug Info",
+            Text = "Hiển thị vá lỗi",
             Default = false
         })
         
         Rooms_AutomationGroupBox:AddToggle("ShowAutoRoomsPathNodes", { 
-            Text = "Show Pathfinding Nodes",
+            Text = "Hiển thị ghi chú",
             Default = false
         })
 
@@ -5278,9 +5287,9 @@ elseif Script.IsRooms then
     Toggles.AntiA90:OnChanged(function(value)
         if Toggles.AutoRooms.Value and not value then
             shared.Notify:Alert({
-                Title = "Auto Rooms",
-                Description = "Anti A-90 is required for Auto Rooms to work!",
-                Reason = "Anti A-90 has been enabled",
+                Title = "Dương Api",
+                Description = "Chặn A90 cực cần thiết khi sử dụng tính năng này!",
+                Reason = "Chống A90 đã bật",
             })
             
             Toggles.AntiA90:SetValue(true)
@@ -5393,8 +5402,8 @@ elseif Script.IsRooms then
                 end
                 
                 shared.Notify:Log({
-                    Title = "Auto Rooms",
-                    Description = "Calculated Objective Successfully!\nObjective: " .. pathfindingGoal.Parent.Name .. "\nCreating path...",
+                    Title = "Dương Api",
+                    Description = "Đang chạy",
                 }, Toggles.AutoRoomsDebug.Value)
 
                 local path = shared.PathfindingService:CreatePath({
@@ -5408,8 +5417,8 @@ elseif Script.IsRooms then
                 })
 
                 shared.Notify:Log({
-                    Title = "Auto Rooms",
-                    Description = "Computing Path to " .. pathfindingGoal.Parent.Name .. "...",
+                    Title = "Dương Api",
+                    Description = "Tính toán đường tới cửa...",
                 }, Toggles.AutoRoomsDebug.Value)
 
                 path:ComputeAsync(shared.RootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
@@ -5436,8 +5445,8 @@ elseif Script.IsRooms then
                     end)
 
                     shared.Notify:Log({
-                        Title = "Auto Rooms",
-                        Description = "Computed path successfully with " .. waypointAmount .. " waypoints!",
+                        Title = "Dương Api",
+                        Description = "Tính toán thành công với " .. waypointAmount .. " điểm!",
                     }, Toggles.AutoRoomsDebug.Value)
 
                     _internal_mspaint_pathfinding_nodes:ClearAllChildren()
@@ -5488,9 +5497,9 @@ elseif Script.IsRooms then
                                 repeat task.wait(0.25) until (not shared.Character:GetAttribute("Hiding") and not shared.Character.PrimaryPart.Anchored)
 
                                 shared.Notify:Alert({
-                                    Title = "Auto Rooms",
-                                    Description = "Seems like you are stuck, trying to recalculate path...",
-                                    Reason = "Failed to move to waypoint",
+                                    Title = "Dương Api",
+                                    Description = "Có vẻ bạn đang bị kẹt, đang tìm đường khác...",
+                                    Reason = "Tính toán thất bại",
                                 })
 
                                 recalculate = true
@@ -5522,8 +5531,8 @@ elseif Script.IsRooms then
                     end
                 else
                     shared.Notify:Log({
-                        Title = "Auto Rooms",
-                        Description = "Pathfinding failed with status " .. tostring(path.Status)   
+                        Title = "Dương Api",
+                        Description = "Tính toán thất bại với lỗi: " .. tostring(path.Status)   
                     }, Toggles.AutoRoomsDebug.Value)
                 end
             end
@@ -5532,9 +5541,9 @@ elseif Script.IsRooms then
             while Toggles.AutoRooms.Value and not shared.Library.Unloaded do
                 if Script.LatestRoom.Value == 1000 then
                     shared.Notify:Alert({
-                        Title = "Auto Rooms",
-                        Description = "You have reached A-1000",
-                        Reason = "A-1000 reached by mspaint autorooms",
+                        Title = "Dương Api",
+                        Description = "Bạn đã tới cửa 1000",
+                        Reason = "A-1000 thiết kế bởi upio-Dương modder",
                     })
 
                     break
@@ -5550,22 +5559,22 @@ elseif Script.IsRooms then
 elseif Script.IsFools then
     local Fools_TrollingGroupBox = Tabs.Floor:AddLeftGroupbox("Trolling") do
         Fools_TrollingGroupBox:AddToggle("GrabBananaJeffToggle",{
-            Text = "Grab Banana / Jeff",
+            Text = "Nhặt Banana / Jeff",
             Default = false
         }):AddKeyPicker("GrabBananaJeff", {
             Default = "H",
             Mode = "Hold",
-            Text = "Grab Banana / Jeff",
+            Text = "Nhặt Banana / Jeff",
         })
     
         Fools_TrollingGroupBox:AddLabel("Throw"):AddKeyPicker("ThrowBananaJeff", {
             Default = "G",
             Mode = "Hold",
-            Text = "Throw"
+            Text = "Ném"
         })
 
         Fools_TrollingGroupBox:AddSlider("ThrowStrength", {
-            Text = "Throw Strength",
+            Text = "Lực ném",
             Default = 1,
             Min = 1,
             Max = 10,
@@ -5607,43 +5616,43 @@ elseif Script.IsFools then
         end
     end
 
-    local Fools_AntiEntityGroupBox = Tabs.Floor:AddRightGroupbox("Anti-Entity") do
+    local Fools_AntiEntityGroupBox = Tabs.Floor:AddRightGroupbox("Chống quái") do
         Fools_AntiEntityGroupBox:AddToggle("AntiSeekObstructions", {
-            Text = "Anti-Seek Obstructions",
+            Text = "Chống vật cản từ seek",
             Default = false
         })
 
         Fools_AntiEntityGroupBox:AddToggle("AntiBananaPeel", {
-            Text = "Anti-Banana",
+            Text = "Chặn vỏ chuối",
             Default = false
         })
 
         Fools_AntiEntityGroupBox:AddToggle("AntiJeffClient", {
-            Text = "Anti-Jeff",
+            Text = "Chống-Jeff",
             Default = false
         })
     end
 
     local Fools_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bypass") do
         Fools_BypassGroupBox:AddToggle("InfRevives", {
-            Text = "Infinite Revives",
+            Text = "Hồi sinh liên tục",
             Default = false
         })
 
         Fools_BypassGroupBox:AddToggle("AntiJeffServer", {
-            Text = "Anti-Jeff (FE)",
+            Text = "Chặn jeff (FE)",
             Default = false
         })
 
         Fools_BypassGroupBox:AddDivider()
 
         Fools_BypassGroupBox:AddToggle("GodmodeNoclipBypassFools", {
-            Text = "Godmode",
+            Text = "Chế độ bất tử",
             Default = false
         })
 
         Fools_BypassGroupBox:AddToggle("FigureGodmodeFools", {
-            Text = "Figure Godmode",
+            Text = "Bất tử trước figure",
             Default = false
         })
     end
@@ -5749,12 +5758,12 @@ local Tabs = Script.Tabs
 --// Main \\--
 local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     PlayerGroupBox:AddToggle("EnableSpeedHack", {
-        Text = "Enable Speed Hack",
+        Text = "Bật tăng tốc chạy",
         Default = false
     })
 
     PlayerGroupBox:AddSlider("WalkSpeed", {
-        Text = "Walk Speed",
+        Text = "Tốc độ chạy",
         Default = 15,
         Min = 0,
         Max = 22,
@@ -5763,7 +5772,7 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddSlider("LadderSpeed", {
-        Text = "Ladder Speed",
+        Text = "Tốc độ leo thang",
         Default = 15,
         Min = 0,
         Max = 75,
@@ -5772,13 +5781,13 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddToggle("EnableJump", {
-        Text = "Enable Jump",
+        Text = "Nút nhảy",
         Default = false,
         Visible = not Script.IsFools
     })
 
     PlayerGroupBox:AddSlider("JumpBoost", {
-        Text = "Jump Boost",
+        Text = "Độ cao khi nhảy",
         Default = 5,
         Min = 0,
         Max = 50,
@@ -5788,46 +5797,46 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddToggle("NoAccel", {
-        Text = "No Acceleration",
+        Text = "Không gia tốc",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("InstaInteract", {
-        Text = "Instant Interact",
+        Text = "Khoảng cách thao tác",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("FastClosetExit", {
-        Text = "Fast Closet Exit",
+        Text = "Thoát khỏi tủ nhanh",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("Noclip", {
-        Text = "Noclip",
+        Text = "Xuyên tường",
         Default = false
     }):AddKeyPicker("NoclipKey", {
         Mode = "Toggle",
         Default = "N",
-        Text = "Noclip",
+        Text = "Xuyên tường",
         SyncToggleState = true
     })
 
     PlayerGroupBox:AddToggle("Fly", {
-        Text = "Fly",
+        Text = "Bay",
         Default = false
     }):AddKeyPicker("FlyKey", {
         Mode = "Toggle",
         Default = "F",
-        Text = "Fly",
+        Text = "Bay",
         SyncToggleState = true
     })
     
     PlayerGroupBox:AddSlider("FlySpeed", {
-        Text = "Fly Speed",
+        Text = "Tốc độ bay",
         Default = 15,
         Min = 10,
         Max = 22,
@@ -5838,17 +5847,17 @@ end
 
 local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
     ReachGroupBox:AddToggle("DoorReach", {
-        Text = "Door Reach",
+        Text = "Khoảng cách mở cửa",
         Default = false
     })
 
     ReachGroupBox:AddToggle("PromptClip", {
-        Text = "Prompt Clip",
+        Text = "Clip nhắc nhở ",
         Default = false
     })
 
     ReachGroupBox:AddSlider("PromptReachMultiplier", {
-        Text = "Prompt Reach Multiplier",
+        Text = "Khoảng cách mở",
         Default = 1,
         Min = 1,
         Max = 2,
@@ -5858,12 +5867,12 @@ end
 
 local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
     AutomationGroupBox:AddToggle("AutoInteract", {
-        Text = "Auto Interact",
+        Text = "Tự động nhặt + mở",
         Default = false
     }):AddKeyPicker("AutoInteractKey", {
         Mode = shared.Library.IsMobile and "Toggle" or "Hold",
         Default = "R",
-        Text = "Auto Interact",
+        Text = "Tự động nhặt + mở",
         SyncToggleState = shared.Library.IsMobile
     })
 
@@ -5879,38 +5888,38 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
     AutomationGroupBox:AddDivider()
 
     AutomationGroupBox:AddToggle("AutoWardrobeNotif", {
-        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value] .. " Notifications",
+        Text = "Thông báo quá trình vá lỗi khi núp",
         Default = false
     })
 
     AutomationGroupBox:AddToggle("AutoWardrobe", {
-        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value],
+        Text = "Tự động núp vô tủ",
         Default = false,
-        Tooltip = "Might fail with multiple entities (Rush & Ambush, 3+ Rush spawns)",
+        Tooltip = "Có thể lỗi khi gặp nhiều quái(ví dụ: 3 rush trở lên hoặc 2 con ambush)",
         Visible = not Script.IsRetro,
         Risky = true
     }):AddKeyPicker("AutoWardrobeKey", {
         Mode = "Toggle",
         Default = "Q",
-        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value],
+        Text = "Tự động núp vô tủ",
         SyncToggleState = true
     })
     AutomationGroupBox:AddDivider()
 
     AutomationGroupBox:AddToggle("AutoHeartbeat", {
-        Text = "Auto Heartbeat Minigame",
+        Text = "Tự động thắng minigame đập tim",
         Default = false,
         Visible = wax.shared.ExecutorSupport["getnamecallmethod"]
     })
 
     if Script.IsHotel or Script.IsFools then
         AutomationGroupBox:AddToggle("AutoLibrarySolver", {
-            Text = "Auto Library Code",
+            Text = "Tự động giải mã thư viện",
             Default = false
         })
 
         AutomationGroupBox:AddSlider("AutoLibraryDistance", {
-            Text = "Unlock Distance",
+            Text = "Khoảng cách mở khóa",
             Default = 20,
             Min = 1,
             Max = 100,
@@ -5926,11 +5935,11 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
             Default = "Legit",
             Multi = false,
 
-            Text = "Auto Breaker Solver Method"
+            Text = "Kiểu giải mã hộp cầu chì(cửa 100)"
         })
 
         AutomationGroupBox:AddToggle("AutoBreakerSolver", {
-            Text = "Auto Breaker Box",
+            Text = "Tự động giải mã(cửa 100)",
             Default = false
         })
 
@@ -5962,7 +5971,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
         end)
     elseif Script.IsMines then
         AutomationGroupBox:AddToggle("AutoAnchorSolver", {
-            Text = "Auto Anchor Solver",
+            Text = "Tự động giải mã trụ điện(floor 2)",
             Default = false
         })
     end
@@ -5970,7 +5979,7 @@ end
 
 local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     MiscGroupBox:AddButton({
-        Text = "Revive",
+        Text = "Hồi sinh",
         Func = function()
             Script.RemotesFolder.Revive:FireServer()
         end,
@@ -5978,7 +5987,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Play Again",
+        Text = "Chơi lại",
         Func = function()
             Script.RemotesFolder.PlayAgain:FireServer()
         end,
@@ -5986,7 +5995,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Lobby",
+        Text = "Sảnh",
         Func = function()
             Script.RemotesFolder.Lobby:FireServer()
         end,
@@ -6087,65 +6096,65 @@ end
 
 --// Visuals \\--
 local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
-    local ESPTab = ESPTabBox:AddTab("ESP") do
+    local ESPTab = ESPTabBox:AddTab("Định vị") do
         ESPTab:AddToggle("DoorESP", {
-            Text = "Door",
+            Text = "Cửa",
             Default = false,
         }):AddColorPicker("DoorEspColor", {
             Default = Color3.new(0, 1, 1),
         })
     
         ESPTab:AddToggle("ObjectiveESP", {
-            Text = "Objective",
+            Text = "vật dụng",
             Default = false,
         }):AddColorPicker("ObjectiveEspColor", {
             Default = Color3.new(0, 1, 0),
         })
     
         ESPTab:AddToggle("EntityESP", {
-            Text = "Entity",
+            Text = "Quái",
             Default = false,
         }):AddColorPicker("EntityEspColor", {
             Default = Color3.new(1, 0, 0),
         })
     
         ESPTab:AddToggle("ItemESP", {
-            Text = "Item",
+            Text = "Vật phẩm",
             Default = false,
         }):AddColorPicker("ItemEspColor", {
             Default = Color3.new(1, 0, 1),
         })
     
         ESPTab:AddToggle("ChestESP", {
-            Text = "Chest",
+            Text = "Rương",
             Default = false,
         }):AddColorPicker("ChestEspColor", {
             Default = Color3.new(1, 1, 0),
         })
     
         ESPTab:AddToggle("PlayerESP", {
-            Text = "Player",
+            Text = "Người chơi",
             Default = false,
         }):AddColorPicker("PlayerEspColor", {
             Default = Color3.new(1, 1, 1),
         })
     
         ESPTab:AddToggle("HidingSpotESP", {
-            Text = Script.HidingPlaceName[Script.Floor.Value],
+            Text = "Nơi ẩn nấp",
             Default = false,
         }):AddColorPicker("HidingSpotEspColor", {
             Default = Color3.new(0, 0.5, 0),
         })
     
         ESPTab:AddToggle("GoldESP", {
-            Text = "Gold",
+            Text = "vàng",
             Default = false,
         }):AddColorPicker("GoldEspColor", {
             Default = Color3.new(1, 1, 0),
         })
     
-        ESPTab:AddToggle("GuidingLightESP", {
-            Text = "Guiding Light",
+        ESPTab:AddToggle("", {
+            Text = "Điểm sáng",
             Default = false,
         }):AddColorPicker("GuidingLightEspColor", {
             Default = Color3.new(0, 0.5, 1),
@@ -6154,19 +6163,19 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
 
     local ESPSettingsTab = ESPTabBox:AddTab("Settings") do
         ESPSettingsTab:AddToggle("ESPRainbow", {
-            Text = "Rainbow ESP",
+            Text = "Định vị cầu vồng",
             Default = false,
         })
 
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPHighlight", {
-            Text = "Enable Highlight",
+            Text = "Hiển thị đường viền",
             Default = true
         })
 
         ESPSettingsTab:AddSlider("ESPFillTransparency", {
-            Text = "Fill Transparency",
+            Text = "Độ trong suốt vật phẩm",
             Default = 0.75,
             Min = 0,
             Max = 1,
@@ -6174,7 +6183,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPSettingsTab:AddSlider("ESPOutlineTransparency", {
-            Text = "Outline Transparency",
+            Text = "Độ trong suốt viền",
             Default = 0,
             Min = 0,
             Max = 1,
@@ -6184,12 +6193,12 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPDistance", {
-            Text = "Show Distance",
+            Text = "Hiển thị khoảng cách",
             Default = true
         })
     
         ESPSettingsTab:AddSlider("ESPTextSize", {
-            Text = "Text Size",
+            Text = "Cỡ chữ",
             Default = 22,
             Min = 16,
             Max = 26,
@@ -6199,7 +6208,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPTracer", {
-            Text = "Enable Tracer",
+            Text = "Hiển thị đường kẻ",
             Default = false
         })
 
@@ -6215,12 +6224,12 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPArrow", {
-            Text = "Enable Arrow",
+            Text = "Định vị kiểu mũi tên",
             Default = false
         })
 
         ESPSettingsTab:AddSlider("ESPArrowCenterOffset", {
-            Text = "Arrow Center Offset",
+            Text = "Khoảng cách giữa tâm và mũi tên",
             Default = 300,
             Min = 0,
             Max = 500,
@@ -6229,9 +6238,9 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     end
 end
 
-local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
+local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Tầm nhìn") do
     AmbientGroupBox:AddSlider("Brightness", {
-        Text = "Brightness",
+        Text = "Độ sáng",
         Default = 0,
         Min = 0,
         Max = 3,
@@ -6239,73 +6248,73 @@ local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
     })
 
     AmbientGroupBox:AddToggle("Fullbright", {
-        Text = "Fullbright",
+        Text = "Map sáng",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("NoFog", {
-        Text = "No Fog",
+        Text = "Không có sương mù",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("AntiLag", {
-        Text = "Anti-Lag",
+        Text = "Chống lag",
         Default = false,
     })
 end
 
 local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
-    local NotifyTab = NotifyTabBox:AddTab("Notifier") do
+    local NotifyTab = NotifyTabBox:AddTab("Cảnh báo") do
         NotifyTab:AddDropdown("NotifyEntity", {
             AllowNull = true,
             Values = {"Blitz", "Lookman", "Rush", "Ambush", "Eyes", "Halt Room", "A60", "A120", "Jeff The Killer", "Gloombat Swarm", "Void/Glitch"},
             Default = {},
             Multi = true,
 
-            Text = "Notify Entities"
+            Text = "Cảnh báo quái"
         })
 
         NotifyTab:AddToggle("NotifyPadlock", {
-            Text = "Notify Library Code",
+            Text = "Hiện thị mã thư viện",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyOxygen", {
-            Text = "Notify Oxygen",
+            Text = "Hiển thị thời gian oxygen",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyHideTime", {
-            Text = "Notify Hide Time",
+            Text = "Hiển thị thời gian ẩn",
             Default = false,
         })
     end
 
-    local NotifySettingsTab = NotifyTabBox:AddTab("Settings") do
+    local NotifySettingsTab = NotifyTabBox:AddTab("Cài đặt") do
         NotifySettingsTab:AddToggle("NotifyChat", {
-            Text = "Notify Chat",
+            Text = "Thông báo trong chat",
             Tooltip = "Entity and Padlock Code",
             Default = false,
         })
 
         NotifySettingsTab:AddInput("NotifyEntityMessage", {
-            Default = "has spawned!",
+            Default = "xuất hiện!",
             Numeric = false,
             Finished = true,
             ClearTextOnFocus = false,
 
-            Text = "Entity Notifier Message"
+            Text = "Cảnh báo quái qua chat"
         })
 
         NotifySettingsTab:AddDivider()
         
         NotifySettingsTab:AddToggle("NotifySound", {
-            Text = "Play Alert Sound",
+            Text = "Âm thanh cảnh báo",
             Default = true,
         })
 
         NotifySettingsTab:AddSlider("NotifyVolume", {
-            Text = "Notify Volume",
+            Text = "Âm lượng",
             Default = 2,
             Min = 0,
             Max = 5,
@@ -6318,16 +6327,16 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Right",
             Multi = false,
 
-            Text = "Notification Side"
+            Text = "Vị trí thống báo"
         })
 
         NotifySettingsTab:AddDropdown("NotifyStyle", {
             AllowNull = false,
             Values = {"Linoria", "Doors"},
-            Default = "Linoria",
+            Default = "Doors",
             Multi = false,
 
-            Text = "Notification Style"
+            Text = "Kiểu thông báo"
         })
 
         NotifySettingsTab:AddDivider()
@@ -6338,7 +6347,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Linoria",
             Multi = false,
 
-            Text = "Caption Style"
+            Text = "Kiểu tiêu đề"
         })
     end
 end
@@ -6346,17 +6355,17 @@ end
 local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
     local SelfTab = SelfTabBox:AddTab("Self") do
         SelfTab:AddToggle("ThirdPerson", {
-            Text = "Third Person",
+            Text = "Góc nhìn thứ 3",
             Default = false
         }):AddKeyPicker("ThirdPersonKey", {
             Default = "V",
-            Text = "Third Person",
+            Text = "Góc nhìn thứ 3",
             Mode = "Toggle",
             SyncToggleState = not shared.Library.IsMobile -- ????
         })
         
         SelfTab:AddSlider("FOV", {
-            Text = "Field of View",
+            Text = "Độ cong góc nhìn",
             Default = 70,
             Min = 70,
             Max = 120,
@@ -6364,29 +6373,29 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
         })
         
         SelfTab:AddToggle("NoCamBob", {
-            Text = "No Camera Bobbing",
+            Text = "Không lắc lư màn",
             Default = false,
             Visible = wax.shared.ExecutorSupport["require"]
         })
     
         SelfTab:AddToggle("NoCamShake", {
-            Text = "No Camera Shake",
+            Text = "Không rung màn",
             Default = false,
             Visible = wax.shared.ExecutorSupport["require"]
         })
     
         SelfTab:AddToggle("NoCutscenes", {
-            Text = "No Cutscenes",
+            Text = "Không đoạn cắt cảnh",
             Default = false,
         })
     
         SelfTab:AddToggle("TranslucentHidingSpot", {
-            Text = "Translucent " .. Script.HidingPlaceName[Script.Floor.Value],
+            Text = "Độ mờ nơi ẩn nấp",
             Default = false
         })
         
         SelfTab:AddSlider("HidingTransparency", {
-            Text = "Hiding Transparency",
+            Text = "Độ trong suốt của nơi ẩn nấp",
             Default = 0.5,
             Min = 0,
             Max = 1,
@@ -6435,24 +6444,24 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
         })
     end
 
-    local EffectsTab = SelfTabBox:AddTab("Effects") do
+    local EffectsTab = SelfTabBox:AddTab("Hiệu ứng") do
         EffectsTab:AddToggle("NoGlitchEffect", {
-            Text = "No Glitch Effect",
+            Text = "Không có hiệu ứng từ glitch",
             Default = false
         })
 
         EffectsTab:AddToggle("NoVoidEffect", {
-            Text = "No Void Effect",
+            Text = "Không có hiệu ứng âm thanh",
             Default = false
         })
 
         EffectsTab:AddToggle("NoEntityJumpscare", {
-            Text = "No Jumpscare",
+            Text = "Không hù dọa",
             Default = false
         })
 
         EffectsTab:AddToggle("NoSpiderJumpscare", {
-            Text = "No Spider Jumpscare",
+            Text = "Chống bị nhện dọa",
             Default = false
         })
     end
@@ -6885,8 +6894,8 @@ if Script.IsBackdoor then
             end
 
             shared.Notify:Alert({
-                Title = "ENTITIES",
-                Description = "Haste is incoming, please find a lever ASAP!",
+                Title = "Quái",
+                Description = "Hatse sắp tiếp cận, tìm cần gạt khẩn cấp!",
                 Time = haste_incoming_progress,
 
                 Warning = true
@@ -11876,26 +11885,6 @@ end
 
 return Linoria
 end)() end,
-    [84] = function()local wax,script,require=ImportGlobals(84)local ImportGlobals return (function(...)local cloneref = (cloneref or function(instance: any) return instance end)
-
-local Services = {}
-function Services:GetService(serviceName: string)
-    if shared[serviceName] then return shared[serviceName] end
-
-    local service = cloneref(game:GetService(serviceName))
-    shared[serviceName] = service
-
-    return service
-end
-
-function Services:GetServices(serviceNames: table)
-    for _, serviceName: string in ipairs(serviceNames) do
-        Services:GetService(serviceName)
-    end
-end
-
-return Services
-end)() end,
     [86] = function()local wax,script,require=ImportGlobals(86)local ImportGlobals return (function(...)local ControlModule = if wax.shared.ExecutorSupport["require"] and shared.PlayerScripts:FindFirstChild("PlayerModule") then wax.require(shared.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")) else { replaced = true }
 
 if ControlModule.replaced == true then
@@ -11958,6 +11947,26 @@ if ControlModule.replaced == true then
 end
 
 return ControlModule
+end)() end,
+    [84] = function()local wax,script,require=ImportGlobals(84)local ImportGlobals return (function(...)local cloneref = (cloneref or function(instance: any) return instance end)
+
+local Services = {}
+function Services:GetService(serviceName: string)
+    if shared[serviceName] then return shared[serviceName] end
+
+    local service = cloneref(game:GetService(serviceName))
+    shared[serviceName] = service
+
+    return service
+end
+
+function Services:GetServices(serviceNames: table)
+    for _, serviceName: string in ipairs(serviceNames) do
+        Services:GetService(serviceName)
+    end
+end
+
+return Services
 end)() end,
     [83] = function()local wax,script,require=ImportGlobals(83)local ImportGlobals return (function(...)local Logs = {
     Debug = true, --or getgenv().mspaint_dev_mode,
@@ -12414,7 +12423,7 @@ end
 
 function UICreator:CreateWindow()
     local Window = shared.Library:CreateWindow({
-        Title = "mspaint v3 | " .. shared.ScriptName,
+        Title = "Dương Api | V2",
         Center = true,
         AutoShow = true,
         Resizable = true,
@@ -12557,66 +12566,6 @@ local ObjectTree = {
                         },
                         {
                             {
-                                62,
-                                1,
-                                {
-                                    "Template"
-                                },
-                                {
-                                    {
-                                        63,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                64,
-                                1,
-                                {
-                                    "Universal"
-                                },
-                                {
-                                    {
-                                        69,
-                                        2,
-                                        {
-                                            "Player"
-                                        }
-                                    },
-                                    {
-                                        65,
-                                        2,
-                                        {
-                                            "Aimbot"
-                                        }
-                                    },
-                                    {
-                                        67,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    },
-                                    {
-                                        66,
-                                        2,
-                                        {
-                                            "Assets"
-                                        }
-                                    },
-                                    {
-                                        68,
-                                        2,
-                                        {
-                                            "ESP"
-                                        }
-                                    }
-                                }
-                            },
-                            {
                                 39,
                                 1,
                                 {
@@ -12640,103 +12589,6 @@ local ObjectTree = {
                                 }
                             },
                             {
-                                44,
-                                1,
-                                {
-                                    "Doors"
-                                },
-                                {
-                                    {
-                                        45,
-                                        1,
-                                        {
-                                            "Doors"
-                                        },
-                                        {
-                                            {
-                                                50,
-                                                2,
-                                                {
-                                                    "ESP"
-                                                }
-                                            },
-                                            {
-                                                46,
-                                                2,
-                                                {
-                                                    "Assets"
-                                                }
-                                            },
-                                            {
-                                                49,
-                                                2,
-                                                {
-                                                    "ConnectionsFuncs"
-                                                }
-                                            },
-                                            {
-                                                52,
-                                                2,
-                                                {
-                                                    "Minecarts"
-                                                }
-                                            },
-                                            {
-                                                51,
-                                                2,
-                                                {
-                                                    "Entities"
-                                                }
-                                            },
-                                            {
-                                                47,
-                                                2,
-                                                {
-                                                    "AutoWardrobe"
-                                                }
-                                            },
-                                            {
-                                                53,
-                                                2,
-                                                {
-                                                    "Padlock"
-                                                }
-                                            },
-                                            {
-                                                54,
-                                                2,
-                                                {
-                                                    "Player"
-                                                }
-                                            },
-                                            {
-                                                48,
-                                                2,
-                                                {
-                                                    "BreakerBox"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        55,
-                                        1,
-                                        {
-                                            "Lobby"
-                                        },
-                                        {
-                                            {
-                                                56,
-                                                2,
-                                                {
-                                                    "Preset"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
                                 57,
                                 1,
                                 {
@@ -12744,17 +12596,17 @@ local ObjectTree = {
                                 },
                                 {
                                     {
+                                        60,
+                                        2,
+                                        {
+                                            "ConnectionsFuncs"
+                                        }
+                                    },
+                                    {
                                         61,
                                         2,
                                         {
                                             "ESP"
-                                        }
-                                    },
-                                    {
-                                        59,
-                                        2,
-                                        {
-                                            "Chat"
                                         }
                                     },
                                     {
@@ -12765,10 +12617,10 @@ local ObjectTree = {
                                         }
                                     },
                                     {
-                                        60,
+                                        59,
                                         2,
                                         {
-                                            "ConnectionsFuncs"
+                                            "Chat"
                                         }
                                     }
                                 }
@@ -12788,6 +12640,163 @@ local ObjectTree = {
                                         }
                                     }
                                 }
+                            },
+                            {
+                                64,
+                                1,
+                                {
+                                    "Universal"
+                                },
+                                {
+                                    {
+                                        69,
+                                        2,
+                                        {
+                                            "Player"
+                                        }
+                                    },
+                                    {
+                                        68,
+                                        2,
+                                        {
+                                            "ESP"
+                                        }
+                                    },
+                                    {
+                                        67,
+                                        2,
+                                        {
+                                            "ConnectionsFuncs"
+                                        }
+                                    },
+                                    {
+                                        66,
+                                        2,
+                                        {
+                                            "Assets"
+                                        }
+                                    },
+                                    {
+                                        65,
+                                        2,
+                                        {
+                                            "Aimbot"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                62,
+                                1,
+                                {
+                                    "Template"
+                                },
+                                {
+                                    {
+                                        63,
+                                        2,
+                                        {
+                                            "ConnectionsFuncs"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                44,
+                                1,
+                                {
+                                    "Doors"
+                                },
+                                {
+                                    {
+                                        55,
+                                        1,
+                                        {
+                                            "Lobby"
+                                        },
+                                        {
+                                            {
+                                                56,
+                                                2,
+                                                {
+                                                    "Preset"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        45,
+                                        1,
+                                        {
+                                            "Doors"
+                                        },
+                                        {
+                                            {
+                                                53,
+                                                2,
+                                                {
+                                                    "Padlock"
+                                                }
+                                            },
+                                            {
+                                                50,
+                                                2,
+                                                {
+                                                    "ESP"
+                                                }
+                                            },
+                                            {
+                                                49,
+                                                2,
+                                                {
+                                                    "ConnectionsFuncs"
+                                                }
+                                            },
+                                            {
+                                                54,
+                                                2,
+                                                {
+                                                    "Player"
+                                                }
+                                            },
+                                            {
+                                                52,
+                                                2,
+                                                {
+                                                    "Minecarts"
+                                                }
+                                            },
+                                            {
+                                                47,
+                                                2,
+                                                {
+                                                    "AutoWardrobe"
+                                                }
+                                            },
+                                            {
+                                                46,
+                                                2,
+                                                {
+                                                    "Assets"
+                                                }
+                                            },
+                                            {
+                                                48,
+                                                2,
+                                                {
+                                                    "BreakerBox"
+                                                }
+                                            },
+                                            {
+                                                51,
+                                                2,
+                                                {
+                                                    "Entities"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
@@ -12798,98 +12807,6 @@ local ObjectTree = {
                             "Tabs"
                         },
                         {
-                            {
-                                23,
-                                1,
-                                {
-                                    "Doors"
-                                },
-                                {
-                                    {
-                                        29,
-                                        1,
-                                        {
-                                            "Lobby"
-                                        },
-                                        {
-                                            {
-                                                30,
-                                                2,
-                                                {
-                                                    "Main"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        24,
-                                        1,
-                                        {
-                                            "Doors"
-                                        },
-                                        {
-                                            {
-                                                26,
-                                                2,
-                                                {
-                                                    "Floor"
-                                                }
-                                            },
-                                            {
-                                                28,
-                                                2,
-                                                {
-                                                    "Visuals"
-                                                }
-                                            },
-                                            {
-                                                27,
-                                                2,
-                                                {
-                                                    "Main"
-                                                }
-                                            },
-                                            {
-                                                25,
-                                                2,
-                                                {
-                                                    "Exploits"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                17,
-                                1,
-                                {
-                                    "3008"
-                                },
-                                {
-                                    {
-                                        18,
-                                        2,
-                                        {
-                                            "Exploits"
-                                        }
-                                    },
-                                    {
-                                        19,
-                                        2,
-                                        {
-                                            "Main"
-                                        }
-                                    },
-                                    {
-                                        20,
-                                        2,
-                                        {
-                                            "Visuals"
-                                        }
-                                    }
-                                }
-                            },
                             {
                                 34,
                                 1,
@@ -12905,17 +12822,109 @@ local ObjectTree = {
                                         }
                                     },
                                     {
+                                        36,
+                                        2,
+                                        {
+                                            "Main"
+                                        }
+                                    },
+                                    {
                                         35,
                                         2,
                                         {
                                             "Exploits"
                                         }
+                                    }
+                                }
+                            },
+                            {
+                                23,
+                                1,
+                                {
+                                    "Doors"
+                                },
+                                {
+                                    {
+                                        24,
+                                        1,
+                                        {
+                                            "Doors"
+                                        },
+                                        {
+                                            {
+                                                27,
+                                                2,
+                                                {
+                                                    "Main"
+                                                }
+                                            },
+                                            {
+                                                25,
+                                                2,
+                                                {
+                                                    "Exploits"
+                                                }
+                                            },
+                                            {
+                                                28,
+                                                2,
+                                                {
+                                                    "Visuals"
+                                                }
+                                            },
+                                            {
+                                                26,
+                                                2,
+                                                {
+                                                    "Floor"
+                                                }
+                                            }
+                                        }
                                     },
                                     {
-                                        36,
+                                        29,
+                                        1,
+                                        {
+                                            "Lobby"
+                                        },
+                                        {
+                                            {
+                                                30,
+                                                2,
+                                                {
+                                                    "Main"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                17,
+                                1,
+                                {
+                                    "3008"
+                                },
+                                {
+                                    {
+                                        19,
                                         2,
                                         {
                                             "Main"
+                                        }
+                                    },
+                                    {
+                                        20,
+                                        2,
+                                        {
+                                            "Visuals"
+                                        }
+                                    },
+                                    {
+                                        18,
+                                        2,
+                                        {
+                                            "Exploits"
                                         }
                                     }
                                 }
@@ -12969,26 +12978,26 @@ local ObjectTree = {
                         },
                         {
                             {
-                                9,
+                                12,
                                 1,
                                 {
-                                    "Doors"
+                                    "R&D"
                                 },
                                 {
                                     {
-                                        11,
+                                        13,
                                         2,
                                         {
-                                            "Lobby"
-                                        }
-                                    },
-                                    {
-                                        10,
-                                        2,
-                                        {
-                                            "Doors"
+                                            "R&D"
                                         }
                                     }
+                                }
+                            },
+                            {
+                                14,
+                                2,
+                                {
+                                    "Template"
                                 }
                             },
                             {
@@ -13031,30 +13040,37 @@ local ObjectTree = {
                                 }
                             },
                             {
-                                14,
-                                2,
-                                {
-                                    "Template"
-                                }
-                            },
-                            {
-                                12,
+                                9,
                                 1,
                                 {
-                                    "R&D"
+                                    "Doors"
                                 },
                                 {
                                     {
-                                        13,
+                                        10,
                                         2,
                                         {
-                                            "R&D"
+                                            "Doors"
+                                        }
+                                    },
+                                    {
+                                        11,
+                                        2,
+                                        {
+                                            "Lobby"
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                }
+            },
+            {
+                2,
+                2,
+                {
+                    "Mappings"
                 }
             },
             {
@@ -13065,24 +13081,40 @@ local ObjectTree = {
                 },
                 {
                     {
-                        82,
+                        72,
                         2,
                         {
-                            "Loader"
+                            "Connections"
                         }
                     },
                     {
-                        74,
-                        2,
+                        85,
+                        1,
                         {
-                            "FileHelper"
-                        }
-                    },
-                    {
-                        84,
-                        2,
+                            "Universal"
+                        },
                         {
-                            "Services"
+                            {
+                                86,
+                                2,
+                                {
+                                    "ControlModule"
+                                }
+                            },
+                            {
+                                88,
+                                2,
+                                {
+                                    "Twerk"
+                                }
+                            },
+                            {
+                                87,
+                                2,
+                                {
+                                    "Fly"
+                                }
+                            }
                         }
                     },
                     {
@@ -13146,10 +13178,17 @@ local ObjectTree = {
                         }
                     },
                     {
-                        71,
+                        82,
                         2,
                         {
-                            "BloxstrapRPC"
+                            "Loader"
+                        }
+                    },
+                    {
+                        84,
+                        2,
+                        {
+                            "Services"
                         }
                     },
                     {
@@ -13160,49 +13199,19 @@ local ObjectTree = {
                         }
                     },
                     {
-                        85,
-                        1,
+                        71,
+                        2,
                         {
-                            "Universal"
-                        },
-                        {
-                            {
-                                87,
-                                2,
-                                {
-                                    "Fly"
-                                }
-                            },
-                            {
-                                86,
-                                2,
-                                {
-                                    "ControlModule"
-                                }
-                            },
-                            {
-                                88,
-                                2,
-                                {
-                                    "Twerk"
-                                }
-                            }
+                            "BloxstrapRPC"
                         }
                     },
                     {
-                        72,
+                        74,
                         2,
                         {
-                            "Connections"
+                            "FileHelper"
                         }
                     }
-                }
-            },
-            {
-                2,
-                2,
-                {
-                    "Mappings"
                 }
             }
         }
@@ -13263,8 +13272,8 @@ local LineOffsets = {
     [74] = 11724,
     [81] = 11813,
     [80] = 11850,
-    [86] = 11899,
-    [84] = 11879,
+    [84] = 11942,
+    [86] = 11879,
     [83] = 11962,
     [88] = 12015,
     [77] = 12398,
