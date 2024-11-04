@@ -4003,12 +4003,12 @@ end
 
 local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
     BypassGroupBox:AddToggle("SpeedBypass", {
-        Text = "Speed Bypass",
+        Text = "Tăng thêm tốc độ",
         Default = false
     })
 
     BypassGroupBox:AddSlider("SpeedBypassDelay", {
-        Text = "Speed Bypass Delay",
+        Text = "Độ trễ khi tăng tốc",
         Default = 0.23,
         Min = 0.22,
         Max = 0.25,
@@ -4019,52 +4019,52 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
     BypassGroupBox:AddDivider()
 
     BypassGroupBox:AddToggle("AnticheatManipulation", {
-        Text = "Anticheat Manipulation",
+        Text = "Can thiệp vào hệ thống chống cheat",
         Default = false,
     }):AddKeyPicker("AnticheatManipulationKey", {
         Default = "T",
-        Text = "Anticheat Manipulation",
+        Text = "Can thiệp vào hệ thống chống cheat",
         Mode = shared.Library.IsMobile and "Toggle" or "Hold",
         SyncToggleState = shared.Library.IsMobile
     })
 
     BypassGroupBox:AddToggle("CollisionOffsetGodmode", {
-        Text = "Godmode",
+        Text = "Bất tử",
         Default = false,
         Risky = true,
-        Tooltip = "Lags you back and is buggy with crouch",
+        Tooltip = "Có thể làm game chậm và lỗi",
     }):AddKeyPicker("CollisionOffsetGodmodeKey", {
         Mode = "Toggle",
         Default = "K",
-        Text = "Godmode",
+        Text = "Bất tử",
         SyncToggleState = true
     })
 
     BypassGroupBox:AddDivider()
     
     BypassGroupBox:AddToggle("InfItems", {
-        Text = "Infinite Items",
+        Text = "Vô hạn vật phẩm",
         Default = false,
         Visible = not Script.IsFools
     })
 
     BypassGroupBox:AddToggle("InfCrucifix", {
-        Text = "Infinite Crucifix",
+        Text = "Thánh giá vô hạn",
         Default = false,
         Visible = not Script.IsFools,
-        Tooltip = "Very risky, you might die/lose the crucifix",
+        Tooltip = "Rất rủi ro, bạn có thể chết và mất vật phẩm",
         Risky = true
     })
 
     BypassGroupBox:AddDivider()
 
     BypassGroupBox:AddToggle("FakeRevive", {
-        Text = "Fake Revive",
+        Text = "Gỉa hồi sinh",
         Default = false
     })
 
     BypassGroupBox:AddToggle("DeleteSeek", {
-        Text = "Delete Seek (FE)",
+        Text = "Xóa seek (FE)",
         Default = false
     })
 end
@@ -4195,17 +4195,17 @@ Toggles.FakeRevive:OnChanged(function(value)
     if value and Script.Alive and shared.Character and not Script.FakeRevive.Enabled then
         if Script.LatestRoom and Script.LatestRoom.Value == 0 then
             shared.Notify:Alert({
-                Title = "Fake Revive",
-                Description = "You have to open the next door to use fake revive",
-                Reason = "You are in the first room"
+                Title = "Dương Api",
+                Description = "Bạn phải mở cửa tiếp theo để sử dụng tính năng này",
+                Reason = "Bạ đang ở phòng thứ nhất"
             })
             repeat task.wait() until Script.LatestRoom.Value > 0
         end
 
         shared.Notify:Alert({
-            Title = "Fake Revive",
-            Description = "Please find a way to die or wait for around 20 seconds\nfor fake revive to work.",
-            Reason = "You are not yet dead",
+            Title = "Dương Api",
+            Description = "Phải tìm nơi để hẹo hoặc đợi 20s\nĐể hoạt động.",
+            Reason = "Bạn vẫn chưa hẹo",
             Time = 20
         })
         
@@ -4231,9 +4231,9 @@ Toggles.FakeRevive:OnChanged(function(value)
         if Script.Alive and not Toggles.FakeRevive.Value then
             Script.RemotesFolder.Underwater:FireServer(false)
             shared.Notify:Alert({
-                Title = "Fake Revive",
-                Description = "Fake revive has been disabled, was unable to kill player.",
-                Reason = "You are not yet dead",
+                Title = "Dương Api",
+                Description = "Đã tắt tính năng",
+                Reason = "Bạn vẫn chưa chết",
             })
             oxygenModule.Enabled = true
             healthModule.Enabled = true
@@ -4542,7 +4542,7 @@ Toggles.FakeRevive:OnChanged(function(value)
             end
 
             if doStepped ~= false then
-                shared.Library:Notify("You are not longer visible to others because you have lost Network Ownership of your shared.Character.", 5);
+                shared.Library:Notify("Bạn không còn hiển thị với người khác do bị mất mạng với nhân vật của bạn.", 5);
 
                 for _,v in pairs(previewCharacter:GetDescendants()) do
                     if v:IsA("BasePart") then 
@@ -4748,9 +4748,9 @@ Toggles.FakeRevive:OnChanged(function(value)
         shared.Connect:GiveSignal(Script.FakeRevive.Connections["CurrentRoomFix"])
 
         shared.Notify:Alert({
-            Title = "Fake Revive",
-            Description = "Fake Revive is now initialized, have fun!",
-            Reason = 'You are now "dead"',
+            Title = "Dương Api",
+            Description = "Đã giả chết thành công, hãy tận hưởng!",
+            Reason = 'Bạn đã chết',
         })
     end
 end)
@@ -4781,15 +4781,15 @@ local Tabs = Script.Tabs
 if Script.IsHotel then
     local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Hotel_AntiEntityGroupBox:AddToggle("AntiSeekObstructions", {
-            Text = "Anti-Seek Obstructions",
+            Text = "Xóa vật cản từ seek",
             Default = false
         })
     end
 
     local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bypass") do
         Hotel_BypassGroupBox:AddToggle("AvoidRushAmbush", {
-            Text = "Avoid Rush/Ambush",
-            Tooltip = "Doesn't work for greenhouse :(",
+            Text = "Né tránh Rush/Ambush",
+            Tooltip = "Không hoạt động ở greenhouse :(",
             Default = false,
             Risky = true
         })
@@ -4797,25 +4797,25 @@ if Script.IsHotel then
 
     local Hotel_FarmGroupBox = Tabs.Floor:AddLeftGroupbox("Farm") do
         Hotel_FarmGroupBox:AddToggle("KnobFarm", {
-            Text = "Knob Farm",
-            Tooltip = "Only works in Room 100 and figure is spawned",
+            Text = "Cày Knob",
+            Tooltip = "Chỉ hoạt động ở cửa 100 và có figure xuất hiện",
             Default = false
         })
     end
 
     local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Modifiers") do
         Hotel_ModifiersGroupBox:AddToggle("NoVoiceActing", {
-            Text = "No Voice Acting",
+            Text = "Không có âm thanh lồng tiếng",
             Default = false
         })
 
         Hotel_ModifiersGroupBox:AddToggle("AntiA90", {
-            Text = "Anti-A90",
+            Text = "Chống-A90",
             Default = false
         })
 
         Hotel_ModifiersGroupBox:AddToggle("NoJammin", {
-            Text = "No Jammin",
+            Text = "Không có Jammin",
             Default = false
         })
     end
@@ -4898,7 +4898,7 @@ if Script.IsHotel then
 elseif Script.IsMines then
     local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Movement") do
         Mines_MovementGroupBox:AddSlider("MaxSlopeAngle", {
-            Text = "Max Floor Angle",
+            Text = "Độ nghiêng sàn tối đa",
             Default = 45,
             Min = 0,
             Max = 90,
@@ -4908,39 +4908,39 @@ elseif Script.IsMines then
 
     local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Mines_AntiEntityGroupBox:AddToggle("AntiGiggle", {
-            Text = "Anti-Giggle",
+            Text = "Tránh bị giggle cắn",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiGloomEgg", {
-            Text = "Anti-Gloom Egg",
+            Text = "Tránh dẫm phải gloomEgg",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiBridgeFall", {
-            Text = "Anti-Bridge Fall",
+            Text = "Chống bị đá rơi vô đầu",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiPipeGap", {
-            Text = "Anti-Pipe Gap",
+            Text = "Chống Pipe Gap",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiSeekFlood", {
-            Text = "Anti-Seek Flood",
+            Text = "Chống bị seek ngập vô",
             Default = false
         })
     end
 
     local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
         Mines_AutomationGroupBox:AddButton({
-            Text = "Beat Door 200",
+            Text = "Phá đảo cửa 200",
             Func = function()
                 if Script.LatestRoom.Value < 99 then
                     shared.Notify:Alert({
-                        Title = "Beat Door 200",
-                        Description = "You haven't reached door 200...",
+                        Title = "Dương Api",
+                        Description = "Bạn chưa tới cửa 200...",
                         Time = 5
                     })
 
