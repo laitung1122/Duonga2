@@ -1747,11 +1747,11 @@ shared.Connect:GiveSignal(shared.LocalPlayer:GetAttributeChangedSignal("CurrentR
     if Script.IsMines and Script.Bypassed and currentRoomModel:GetAttribute("RawName") == "HaltHallway" then
         Script.Bypassed = false
         shared.Notify:Alert({
-            Title = "Anticheat Bypass",
-            Description = "Halt has broken anticheat bypass.",
-            Reason = "Please go on a ladder again to fix it.",
+            Title = "Dương Api",
+            Description = "Half đã phá hủy bỏ qua gian lận.",
+            Reason = "Hãy lên thang để sửa lại lỗi.",
 
-            LinoriaMessage = "Halt has broken anticheat bypass, please go on a ladder again to fix it.",
+            LinoriaMessage = "Half đã phá hủy bỏ qua gian lận, Hãy lên thang để sửa lại lỗi.",
         })
 
         Options.WalkSpeed:SetMax(Toggles.SpeedBypass.Value and 75 or (Toggles.EnableJump.Value and 18 or 22))
@@ -2056,9 +2056,9 @@ shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
                         local result = Anchor:FindFirstChildOfClass("RemoteFunction"):InvokeServer(CurrentGameState.AnchorCode)
                         if result then
                             shared.Notify:Alert({
-                                Title = "Auto Anchor Solver",
-                                Description = "Solved Anchor " .. CurrentAnchor .. " successfully!",
-                                Reason = "Solved anchor with the code " .. CurrentGameState.AnchorCode,
+                                Title = "Tự động giải mã trụ điện",
+                                Description = "giải mã trụ" .. CurrentAnchor .. " Thành công!",
+                                Reason = "giải mã thành công với code: " .. CurrentGameState.AnchorCode,
                             })
                         end
                     end)
@@ -2068,8 +2068,8 @@ shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
             local HoldingItem = Script.Temp.HoldingItem
             if HoldingItem and not shared.isnetworkowner(HoldingItem) then
                 shared.Notify:Alert({
-                    Title = "Banana/Jeff Throw",
-                    Description = "You are no longer holding the item due to network owner change!",
+                    Title = "Dương Api",
+                    Description = "Bạn không còn giữ được vật phẩm này lâu do mạng đổi!",
                 })
                 Script.Temp.HoldingItem = nil
             end
@@ -2710,7 +2710,7 @@ shared.Connect:GiveSignal(workspace.ChildAdded:Connect(function(child)
     if Toggles.NotifyEntity.Value then
         shared.Notify:Alert({
             Title = "ENTITIES",
-            Description = entityName .. " has spawned!"
+            Description = entityName .. " đã xuất hiện!"
         })
     
         if Toggles.NotifyChat.Value then
@@ -2767,7 +2767,7 @@ shared.Library:OnUnload(function()
         end
     end
 
-    print("Unloading " .. shared.ScriptName .. "...")
+    print("Ngừng tải " .. shared.ScriptName .. "...")
 end)
 
 getgenv().mspaint_loaded = true
@@ -2870,7 +2870,7 @@ task.spawn(Script.Functions.SetupCharacterConnection, shared.Character)
 
 --// Unload \\--
 shared.Library:OnUnload(function()
-    print("Unloading " .. shared.ScriptName .. "...")
+    print("Ngừng tải " .. shared.ScriptName .. "...")
 end)
 
 getgenv().mspaint_loaded = true
@@ -2901,10 +2901,10 @@ function Script.Functions.UpdateBloxstrapRPC()
     if not wax.shared.BloxstrapRPC then return end
 
     wax.shared.BloxstrapRPC.SetRichPresence({
-        details = "Playing " .. Script.GameName .. " [ mspaint v3 ]",
-        state = #shared.Players:GetPlayers() .. " players in the server",
+        details = "Đang chơi " .. Script.GameName .. " [ Dương Api ]",
+        state = #shared.Players:GetPlayers() .. " người chơi trong sever",
         largeImage = {
-            hoverText = "Using mspaint v3"
+            hoverText = "Sử dụng Dương Api V2"
         },
         smallImage = {
             assetId = 6925817108,
@@ -3943,37 +3943,37 @@ local Tabs = Script.Tabs
 --// Exploits \\--
 local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Anti-Entity") do
     AntiEntityGroupBox:AddToggle("AntiDread", {
-        Text = "Anti-Dread",
+        Text = "Chống-Dread",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiHalt", {
-        Text = "Anti-Halt",
+        Text = "Chống-Halt",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiScreech", {
-        Text = "Anti-Screech",
+        Text = "Chống Screech hù dọa",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiDupe", {
-        Text = "Anti-" .. (Script.IsBackdoor and "Vacuum" or "Dupe"),
+        Text = "Chống-" .. (Script.IsBackdoor and "Vacuum" or "Dupe"),
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiEyes", {
-        Text = "Anti-" .. (Script.IsBackdoor and "Lookman" or "Eyes"),
+        Text = "Chống-" .. (Script.IsBackdoor and "Lookman" or "Eyes"),
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiSnare", {
-        Text = "Anti-Snare",
+        Text = "Chống bẫy",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiHearing", {
-        Text = "Anti-Figure Hearing",
+        Text = "Chống Figure nghe thấy",
         Default = false,
         Visible = not Script.IsFools
     })
@@ -3981,11 +3981,11 @@ end
 
 local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
     TrollingGroupBox:AddToggle("SpamOtherTools", {
-        Text = "Spam Other Tools",
+        Text = "Tạo một số công cụ",
         Default = false
     }):AddKeyPicker("SpamOtherTools", {
         Default = "X",
-        Text = "Spam Other Tools",
+        Text = "Tạo một số công cụ",
         Mode = shared.Library.IsMobile and "Toggle" or "Hold",
         SyncToggleState = shared.Library.IsMobile
     })
@@ -3996,7 +3996,7 @@ local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
     })
 
     TrollingGroupBox:AddToggle("Twerk", {
-        Text = "Twerk",
+        Text = "Nhảy",
         Default = false
     })
 end
