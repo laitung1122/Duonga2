@@ -5004,19 +5004,19 @@ elseif Script.IsMines then
         })
 
         Mines_AutomationGroupBox:AddToggle("TheMinesAnticheatBypass", {
-            Text = "Anticheat Bypass",
+            Text = "Bỏ qua hệ thống chống gian lận",
             Default = false
         })
     end
 
     local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bypass") do
         Mines_BypassGroupBox:AddToggle("MinecartTeleport", {
-            Text = "Minecart Teleport",
+            Text = "Dịch chuyển xe mỏ",
             Default = false
         })
 
         Mines_BypassGroupBox:AddToggle("MinecartTeleportDebug", {
-            Text = "Minecart Teleport Debug",
+            Text = "Vá lỗi dịch chuyển",
             Default = false,
             Visible = true,
         })
@@ -5024,7 +5024,7 @@ elseif Script.IsMines then
     
     local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visuals") do
         Mines_VisualGroupBox:AddToggle("MinecartPathVisualiser", {
-            Text = "Visualize Correct Seek Path",
+            Text = "Hiển thị đường đi đúng",
             Default = false
         })
     end
@@ -6328,7 +6328,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         NotifySettingsTab:AddDropdown("NotifyStyle", {
             AllowNull = false,
             Values = {"Linoria", "Doors"},
-            Default = "Linoria",
+            Default = "Doors",
             Multi = false,
 
             Text = "Notification Style"
@@ -11836,7 +11836,7 @@ function Notify:Alert(options)
         local linoriaMessage = options["LinoriaMessage"] or options.Description
         options.Description = linoriaMessage
 
-        Linoria:Alert(options)
+        :Alert(options)
     elseif shared.NotifyStyle == "Doors" and shared.ScriptName == "DOORS" then
         if options.Warning then
             options["Warning"] = nil
@@ -11854,7 +11854,7 @@ end)() end,
     [80] = function()local wax,script,require=ImportGlobals(80)local ImportGlobals return (function(...)local Linoria = {}
 
 function Linoria:Alert(options)
-    if not shared.Library then return warn("No Linoria library") end
+    if not shared.Library then return warn("No  library") end
     Linoria:Notify(options)
 
     if shared.CheckToggle("NotifySound", true) then
@@ -12232,7 +12232,7 @@ end
 
 function UICreator:CreateWindow()
     local Window = shared.Library:CreateWindow({
-        Title = "mspaint v3 | " .. shared.ScriptName,
+        Title = "Dương Api V2 | " .. shared.ScriptName,
         Center = true,
         AutoShow = true,
         Resizable = true,
