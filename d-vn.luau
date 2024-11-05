@@ -5201,14 +5201,14 @@ elseif Script.IsMines then
 elseif Script.IsBackdoor then
     local Backdoors_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Backdoors_AntiEntityGroupBox:AddToggle("AntiHasteJumpscare", {
-            Text = "Anti Haste Jumpscare",
+            Text = "Chặn Haste dọa",
             Default = false
         })
     end
 
     local Backdoors_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visual") do
         Backdoors_VisualGroupBox:AddToggle("HasteClock", {
-            Text = "Haste Clock",
+            Text = "Đồng hồ Haste",
             Default = true
         })
     end
@@ -5252,14 +5252,14 @@ elseif Script.IsBackdoor then
 elseif Script.IsRooms then
     local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Rooms_AntiEntityGroupBox:AddToggle("AntiA90", {
-            Text = "Anti-A90",
+            Text = "Chống A90",
             Default = false
         })
     end
 
     local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
         Rooms_AutomationGroupBox:AddToggle("AutoRooms", {
-            Text = "Auto Rooms",
+            Text = "Tự động A1000",
             Default = false
         })
 
@@ -5268,12 +5268,12 @@ elseif Script.IsRooms then
         Rooms_AutomationGroupBox:AddDivider()
 
         Rooms_AutomationGroupBox:AddToggle("AutoRoomsDebug", { 
-            Text = "Show Debug Info",
+            Text = "Hiển thị vá lỗi",
             Default = false
         })
         
         Rooms_AutomationGroupBox:AddToggle("ShowAutoRoomsPathNodes", { 
-            Text = "Show Pathfinding Nodes",
+            Text = "Hiển thị ghi chú",
             Default = false
         })
 
@@ -5282,9 +5282,9 @@ elseif Script.IsRooms then
     Toggles.AntiA90:OnChanged(function(value)
         if Toggles.AutoRooms.Value and not value then
             shared.Notify:Alert({
-                Title = "Auto Rooms",
-                Description = "Anti A-90 is required for Auto Rooms to work!",
-                Reason = "Anti A-90 has been enabled",
+                Title = "Dương Api",
+                Description = "Chống A90 cần thiết để hoạt động ổn định!",
+                Reason = "Chống A90 đã bật",
             })
             
             Toggles.AntiA90:SetValue(true)
@@ -5397,8 +5397,8 @@ elseif Script.IsRooms then
                 end
                 
                 shared.Notify:Log({
-                    Title = "Auto Rooms",
-                    Description = "Calculated Objective Successfully!\nObjective: " .. pathfindingGoal.Parent.Name .. "\nCreating path...",
+                    Title = "Dương Api",
+                    Description = "Tìm thành công!\nĐang tạo điểm...",
                 }, Toggles.AutoRoomsDebug.Value)
 
                 local path = shared.PathfindingService:CreatePath({
@@ -5412,8 +5412,8 @@ elseif Script.IsRooms then
                 })
 
                 shared.Notify:Log({
-                    Title = "Auto Rooms",
-                    Description = "Computing Path to " .. pathfindingGoal.Parent.Name .. "...",
+                    Title = "Dương Api",
+                    Description = "Tính toán đường tới" .. pathfindingGoal.Parent.Name .. "...",
                 }, Toggles.AutoRoomsDebug.Value)
 
                 path:ComputeAsync(shared.RootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
@@ -5440,8 +5440,8 @@ elseif Script.IsRooms then
                     end)
 
                     shared.Notify:Log({
-                        Title = "Auto Rooms",
-                        Description = "Computed path successfully with " .. waypointAmount .. " waypoints!",
+                        Title = "Dương Api",
+                        Description = "Tính toán thành công với" .. waypointAmount .. " điểm!",
                     }, Toggles.AutoRoomsDebug.Value)
 
                     _internal_mspaint_pathfinding_nodes:ClearAllChildren()
@@ -5492,9 +5492,9 @@ elseif Script.IsRooms then
                                 repeat task.wait(0.25) until (not shared.Character:GetAttribute("Hiding") and not shared.Character.PrimaryPart.Anchored)
 
                                 shared.Notify:Alert({
-                                    Title = "Auto Rooms",
-                                    Description = "Seems like you are stuck, trying to recalculate path...",
-                                    Reason = "Failed to move to waypoint",
+                                    Title = "Dương Api",
+                                    Description = "Có vẻ bạn đang bị kẹt, đang tính đường mới...",
+                                    Reason = "Thất bại khi đến điểm chấm",
                                 })
 
                                 recalculate = true
@@ -5526,8 +5526,8 @@ elseif Script.IsRooms then
                     end
                 else
                     shared.Notify:Log({
-                        Title = "Auto Rooms",
-                        Description = "Pathfinding failed with status " .. tostring(path.Status)   
+                        Title = "Dương Api",
+                        Description = "Tính toán thất bại với lỗi " .. tostring(path.Status)   
                     }, Toggles.AutoRoomsDebug.Value)
                 end
             end
@@ -5536,9 +5536,9 @@ elseif Script.IsRooms then
             while Toggles.AutoRooms.Value and not shared.Library.Unloaded do
                 if Script.LatestRoom.Value == 1000 then
                     shared.Notify:Alert({
-                        Title = "Auto Rooms",
-                        Description = "You have reached A-1000",
-                        Reason = "A-1000 reached by mspaint autorooms",
+                        Title = "Dương Api",
+                        Description = "Bạn đã tới A-1000",
+                        Reason = "A-1000 Fix bởi dương modder",
                     })
 
                     break
@@ -6441,22 +6441,22 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
 
     local EffectsTab = SelfTabBox:AddTab("Effects") do
         EffectsTab:AddToggle("NoGlitchEffect", {
-            Text = "No Glitch Effect",
+            Text = "Không hiệu ứng Glicth",
             Default = false
         })
 
         EffectsTab:AddToggle("NoVoidEffect", {
-            Text = "No Void Effect",
+            Text = "Không hiệu ứng âm thanh",
             Default = false
         })
 
         EffectsTab:AddToggle("NoEntityJumpscare", {
-            Text = "No Jumpscare",
+            Text = "Không hù dọa",
             Default = false
         })
 
         EffectsTab:AddToggle("NoSpiderJumpscare", {
-            Text = "No Spider Jumpscare",
+            Text = "Không bị nhện dọa",
             Default = false
         })
     end
@@ -6890,7 +6890,7 @@ if Script.IsBackdoor then
 
             shared.Notify:Alert({
                 Title = "ENTITIES",
-                Description = "Haste is incoming, please find a lever ASAP!",
+                Description = "Haste đang đến, hãy tìm cần gạt nhanh!",
                 Time = haste_incoming_progress,
 
                 Warning = true
@@ -7057,7 +7057,7 @@ local Tabs = Script.Tabs
 ---// Main \\--
 local SniperGroupbox = Tabs.Main:AddLeftGroupbox("Sniper") do
     SniperGroupbox:AddToggle("ElevatorSniper", {
-        Text = "Elevator Sniper",
+        Text = "Chọn thanh máy",
         Default = false
     })
 
@@ -7065,18 +7065,18 @@ local SniperGroupbox = Tabs.Main:AddLeftGroupbox("Sniper") do
         SpecialType = "Player",
         Multi = false,
 
-        Text = "Target"
+        Text = "Chọn người chơi"
     })
 end
 
 local OtherGroupbox = Tabs.Main:AddRightGroupbox("Other") do
     OtherGroupbox:AddToggle("Twerk", {
-        Text = "Twerk",
+        Text = "Nhảy",
         Default = false
     })
 
     OtherGroupbox:AddToggle("LoopAchievements", {
-        Text = "Loop Achievements",
+        Text = "Thay đổi danh hiệu liên tục",
         Default = false
     })
 
@@ -7336,7 +7336,7 @@ local Tabs = Script.Tabs
 local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     local ESPTab = ESPTabBox:AddTab("ESP") do
         ESPTab:AddToggle("DoorESP", {
-            Text = "Door",
+            Text = "Doors",
             Default = false,
         }):AddColorPicker("DoorEspColor", {
             Default = Color3.new(0, 1, 1),
@@ -9785,13 +9785,13 @@ function Script.Functions.DoorESP(room)
         local opened = door:GetAttribute("Opened")
         local locked = room:GetAttribute("RequiresKey")
 
-        local doorState = if opened then "[Opened]" elseif locked then "[Locked]" else ""
+        local doorState = if opened then "[Đã mở]" elseif locked then "[Khóa]" else ""
         local doorIdx = Script.Functions.RandomString()
 
         local doorEsp = Script.Functions.ESP({
             Type = "Door",
             Object = door:WaitForChild("Door"),
-            Text = string.format("Door %s %s", doorNumber, doorState),
+            Text = string.format("Cửa %s %s", doorNumber, doorState),
             Color = Options.DoorEspColor.Value,
 
             OnDestroy = function()
@@ -9800,7 +9800,7 @@ function Script.Functions.DoorESP(room)
         })
 
         Script.FeatureConnections.Door[doorIdx] = door:GetAttributeChangedSignal("Opened"):Connect(function()
-            if doorEsp then doorEsp.SetText(string.format("Door %s [Opened]", doorNumber)) end
+            if doorEsp then doorEsp.SetText(string.format("Cửa %s [Đã mở]", doorNumber)) end
             if Script.FeatureConnections.Door[doorIdx] then Script.FeatureConnections.Door[doorIdx]:Disconnect() end
         end)
     end
@@ -9812,7 +9812,7 @@ function Script.Functions.ObjectiveESP(child)
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = string.format("Timer Lever [+%s]", child.TakeTimer.TextLabel.Text),
+            Text = string.format("Cần gạt hẹn giờ [+%s]", child.TakeTimer.TextLabel.Text),
             Color = Options.ObjectiveEspColor.Value
         })
     -- Backdoor + Hotel
@@ -9820,7 +9820,7 @@ function Script.Functions.ObjectiveESP(child)
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Key",
+            Text = "Chìa khóa",
             Color = Options.ObjectiveEspColor.Value
         })
     -- Hotel
@@ -9828,28 +9828,28 @@ function Script.Functions.ObjectiveESP(child)
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Electrical Key",
+            Text = "Chìa khóa điện tử",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "LeverForGate" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Gate Lever",
+            Text = "Cần gạt",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "LiveHintBook" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Book",
+            Text = "Vở",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "LiveBreakerPolePickup" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Breaker",
+            Text = "Cầu chì",
             Color = Options.ObjectiveEspColor.Value
         })
     -- Mines
@@ -9857,21 +9857,21 @@ function Script.Functions.ObjectiveESP(child)
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Generator",
+            Text = "Máy phát điện",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "MinesGateButton" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Gate Power Button",
+            Text = "Nút mở cửa",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "FuseObtain" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Fuse",
+            Text = "Cầu chì",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "MinesAnchor" then
@@ -9881,7 +9881,7 @@ function Script.Functions.ObjectiveESP(child)
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = string.format("Anchor %s", sign.TextLabel.Text),
+                Text = string.format("Trụ điện %s", sign.TextLabel.Text),
                 Color = Options.ObjectiveEspColor.Value
             })
         end
@@ -9895,7 +9895,7 @@ function Script.Functions.ObjectiveESP(child)
             local pumpEsp = Script.Functions.ESP({
                 Type = "Objective",
                 Object = wheel,
-                Text = "Water Pump",
+                Text = "Máy bơm nước",
                 Color = Options.ObjectiveEspColor.Value,
 
                 OnDestroy = function()
@@ -9992,7 +9992,7 @@ function Script.Functions.GoldESP(gold)
     Script.Functions.ESP({
         Type = "Gold",
         Object = gold,
-        Text = string.format("Gold [%s]", gold:GetAttribute("GoldValue")),
+        Text = string.format("Vàng [%s]", gold:GetAttribute("GoldValue")),
         Color = Options.GoldEspColor.Value
     })
 end
@@ -10012,7 +10012,7 @@ function Script.Functions.GuidingLightEsp(guidance)
     local guidanceEsp = Script.Functions.ESP({
         Type = "Guiding",
         Object = part,
-        Text = "Guidance",
+        Text = "Chỉ dẫn",
         Color = Options.GuidingLightEspColor.Value
     })
 
@@ -10086,16 +10086,16 @@ function Script.Functions.DeleteSeek(collision: BasePart)
         
         if collision:IsDescendantOf(workspace) and (collision.Parent and collision.Parent.Name == "TriggerEventCollision") then
             shared.Notify:Alert({
-                Title = "Delete Seek FE",
-                Description = "Deleting Seek trigger...",
+                Title = "Dương Api",
+                Description = "Đang xóa seek...",
                 Reason = "",
             })
 
             task.delay(4, function()
                 if collision:IsDescendantOf(workspace) then
                     shared.Notify:Alert({
-                        Title = "Delete Seek FE",
-                        Description = "Failed to delete Seek trigger!",
+                        Title = "Dương Api",
+                        Description = "Xóa seek thất bại!",
                         Reason = "",
                     })
                 end
@@ -10120,8 +10120,8 @@ function Script.Functions.DeleteSeek(collision: BasePart)
             
             if not collision:IsDescendantOf(workspace) then
                 shared.Notify:Log({
-                    Title = "Delete Seek FE",
-                    Description = "Deleted Seek trigger successfully!",
+                    Title = "Duong Api",
+                    Description = "Xóa seek thành công!",
                 })
             end
         end
@@ -12307,6 +12307,7 @@ function UICreator:CreateSettingsTab()
     CreditsGroup:AddLabel("deividcomsono - main script dev")
     CreditsGroup:AddLabel("mstudio45")
     CreditsGroup:AddLabel("bacalhauz")
+    CreditsGroup:AddLabel("Dương Modder")
 
     shared.Library.ToggleKeybind = shared.Options.MenuKeybind
 
