@@ -12275,7 +12275,7 @@ function UICreator:CreateWindow()
 end
 
 function UICreator:CreateSettingsTab()
-    local SettingsTab = shared.Window:AddTab("UI Settings")
+    local SettingsTab = shared.Window:AddTab("Cài đặt")
 
     local MenuGroup = SettingsTab:AddLeftGroupbox("Menu")
     local CreditsGroup = SettingsTab:AddRightGroupbox("Credits")
@@ -12442,7 +12442,7 @@ task.spawn(function()
     
     local function createAddonTab(hasAddons: boolean)
         if not AddonTab then
-            AddonTab = shared.Window:AddTab("Addons [BETA]")
+            AddonTab = shared.Window:AddTab("Tính năng mở :v")
         end
         
         AddonTab:UpdateWarningBox({
