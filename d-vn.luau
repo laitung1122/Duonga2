@@ -10,7 +10,7 @@ local ImportGlobals
 -- Holds direct closure data (defining this before the DOM tree for line debugging etc)
 local ClosureBindings = {
     function()local wax,script,require=ImportGlobals(1)local ImportGlobals return (function(...)if getgenv().mspaint_loading then print("[mspaint] Loading stopped. (ERROR: Loading)"); return end
-if getgenv().mspaint_loaded then print("[mspaint] Loading stopped. (ERROR: Already loaded)"); return end
+if getgenv().mspaint_loaded then print("[Dương API] Loading stopped. (ERROR: Already loaded)"); return end
 
 getgenv().mspaint_loading = true
 
@@ -6339,7 +6339,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         NotifySettingsTab:AddDropdown("CaptionStyle", {
             AllowNull = false,
             Values = CaptionStyles,
-            Default = "Linoria",
+            Default = "Doors",
             Multi = false,
 
             Text = "Kiểu tiêu đề"
@@ -8974,13 +8974,13 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
         return
     end
 
-    local NotifPrefix = "Auto " .. Script.HidingPlaceName[Script.Floor.Value];
+    local NotifPrefix = "Dương Api";
     task.spawn(function() 
         shared.Notify:Log({
-            Title = NotifPrefix,
-            Description = "Looking for a hiding place",
+            Title = "Dương Api",
+            Description = "Đang tìm nơi ẩn nấp",
     
-            LinoriaMessage = "[" .. NotifPrefix .. "] Looking for a hiding spot..."
+            LinoriaMessage = "[" .. NotifPrefix .. "] Đang tìm nơi ẩn nấp..."
         }, Toggles.AutoWardrobeNotif.Value)
     end)
 
@@ -9019,10 +9019,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
     -- Hide
     task.spawn(function() 
         shared.Notify:Log({
-            Title = NotifPrefix,
-            Description = "Starting...",
+            Title = "Dương Api",
+            Description = "Bắt đầu chạy...",
     
-            LinoriaMessage = "[" .. NotifPrefix .. "] Starting..."
+            LinoriaMessage = "[" .. NotifPrefix .. "] Bắt đầu chạy..."
         }, Toggles.AutoWardrobeNotif.Value)
     end)
     
@@ -9066,10 +9066,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
                 if didPlayerSeeEntity == true and isSafe == true then
                     task.spawn(function() 
                         shared.Notify:Log({
-                            Title = NotifPrefix,
-                            Description = "Exiting the locker, entity is far away.",
+                            Title = "Dương Api",
+                            Description = "Đang thoát khỏi tủ, quái đã đi xa",
                             
-                            LinoriaMessage = "[" .. NotifPrefix .. "] Exiting the locker, entity is far away."
+                            LinoriaMessage = "[" .. NotifPrefix .. "] Đang thoát khỏi tủ, quái đã đi xa."
                         }, Toggles.AutoWardrobeNotif.Value)
                     end)
 
@@ -9078,10 +9078,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
                     if isSafe == true and not child:IsDescendantOf(workspace) then 
                         task.spawn(function() 
                             shared.Notify:Log({
-                                Title = NotifPrefix,
-                                Description = "Exiting the locker, entity is deleted.",
+                                Title = "Dương Api",
+                                Description = "Đang thoát khỏi tủ, quái đã bị xóa.",
                                 
-                                LinoriaMessage = "[" .. NotifPrefix .. "] Exiting the locker, entity is deleted."
+                                LinoriaMessage = "[" .. NotifPrefix .. "] Đang thoát khỏi tủ, quái đã bị xóa."
                             }, Toggles.AutoWardrobeNotif.Value)
                         end)
 
@@ -9090,13 +9090,13 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
                 end
 
                 if not Script.Alive then  
-                    if Toggles.AutoWardrobeNotif.Value then shared.Notify:Log("[" .. NotifPrefix .. "] Stopping (you died).") end             
+                    if Toggles.AutoWardrobeNotif.Value then shared.Notify:Log("[" .. NotifPrefix .. "] Đang dừng lại (Bạn đã chết).") end             
                     task.spawn(function() 
                         shared.Notify:Log({
-                            Title = NotifPrefix,
-                            Description = "Stopping (you died)",
+                            Title = "Dương Api",
+                            Description = "Đang dừng lại (Bạn đã chết)",
                             
-                            LinoriaMessage = "[" .. NotifPrefix .. "] Stopping (you died)."
+                            LinoriaMessage = "[" .. NotifPrefix .. "] Đang dừng lại (Bạn đã chết)."
                         }, Toggles.AutoWardrobeNotif.Value)
                     end)
 
@@ -9135,10 +9135,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
         repeat task.wait()
             task.spawn(function() 
                 shared.Notify:Log({
-                    Title = NotifPrefix,
-                    Description = "Waiting for Ambush to be close enough...",
+                    Title = "Dương Api",
+                    Description = "Đang chờ ambush đến gần để núp...",
     
-                    LinoriaMessage = "[" .. NotifPrefix .. "] Waiting for Ambush to be close enough...",
+                    LinoriaMessage = "[" .. NotifPrefix .. "] Đang chờ ambush đến gần để núp...",
                 }, Toggles.AutoWardrobeNotif.Value)
             end)
 
@@ -9149,10 +9149,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
             if success then
                 task.spawn(function() 
                     shared.Notify:Log({
-                        Title = NotifPrefix,
-                        Description = "Waiting for it to be safe to exit...",
+                        Title = "Dương Api",
+                        Description = "Đang chờ nó đi xa để an toàn khi ra...",
     
-                        LinoriaMessage = "[" .. NotifPrefix .. "] Waiting for it to be safe to exit...",
+                        LinoriaMessage = "[" .. NotifPrefix .. "] Đang chờ nó đi xa để an toàn khi ra...",
                     }, Toggles.AutoWardrobeNotif.Value)
                 end)
 
@@ -9180,10 +9180,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
     table.remove(Script.Temp.AutoWardrobeEntities, entityIndex)
     task.spawn(function() 
         shared.Notify:Log({
-            Title = NotifPrefix,
-            Description = "Finished.",
+            Title = "Dương Api",
+            Description = "Hoàn thành.",
     
-            LinoriaMessage = "[" .. NotifPrefix .. "] Finished.",
+            LinoriaMessage = "[" .. NotifPrefix .. "] Hoàn thành.",
         }, Toggles.AutoWardrobeNotif.Value)
     end)
 end
@@ -9224,8 +9224,8 @@ function Script.Functions.SolveBreakerBox(breakerBox)
     if not breakerBox:IsDescendantOf(workspace) then return end
 
     shared.Notify:Alert({
-        Title = "Auto Breaker Solver",
-        Description = "Solving the breaker box...",
+        Title = "Dương Api",
+        Description = "Đang giải mã hộp cầu chì...",
         Reason = ""
     })
 
@@ -9259,8 +9259,8 @@ function Script.Functions.SolveBreakerBox(breakerBox)
         until not workspace.CurrentRooms["100"]:FindFirstChild("DoorToBreakDown")
 
         shared.Notify:Alert({
-            Title = "Auto Breaker Solver",
-            Description = "The breaker box has been successfully solved.",
+            Title = "Dương Api",
+            Description = "Đã giải mã hộp cầu chì thành công.",
         })
     end
 end
