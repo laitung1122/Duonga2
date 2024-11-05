@@ -4019,11 +4019,11 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
     BypassGroupBox:AddDivider()
 
     BypassGroupBox:AddToggle("AnticheatManipulation", {
-        Text = "Can thiệp vào hệ thống chống cheat",
+        Text = "Can thiệp anticheat",
         Default = false,
     }):AddKeyPicker("AnticheatManipulationKey", {
         Default = "T",
-        Text = "Can thiệp vào hệ thống chống cheat",
+        Text = "Can thiệp anticheat",
         Mode = shared.Library.IsMobile and "Toggle" or "Hold",
         SyncToggleState = shared.Library.IsMobile
     })
@@ -4059,7 +4059,7 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
     BypassGroupBox:AddDivider()
 
     BypassGroupBox:AddToggle("FakeRevive", {
-        Text = "Gỉa hồi sinh",
+        Text = "Giả hồi sinh",
         Default = false
     })
 
@@ -5753,12 +5753,12 @@ local Tabs = Script.Tabs
 --// Main \\--
 local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     PlayerGroupBox:AddToggle("EnableSpeedHack", {
-        Text = "Enable Speed Hack",
+        Text = "Áp dụng tốc độ chạy",
         Default = false
     })
 
     PlayerGroupBox:AddSlider("WalkSpeed", {
-        Text = "Walk Speed",
+        Text = "Tốc độ chạy",
         Default = 15,
         Min = 0,
         Max = 22,
@@ -5767,7 +5767,7 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddSlider("LadderSpeed", {
-        Text = "Ladder Speed",
+        Text = "Tốc độ leo thang",
         Default = 15,
         Min = 0,
         Max = 75,
@@ -5776,13 +5776,13 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddToggle("EnableJump", {
-        Text = "Enable Jump",
+        Text = "Nút nhảy",
         Default = false,
         Visible = not Script.IsFools
     })
 
     PlayerGroupBox:AddSlider("JumpBoost", {
-        Text = "Jump Boost",
+        Text = "Độ cao nhảy",
         Default = 5,
         Min = 0,
         Max = 50,
@@ -5792,46 +5792,46 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 
     PlayerGroupBox:AddToggle("NoAccel", {
-        Text = "No Acceleration",
+        Text = "không có gia tốc",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("InstaInteract", {
-        Text = "Instant Interact",
+        Text = "Tương tác tức thì",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("FastClosetExit", {
-        Text = "Fast Closet Exit",
+        Text = "Thoát khỏi tủ nhanh",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("Noclip", {
-        Text = "Noclip",
+        Text = "Xuyên tường",
         Default = false
     }):AddKeyPicker("NoclipKey", {
         Mode = "Toggle",
         Default = "N",
-        Text = "Noclip",
+        Text = "Xuyên tường",
         SyncToggleState = true
     })
 
     PlayerGroupBox:AddToggle("Fly", {
-        Text = "Fly",
+        Text = "Bay",
         Default = false
     }):AddKeyPicker("FlyKey", {
         Mode = "Toggle",
         Default = "F",
-        Text = "Fly",
+        Text = "Bay",
         SyncToggleState = true
     })
     
     PlayerGroupBox:AddSlider("FlySpeed", {
-        Text = "Fly Speed",
+        Text = "Tốc độ bay",
         Default = 15,
         Min = 10,
         Max = 22,
@@ -5842,17 +5842,17 @@ end
 
 local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
     ReachGroupBox:AddToggle("DoorReach", {
-        Text = "Door Reach",
+        Text = "Mở cửa khoảng cách xa",
         Default = false
     })
 
     ReachGroupBox:AddToggle("PromptClip", {
-        Text = "Prompt Clip",
+        Text = "Tương tác xa",
         Default = false
     })
 
     ReachGroupBox:AddSlider("PromptReachMultiplier", {
-        Text = "Prompt Reach Multiplier",
+        Text = "Khoảng cách tương tác",
         Default = 1,
         Min = 1,
         Max = 2,
@@ -5862,12 +5862,12 @@ end
 
 local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
     AutomationGroupBox:AddToggle("AutoInteract", {
-        Text = "Auto Interact",
+        Text = "Tự động lụm + mở",
         Default = false
     }):AddKeyPicker("AutoInteractKey", {
         Mode = shared.Library.IsMobile and "Toggle" or "Hold",
         Default = "R",
-        Text = "Auto Interact",
+        Text = "Tự động lụm + mở",
         SyncToggleState = shared.Library.IsMobile
     })
 
@@ -5877,44 +5877,44 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
         Default = {"Jeff Items"},
         Multi = true,
 
-        Text = "Ignore List"
+        Text = "Danh sách bỏ qua"
     })
 
     AutomationGroupBox:AddDivider()
 
     AutomationGroupBox:AddToggle("AutoWardrobeNotif", {
-        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value] .. " Notifications",
+        Text = "Thông báo tự động ẩn nấp",
         Default = false
     })
 
     AutomationGroupBox:AddToggle("AutoWardrobe", {
-        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value],
+        Text = "Tự động ẩn nấp",
         Default = false,
-        Tooltip = "Might fail with multiple entities (Rush & Ambush, 3+ Rush spawns)",
+        Tooltip = "Có thể lỗi khi gặp (Rush & Ambush, 3+ Rush xuất hiện)",
         Visible = not Script.IsRetro,
         Risky = true
     }):AddKeyPicker("AutoWardrobeKey", {
         Mode = "Toggle",
         Default = "Q",
-        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value],
+        Text = "Tự động ẩn nấp",
         SyncToggleState = true
     })
     AutomationGroupBox:AddDivider()
 
     AutomationGroupBox:AddToggle("AutoHeartbeat", {
-        Text = "Auto Heartbeat Minigame",
+        Text = "Tự động win minigame nhịp tim",
         Default = false,
         Visible = wax.shared.ExecutorSupport["getnamecallmethod"]
     })
 
     if Script.IsHotel or Script.IsFools then
         AutomationGroupBox:AddToggle("AutoLibrarySolver", {
-            Text = "Auto Library Code",
+            Text = "Tụ động nhập mã code",
             Default = false
         })
 
         AutomationGroupBox:AddSlider("AutoLibraryDistance", {
-            Text = "Unlock Distance",
+            Text = "Khoảng cách nhập mã",
             Default = 20,
             Min = 1,
             Max = 100,
@@ -5930,11 +5930,11 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
             Default = "Legit",
             Multi = false,
 
-            Text = "Auto Breaker Solver Method"
+            Text = "Phương pháp giải mã hộp cầu chì"
         })
 
         AutomationGroupBox:AddToggle("AutoBreakerSolver", {
-            Text = "Auto Breaker Box",
+            Text = "Tự động giải mã hộp cầu chì",
             Default = false
         })
 
@@ -5966,7 +5966,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
         end)
     elseif Script.IsMines then
         AutomationGroupBox:AddToggle("AutoAnchorSolver", {
-            Text = "Auto Anchor Solver",
+            Text = "Tự động giải mã trụ điện",
             Default = false
         })
     end
@@ -5974,7 +5974,7 @@ end
 
 local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     MiscGroupBox:AddButton({
-        Text = "Revive",
+        Text = "Hồi sinh",
         Func = function()
             Script.RemotesFolder.Revive:FireServer()
         end,
@@ -5982,7 +5982,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Play Again",
+        Text = "Chơi lại",
         Func = function()
             Script.RemotesFolder.PlayAgain:FireServer()
         end,
@@ -5990,7 +5990,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Lobby",
+        Text = "Sảnh",
         Func = function()
             Script.RemotesFolder.Lobby:FireServer()
         end,
@@ -6093,63 +6093,63 @@ end
 local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     local ESPTab = ESPTabBox:AddTab("ESP") do
         ESPTab:AddToggle("DoorESP", {
-            Text = "Door",
+            Text = "Cửa",
             Default = false,
         }):AddColorPicker("DoorEspColor", {
             Default = Color3.new(0, 1, 1),
         })
     
         ESPTab:AddToggle("ObjectiveESP", {
-            Text = "Objective",
+            Text = "Dụng cụ",
             Default = false,
         }):AddColorPicker("ObjectiveEspColor", {
             Default = Color3.new(0, 1, 0),
         })
     
         ESPTab:AddToggle("EntityESP", {
-            Text = "Entity",
+            Text = "Quái vật",
             Default = false,
         }):AddColorPicker("EntityEspColor", {
             Default = Color3.new(1, 0, 0),
         })
     
         ESPTab:AddToggle("ItemESP", {
-            Text = "Item",
+            Text = "Vật phẩm",
             Default = false,
         }):AddColorPicker("ItemEspColor", {
             Default = Color3.new(1, 0, 1),
         })
     
         ESPTab:AddToggle("ChestESP", {
-            Text = "Chest",
+            Text = "Rương",
             Default = false,
         }):AddColorPicker("ChestEspColor", {
             Default = Color3.new(1, 1, 0),
         })
     
         ESPTab:AddToggle("PlayerESP", {
-            Text = "Player",
+            Text = "Người chơi",
             Default = false,
         }):AddColorPicker("PlayerEspColor", {
             Default = Color3.new(1, 1, 1),
         })
     
         ESPTab:AddToggle("HidingSpotESP", {
-            Text = Script.HidingPlaceName[Script.Floor.Value],
+            Text = "Nơi ẩn nấp",
             Default = false,
         }):AddColorPicker("HidingSpotEspColor", {
             Default = Color3.new(0, 0.5, 0),
         })
     
         ESPTab:AddToggle("GoldESP", {
-            Text = "Gold",
+            Text = "Vàng",
             Default = false,
         }):AddColorPicker("GoldEspColor", {
             Default = Color3.new(1, 1, 0),
         })
     
         ESPTab:AddToggle("GuidingLightESP", {
-            Text = "Guiding Light",
+            Text = "Điểm sáng",
             Default = false,
         }):AddColorPicker("GuidingLightEspColor", {
             Default = Color3.new(0, 0.5, 1),
@@ -6158,19 +6158,19 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
 
     local ESPSettingsTab = ESPTabBox:AddTab("Settings") do
         ESPSettingsTab:AddToggle("ESPRainbow", {
-            Text = "Rainbow ESP",
+            Text = "Định vị cầu vồng",
             Default = false,
         })
 
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPHighlight", {
-            Text = "Enable Highlight",
+            Text = "Hiển thị đường sáng",
             Default = true
         })
 
         ESPSettingsTab:AddSlider("ESPFillTransparency", {
-            Text = "Fill Transparency",
+            Text = "Độ trong suốt vật phẩm",
             Default = 0.75,
             Min = 0,
             Max = 1,
@@ -6178,7 +6178,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPSettingsTab:AddSlider("ESPOutlineTransparency", {
-            Text = "Outline Transparency",
+            Text = "Độ trong suốt viền",
             Default = 0,
             Min = 0,
             Max = 1,
@@ -6188,12 +6188,12 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPDistance", {
-            Text = "Show Distance",
+            Text = "Hiển thị khoảng cách",
             Default = true
         })
     
         ESPSettingsTab:AddSlider("ESPTextSize", {
-            Text = "Text Size",
+            Text = "Kích cỡ chữ",
             Default = 22,
             Min = 16,
             Max = 26,
@@ -6203,7 +6203,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPTracer", {
-            Text = "Enable Tracer",
+            Text = "Hiển thị đường kẻ",
             Default = false
         })
 
@@ -6213,18 +6213,18 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
             Default = "Bottom",
             Multi = false,
 
-            Text = "Tracer Start Position"
+            Text = "Vị trí hiển thị đường kẻ"
         })
 
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPArrow", {
-            Text = "Enable Arrow",
+            Text = "Hiển thị mũi tên",
             Default = false
         })
 
         ESPSettingsTab:AddSlider("ESPArrowCenterOffset", {
-            Text = "Arrow Center Offset",
+            Text = "khoảng cách mũi tên với tâm",
             Default = 300,
             Min = 0,
             Max = 500,
@@ -6235,7 +6235,7 @@ end
 
 local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
     AmbientGroupBox:AddSlider("Brightness", {
-        Text = "Brightness",
+        Text = "Mức độ sáng",
         Default = 0,
         Min = 0,
         Max = 3,
@@ -6243,17 +6243,17 @@ local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
     })
 
     AmbientGroupBox:AddToggle("Fullbright", {
-        Text = "Fullbright",
+        Text = "Map sáng",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("NoFog", {
-        Text = "No Fog",
+        Text = "Không sương mù",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("AntiLag", {
-        Text = "Anti-Lag",
+        Text = "Chống lag",
         Default = false,
     })
 end
@@ -6266,50 +6266,50 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = {},
             Multi = true,
 
-            Text = "Notify Entities"
+            Text = "Cảnh báo quái"
         })
 
         NotifyTab:AddToggle("NotifyPadlock", {
-            Text = "Notify Library Code",
+            Text = "Thông báo mã thư viện",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyOxygen", {
-            Text = "Notify Oxygen",
+            Text = "Thông báo oxygen",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyHideTime", {
-            Text = "Notify Hide Time",
+            Text = "Thông báo thời gian ẩn",
             Default = false,
         })
     end
 
     local NotifySettingsTab = NotifyTabBox:AddTab("Settings") do
         NotifySettingsTab:AddToggle("NotifyChat", {
-            Text = "Notify Chat",
-            Tooltip = "Entity and Padlock Code",
+            Text = "Cảnh báo trong chat",
+            Tooltip = "Cả mã thư viện và quái",
             Default = false,
         })
 
         NotifySettingsTab:AddInput("NotifyEntityMessage", {
-            Default = "has spawned!",
+            Default = "Đã xuất hiện",
             Numeric = false,
             Finished = true,
             ClearTextOnFocus = false,
 
-            Text = "Entity Notifier Message"
+            Text = "Tin nhắn thông báo"
         })
 
         NotifySettingsTab:AddDivider()
         
         NotifySettingsTab:AddToggle("NotifySound", {
-            Text = "Play Alert Sound",
+            Text = "Âm thanh cảnh báo",
             Default = true,
         })
 
         NotifySettingsTab:AddSlider("NotifyVolume", {
-            Text = "Notify Volume",
+            Text = "Âm lượng cảnh báo",
             Default = 2,
             Min = 0,
             Max = 5,
@@ -6322,7 +6322,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Right",
             Multi = false,
 
-            Text = "Notification Side"
+            Text = "Vị trí thông báo"
         })
 
         NotifySettingsTab:AddDropdown("NotifyStyle", {
@@ -6331,7 +6331,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Doors",
             Multi = false,
 
-            Text = "Notification Style"
+            Text = "Kiểu thông báo"
         })
 
         NotifySettingsTab:AddDivider()
@@ -6342,7 +6342,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Linoria",
             Multi = false,
 
-            Text = "Caption Style"
+            Text = "Kiểu tiêu đề"
         })
     end
 end
@@ -6350,17 +6350,17 @@ end
 local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
     local SelfTab = SelfTabBox:AddTab("Self") do
         SelfTab:AddToggle("ThirdPerson", {
-            Text = "Third Person",
+            Text = "Góc nhìn thứ ba",
             Default = false
         }):AddKeyPicker("ThirdPersonKey", {
             Default = "V",
-            Text = "Third Person",
+            Text = "Góc nhìn thứ ba",
             Mode = "Toggle",
             SyncToggleState = not shared.Library.IsMobile -- ????
         })
         
         SelfTab:AddSlider("FOV", {
-            Text = "Field of View",
+            Text = "Độ cong màn",
             Default = 70,
             Min = 70,
             Max = 120,
@@ -6368,29 +6368,29 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
         })
         
         SelfTab:AddToggle("NoCamBob", {
-            Text = "No Camera Bobbing",
+            Text = "Không nghiêng màn",
             Default = false,
             Visible = wax.shared.ExecutorSupport["require"]
         })
     
         SelfTab:AddToggle("NoCamShake", {
-            Text = "No Camera Shake",
+            Text = "Không lắc lư màn",
             Default = false,
             Visible = wax.shared.ExecutorSupport["require"]
         })
     
         SelfTab:AddToggle("NoCutscenes", {
-            Text = "No Cutscenes",
+            Text = "Không đoạn cắt cảnh",
             Default = false,
         })
     
         SelfTab:AddToggle("TranslucentHidingSpot", {
-            Text = "Translucent " .. Script.HidingPlaceName[Script.Floor.Value],
+            Text = "Độ trong suốt của nơi ẩn nấp ",
             Default = false
         })
         
         SelfTab:AddSlider("HidingTransparency", {
-            Text = "Hiding Transparency",
+            Text = "Độ trong suốt",
             Default = 0.5,
             Min = 0,
             Max = 1,
@@ -6403,7 +6403,7 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
         end
 
         SelfTab:AddToggle("ViewmodelOffset", {
-            Text = "Viewmodel Offset",
+            Text = "Tầm nhìn",
             Default = false,
             Visible = wax.shared.ExecutorSupport["require"]
         })
