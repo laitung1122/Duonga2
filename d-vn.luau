@@ -401,8 +401,8 @@ shared.Load("Utils", "ESP")
 --// Tabs \\--
 Script.Tabs = {
     Main = shared.Window:AddTab("Main"),
-    Exploits = shared.Window:AddTab("Exploits"),
-    Visuals = shared.Window:AddTab("Visuals"),
+    Exploits = shared.Window:AddTab("Tính năng"),
+    Visuals = shared.Window:AddTab("Tầm nhìn"),
 }
 
 shared.Load("Tabs", "Main")
@@ -1268,9 +1268,9 @@ shared.Load("Utils", "ConnectionsFuncs")
 --// Tabs \\--
 Script.Tabs = {
     Main = shared.Window:AddTab("Main"),
-    Exploits = shared.Window:AddTab("Exploits"),
-    Visuals = shared.Window:AddTab("Visuals"),
-    Floor = shared.Window:AddTab("Floor")
+    Exploits = shared.Window:AddTab("Tính năng"),
+    Visuals = shared.Window:AddTab("Tầm nhìn"),
+    Floor = shared.Window:AddTab("Khác")
 }
 
 shared.Load("Tabs", "Main")
@@ -3941,7 +3941,7 @@ local Script = shared.Script
 local Tabs = Script.Tabs
 
 --// Exploits \\--
-local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Anti-Entity") do
+local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Chống quái") do
     AntiEntityGroupBox:AddToggle("AntiDread", {
         Text = "Chống-Dread",
         Default = false
@@ -3979,7 +3979,7 @@ local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Anti-Entity") do
     })
 end
 
-local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
+local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trôn vn") do
     TrollingGroupBox:AddToggle("SpamOtherTools", {
         Text = "Tạo một số công cụ",
         Default = false
@@ -4001,7 +4001,7 @@ local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
     })
 end
 
-local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
+local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bỏ qua") do
     BypassGroupBox:AddToggle("SpeedBypass", {
         Text = "Tăng thêm tốc độ",
         Default = false
@@ -4779,14 +4779,14 @@ local Tabs = Script.Tabs
 
 --// Floor \\--
 if Script.IsHotel then
-    local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+    local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
         Hotel_AntiEntityGroupBox:AddToggle("AntiSeekObstructions", {
             Text = "Xóa vật cản từ seek",
             Default = false
         })
     end
 
-    local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bypass") do
+    local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bỏ qua") do
         Hotel_BypassGroupBox:AddToggle("AvoidRushAmbush", {
             Text = "Né tránh Rush/Ambush",
             Tooltip = "Không hoạt động ở greenhouse :(",
@@ -4795,7 +4795,7 @@ if Script.IsHotel then
         })
     end
 
-    local Hotel_FarmGroupBox = Tabs.Floor:AddLeftGroupbox("Farm") do
+    local Hotel_FarmGroupBox = Tabs.Floor:AddLeftGroupbox("Cày vật phẩm") do
         Hotel_FarmGroupBox:AddToggle("KnobFarm", {
             Text = "Cày Knob",
             Tooltip = "Chỉ hoạt động ở cửa 100 và có figure xuất hiện",
@@ -4803,7 +4803,7 @@ if Script.IsHotel then
         })
     end
 
-    local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Modifiers") do
+    local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Tính năng khác") do
         Hotel_ModifiersGroupBox:AddToggle("NoVoiceActing", {
             Text = "Không có âm thanh lồng tiếng",
             Default = false
@@ -4896,7 +4896,7 @@ if Script.IsHotel then
         if jamminEffect then jamminEffect.Enabled = not value end
     end)
 elseif Script.IsMines then
-    local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Movement") do
+    local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Di chuyển") do
         Mines_MovementGroupBox:AddSlider("MaxSlopeAngle", {
             Text = "Độ nghiêng sàn tối đa",
             Default = 45,
@@ -4906,7 +4906,7 @@ elseif Script.IsMines then
         })
     end
 
-    local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+    local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
         Mines_AntiEntityGroupBox:AddToggle("AntiGiggle", {
             Text = "Tránh bị giggle cắn",
             Default = false
@@ -4933,7 +4933,7 @@ elseif Script.IsMines then
         })
     end
 
-    local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
+    local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
         Mines_AutomationGroupBox:AddButton({
             Text = "Phá đảo cửa 200",
             Func = function()
@@ -5009,7 +5009,7 @@ elseif Script.IsMines then
         })
     end
 
-    local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bypass") do
+    local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bỏ qua") do
         Mines_BypassGroupBox:AddToggle("MinecartTeleport", {
             Text = "Dịch chuyển xe mỏ",
             Default = false
@@ -5022,7 +5022,7 @@ elseif Script.IsMines then
         })
     end
     
-    local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visuals") do
+    local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Tầm nhìn") do
         Mines_VisualGroupBox:AddToggle("MinecartPathVisualiser", {
             Text = "Hiển thị đường đi đúng",
             Default = false
@@ -5250,14 +5250,14 @@ elseif Script.IsBackdoor then
         end
     end))
 elseif Script.IsRooms then
-    local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
+    local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
         Rooms_AntiEntityGroupBox:AddToggle("AntiA90", {
             Text = "Chống A90",
             Default = false
         })
     end
 
-    local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
+    local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
         Rooms_AutomationGroupBox:AddToggle("AutoRooms", {
             Text = "Tự động A1000",
             Default = false
@@ -5751,7 +5751,7 @@ local Script = shared.Script
 local Tabs = Script.Tabs
 
 --// Main \\--
-local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
+local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Người chơi") do
     PlayerGroupBox:AddToggle("EnableSpeedHack", {
         Text = "Áp dụng tốc độ chạy",
         Default = false
@@ -5840,7 +5840,7 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     })
 end
 
-local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
+local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Tương tác") do
     ReachGroupBox:AddToggle("DoorReach", {
         Text = "Mở cửa khoảng cách xa",
         Default = false
@@ -5860,7 +5860,7 @@ local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
     })
 end
 
-local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
+local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
     AutomationGroupBox:AddToggle("AutoInteract", {
         Text = "Tự động lụm + mở",
         Default = false
@@ -5972,7 +5972,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
     end
 end
 
-local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
+local MiscGroupBox = Tabs.Main:AddRightGroupbox("Tính năng phụ") do
     MiscGroupBox:AddButton({
         Text = "Hồi sinh",
         Func = function()
@@ -6091,7 +6091,7 @@ end
 
 --// Visuals \\--
 local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
-    local ESPTab = ESPTabBox:AddTab("ESP") do
+    local ESPTab = ESPTabBox:AddTab("Định vị") do
         ESPTab:AddToggle("DoorESP", {
             Text = "Cửa",
             Default = false,
@@ -6156,7 +6156,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     end
 
-    local ESPSettingsTab = ESPTabBox:AddTab("Settings") do
+    local ESPSettingsTab = ESPTabBox:AddTab("Cài đặt") do
         ESPSettingsTab:AddToggle("ESPRainbow", {
             Text = "Định vị cầu vồng",
             Default = false,
@@ -6233,7 +6233,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     end
 end
 
-local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
+local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Giác quan") do
     AmbientGroupBox:AddSlider("Brightness", {
         Text = "Mức độ sáng",
         Default = 0,
@@ -6259,7 +6259,7 @@ local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
 end
 
 local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
-    local NotifyTab = NotifyTabBox:AddTab("Notifier") do
+    local NotifyTab = NotifyTabBox:AddTab("Thông báo") do
         NotifyTab:AddDropdown("NotifyEntity", {
             AllowNull = true,
             Values = {"Blitz", "Lookman", "Rush", "Ambush", "Eyes", "Halt Room", "A60", "A120", "Jeff The Killer", "Gloombat Swarm", "Void/Glitch"},
@@ -6285,7 +6285,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         })
     end
 
-    local NotifySettingsTab = NotifyTabBox:AddTab("Settings") do
+    local NotifySettingsTab = NotifyTabBox:AddTab("Cài đặt") do
         NotifySettingsTab:AddToggle("NotifyChat", {
             Text = "Cảnh báo trong chat",
             Tooltip = "Cả mã thư viện và quái",
@@ -6348,7 +6348,7 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
 end
 
 local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
-    local SelfTab = SelfTabBox:AddTab("Self") do
+    local SelfTab = SelfTabBox:AddTab("Bản thân") do
         SelfTab:AddToggle("ThirdPerson", {
             Text = "Góc nhìn thứ ba",
             Default = false
@@ -6439,7 +6439,7 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
         })
     end
 
-    local EffectsTab = SelfTabBox:AddTab("Effects") do
+    local EffectsTab = SelfTabBox:AddTab("Hiệu ứng") do
         EffectsTab:AddToggle("NoGlitchEffect", {
             Text = "Không hiệu ứng Glicth",
             Default = false
@@ -12285,19 +12285,19 @@ function UICreator:CreateSettingsTab()
     MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) shared.Library.ShowCustomCursor = Value end})
     MenuGroup:AddDivider()
     MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-    MenuGroup:AddButton("Join Discord", function()
+    MenuGroup:AddButton("Gia nhập discord", function()
         local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-        Inviter.Join("https://discord.com/invite/cfyMptntHr")
+        Inviter.Join("https://discord.com/invite/hNvPjJuJ")
         Inviter.Prompt({
-            name = "mspaint",
-            invite = "https://discord.com/invite/cfyMptntHr",
+            name = "Nhóm giao lưu",
+            invite = "https://discord.com/invite/hNvPjJuJ",
         })
-    end):AddButton("Copy Link", function()
+    end):AddButton("Sao chép liên kết", function()
         if setclipboard then
-            setclipboard("https://discord.com/invite/cfyMptntHr")
-            shared.Library:Notify("Copied discord link to clipboard!")
+            setclipboard("https://discord.com/invite/hNvPjJuJ")
+            shared.Library:Notify("Đã sao chép vào bộ nhớ tạm!")
         else
-            shared.Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
+            shared.Library:Notify("Sao chép liên kết: https://discord.com/invite/hNvPjJuJ", 10)
         end
     end)
     MenuGroup:AddButton("Unload", function() shared.Library:Unload() end)
