@@ -5281,17 +5281,17 @@ elseif Script.IsRooms then
 
     Toggles.AntiA90:OnChanged(function(value)
         if Toggles.AutoRooms.Value and not value then
-            shared.Notify:Alert({
-                Title = "Dương Api",
-                Description = "Chống A90 cần thiết để hoạt động ổn định!",
-                Reason = "Chống A90 đã bật",
+            Script.Functions.Alert({
+                Title = "Phá đảo A-1000",
+                Description = "Cần bật chống A-90 để chạy ổn định!",
+                Reason = "Đã bật chống A-90",
             })
             
             Toggles.AntiA90:SetValue(true)
         end
 
-        if not Script.MainGame then return end
-        local module = Script.MainGame:FindFirstChild("A90", true) or Script.MainGame:FindFirstChild("_A90", true)
+        if not mainGame then return end
+        local module = mainGame:FindFirstChild("A90", true) or mainGame:FindFirstChild("_A90", true)
     
         if module then
             module.Name = value and "_A90" or "A90"
@@ -5308,14 +5308,14 @@ elseif Script.IsRooms then
             return GoalLocker.PrimaryPart
         end
 
-        return workspace.CurrentRooms[Script.LatestRoom.Value].RoomExit
+        return workspace.CurrentRooms[latestRoom.Value].Door.Door
     end
 
-    local _internal_mspaint_pathfinding_nodes = Instance.new("Folder", shared.Workspace) do
+    local _internal_mspaint_pathfinding_nodes = Instance.new("Folder", Workspace) do
         _internal_mspaint_pathfinding_nodes.Name = "_internal_mspaint_pathfinding_nodes"
     end
 
-    local _internal_mspaint_pathfinding_block = Instance.new("Folder", shared.Workspace) do
+    local _internal_mspaint_pathfinding_block = Instance.new("Folder", Workspace) do
         _internal_mspaint_pathfinding_block.Name = "_internal_mspaint_pathfinding_block"
     end
 
@@ -5328,21 +5328,21 @@ elseif Script.IsRooms then
         end
     end)
 
-    shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
+    Library:GiveSignal(RunService.RenderStepped:Connect(function()
         if not Toggles.AutoRooms.Value then return end
 
         local entity = (workspace:FindFirstChild("A60") or workspace:FindFirstChild("A120"))
         local isEntitySpawned = (entity and entity.PrimaryPart.Position.Y > -10)
         
-        if isEntitySpawned and not shared.RootPart.Anchored then
+        if isEntitySpawned and not rootPart.Anchored then
             local pathfindingGoal = Script.Functions.GetAutoRoomsPathfindingGoal()
 
             if Script.Functions.IsPromptInRange(pathfindingGoal.Parent.HidePrompt) then
-                shared.forcefireproximityprompt(pathfindingGoal.Parent.HidePrompt)
+                forceFirePrompt(pathfindingGoal.Parent.HidePrompt)
             end
-        elseif not isEntitySpawned and shared.RootPart.Anchored then
+        elseif not isEntitySpawned and rootPart.Anchored then
             for i = 1, 10 do
-                Script.RemotesFolder.CamLock:FireServer()
+                remotesFolder.CamLock:FireServer()
             end
         end
     end))
@@ -5357,10 +5357,10 @@ elseif Script.IsRooms then
         end
 
         local function moveToCleanup()
-            if shared.Humanoid then
-                shared.Humanoid:Move(shared.RootPart.Position)
-                shared.Humanoid.WalkToPart = nil
-                shared.Humanoid.WalkToPoint = shared.RootPart.Position
+            if humanoid then
+                humanoid:Move(rootPart.Position)
+                humanoid.WalkToPart = nil
+                humanoid.WalkToPoint = rootPart.Position
             end
             nodeCleanup()
         end
@@ -5391,17 +5391,17 @@ elseif Script.IsRooms then
             local function doAutoRooms()
                 local pathfindingGoal = Script.Functions.GetAutoRoomsPathfindingGoal()
 
-                if Script.LatestRoom.Value ~= lastRoomValue then
+                if latestRoom.Value ~= lastRoomValue then
                     _internal_mspaint_pathfinding_block:ClearAllChildren()
-                    lastRoomValue = Script.LatestRoom.Value
+                    lastRoomValue = latestRoom.Value
                 end
                 
-                shared.Notify:Log({
-                    Title = "Dương Api",
-                    Description = "Tìm thành công!\nĐang tạo điểm...",
+                Script.Functions.Log({
+                    Title = "Dương-Api",
+                    Description = "Xác định thành công!\nđiểm đến: " .. pathfindingGoal.Parent.Name .. "\ntạo diểm chấm...",
                 }, Toggles.AutoRoomsDebug.Value)
 
-                local path = shared.PathfindingService:CreatePath({
+                local path = PathfindingService:CreatePath({
                     AgentCanJump = false,
                     AgentCanClimb = false,
                     WaypointSpacing = 2,
@@ -5411,12 +5411,12 @@ elseif Script.IsRooms then
                     }
                 })
 
-                shared.Notify:Log({
-                    Title = "Dương Api",
-                    Description = "Tính toán đường tới" .. pathfindingGoal.Parent.Name .. "...",
+                Script.Functions.Log({
+                    Title = "Dương-Api",
+                    Description = "Đang tạo đường dẫn " .. pathfindingGoal.Parent.Name .. "...",
                 }, Toggles.AutoRoomsDebug.Value)
 
-                path:ComputeAsync(shared.RootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
+                path:ComputeAsync(rootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
                 local waypoints = path:GetWaypoints()
                 local waypointAmount = #waypoints
 
@@ -5425,23 +5425,23 @@ elseif Script.IsRooms then
                     task.spawn(function()
                         task.wait(0.1)
                         hasResetFailsafe = false
-                        if shared.Humanoid and Script.Collision then
-                            local checkFloor = shared.Humanoid.FloorMaterial
+                        if humanoid and collision then
+                            local checkFloor = humanoid.FloorMaterial
                             local isStuck = checkFloor == Enum.Material.Air or checkFloor == Enum.Material.Concrete
                             if isStuck then
                                 repeat task.wait()
-                                    Script.Collision.CanCollide = false
-                                    Script.Collision.CollisionCrouch.CanCollide = not (Toggles.CollisionOffsetGodmode.Value or shared.Library.IsMobile or Options.CollisionOffsetGodmodeKey:GetState())
+                                    collision.CanCollide = false
+                                    collision.CollisionCrouch.CanCollide = true
                                 until not isStuck or hasResetFailsafe
-                                Script.Collision.CanCollide = not (Toggles.CollisionOffsetGodmode.Value and (shared.Library.IsMobile or Options.CollisionOffsetGodmodeKey:GetState()))
+                                collision.CanCollide = true
                             end
                             hasResetFailsafe = true
                         end
                     end)
 
-                    shared.Notify:Log({
-                        Title = "Dương Api",
-                        Description = "Tính toán thành công với" .. waypointAmount .. " điểm!",
+                    Script.Functions.Log({
+                        Title = "Dương-Api",
+                        Description = "Tính toán thành công với " .. waypointAmount .. " điểm!",
                     }, Toggles.AutoRoomsDebug.Value)
 
                     _internal_mspaint_pathfinding_nodes:ClearAllChildren()
@@ -5463,14 +5463,14 @@ elseif Script.IsRooms then
                     for i, waypoint in pairs(waypoints) do
                         local moveToFinished = false
                         local recalculate = false
-                        local waypointConnection = shared.Humanoid.MoveToFinished:Connect(function() moveToFinished = true end)
+                        local waypointConnection = humanoid.MoveToFinished:Connect(function() moveToFinished = true end)
                         if not moveToFinished or not Toggles.AutoRooms.Value then
-                            shared.Humanoid:MoveTo(waypoint.Position)
+                            humanoid:MoveTo(waypoint.Position)
                             
                             local entity = (workspace:FindFirstChild("A60") or workspace:FindFirstChild("A120"))
                             local isEntitySpawned = (entity and entity.PrimaryPart.Position.Y > -10)
 
-                            if isEntitySpawned and not shared.RootPart.Anchored and pathfindingGoal.Parent.Name ~= "Rooms_Locker" then
+                            if isEntitySpawned and not rootPart.Anchored and pathfindingGoal.Parent.Name ~= "Rooms_Locker" then
                                 waypointConnection:Disconnect()
 
                                 if not Toggles.AutoRooms.Value then
@@ -5487,14 +5487,14 @@ elseif Script.IsRooms then
 
                             task.delay(1.5, function()
                                 if moveToFinished then return end
-                                if (not Toggles.AutoRooms.Value or shared.Library.Unloaded) then return moveToCleanup() end
+                                if (not Toggles.AutoRooms.Value or Library.Unloaded) then return moveToCleanup() end
 
-                                repeat task.wait(0.25) until (not shared.Character:GetAttribute("Hiding") and not shared.Character.PrimaryPart.Anchored)
+                                repeat task.wait(.25) until (not character:GetAttribute("Hiding") and not character.PrimaryPart.Anchored)
 
-                                shared.Notify:Alert({
-                                    Title = "Dương Api",
-                                    Description = "Có vẻ bạn đang bị kẹt, đang tính đường mới...",
-                                    Reason = "Thất bại khi đến điểm chấm",
+                                Script.Functions.Alert({
+                                    Title = "Dương-Api",
+                                    Description = "Có vẻ bạn đang bị kẹt, đang tính toán đường đi khác...",
+                                    Reason = "Tạo đường kẻ thất bại",
                                 })
 
                                 recalculate = true
@@ -5508,7 +5508,7 @@ elseif Script.IsRooms then
                             end)
                         end
 
-                        repeat task.wait() until moveToFinished or not Toggles.AutoRooms.Value or recalculate or shared.Library.Unloaded
+                        repeat task.wait() until moveToFinished or not Toggles.AutoRooms.Value or recalculate or Library.Unloaded
                         lastWaypoint = waypoint
 
                         waypointConnection:Disconnect()
@@ -5525,20 +5525,20 @@ elseif Script.IsRooms then
                         if recalculate then break end
                     end
                 else
-                    shared.Notify:Log({
-                        Title = "Dương Api",
+                    Script.Functions.Log({
+                        Title = "Dương-Api",
                         Description = "Tính toán thất bại với lỗi " .. tostring(path.Status)   
                     }, Toggles.AutoRoomsDebug.Value)
                 end
             end
 
             -- Movement
-            while Toggles.AutoRooms.Value and not shared.Library.Unloaded do
-                if Script.LatestRoom.Value == 1000 then
-                    shared.Notify:Alert({
-                        Title = "Dương Api",
-                        Description = "Bạn đã tới A-1000",
-                        Reason = "A-1000 Fix bởi dương modder",
+            while Toggles.AutoRooms.Value and not Library.Unloaded do
+                if latestRoom.Value == 1000 then
+                    Script.Functions.Alert({
+                        Title = "Dương-Api",
+                        Description = "Bạn đã tới cửa A-1000",
+                        Reason = "A-1000 sửa lại bởi Dương modder",
                     })
 
                     break
@@ -5547,7 +5547,7 @@ elseif Script.IsRooms then
                 doAutoRooms()
             end
             
-            -- Unload Auto Rooms
+            -- Dừng chạy Tự động A1000
             moveToCleanup()
         end
     end)
