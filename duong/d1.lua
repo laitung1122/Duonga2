@@ -420,7 +420,7 @@ local Toggles = getgenv().Linoria.Toggles
 local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/laitung1122/Duonga2/main/esp.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "Dương Api V1 | DOORS",
+    Title = "Dương Api V2 | DOORS",
     Center = true,
     AutoShow = true,
     Resizable = true,
@@ -2547,7 +2547,17 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
         SyncToggleState = Library.IsMobile
     })
 
+    AutomationGroupBox:AddDropdown("AutoInteractIgnore", {
+        AllowNull = true,
+        Values = {"Jeff Items", "Unlock w/ Lockpick", "Paintings", "Gold", "Light Source Items", "Skull Prompt"},
+        Default = {"Jeff Items","Paintings"},
+        Multi = true,
+
+        Text = "Danh sách đồ không thao tác"
+    })
+
     AutomationGroupBox:AddDivider()
+
     AutomationGroupBox:AddToggle("AutoWardrobeNotif", {
         Text = "Thông báo nơi núp gần",
         Default = false
@@ -2630,7 +2640,7 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
         end)
     elseif isMines then
         AutomationGroupBox:AddToggle("AutoAnchorSolver", {
-            Text = " giải mã mỏ neo",
+            Text = " giải mã trụ điện",
             Default = false
         })
     end
@@ -5825,55 +5835,52 @@ Library:GiveSignal(RunService.RenderStepped:Connect(function()
             end
         end
 
-        if Toggles.AutoInteract.Value and (Library.IsMobile or Options.AutoInteractKey:GetState()) then
+        if Toggles.AutoInteract.Value and (shared.Library.IsMobile or Options.AutoInteractKey:GetState()) then
             local prompts = Script.Functions.GetAllPromptsWithCondition(function(prompt)
-                if not prompt.parent then return false end
+                if not prompt.Parent then return false end
 
-                if prompt.Parent:GetAttribute("JeffShop") then return false end
-                if prompt.Parent:GetAttribute("PropType") == "Battery" and ((character:FindFirstChildOfClass("Tool") and character:FindFirstChildOfClass("Tool"):GetAttribute("RechargeProp") ~= "Battery") or character:FindFirstChildOfClass("Tool") == nil) then return false end 
-                if prompt.Parent:GetAttribute("PropType") == "Heal" and humanoid and humanoid.Health == humanoid.MaxHealth then return false end
+                if Options.AutoInteractIgnore.Value["Jeff Items"] and prompt.Parent:GetAttribute("JeffShop") then return false end
+                if Options.AutoInteractIgnore.Value["Unlock w/ Lockpick"] and (prompt.Name == "UnlockPrompt" or prompt.Parent:GetAttribute("Locked")) and shared.Character:FindFirstChild("Lockpick") then return false end
+                if Options.AutoInteractIgnore.Value["Paintings"] and prompt.Name == "PropPrompt" then return false end
+                if Options.AutoInteractIgnore.Value["Gold"] and prompt.Name == "LootPrompt" then return false end
+                if Options.AutoInteractIgnore.Value["Light Source Items"] and prompt.Parent:GetAttribute("Tool_LightSource") and not prompt.Parent:GetAttribute("Tool_CanCutVines") then return false end
+                if Options.AutoInteractIgnore.Value["Skull Prompt"] and prompt.Name == "SkullPrompt" then return false end
+
+                if prompt.Parent:GetAttribute("PropType") == "Battery" and not (shared.Character:FindFirstChildOfClass("Tool") and (shared.Character:FindFirstChildOfClass("Tool"):GetAttribute("RechargeProp") == "Battery" or shared.Character:FindFirstChildOfClass("Tool"):GetAttribute("StorageProp") == "Battery")) then return false end 
+                if prompt.Parent:GetAttribute("PropType") == "Heal" and shared.Humanoid and shared.Humanoid.Health == shared.Humanoid.MaxHealth then return false end
                 if prompt.Parent.Name == "MinesAnchor" then return false end
 
-                if isRetro and prompt.Parent.Parent.Name == "RetroWardrobe" then return false end
+                if Script.IsRetro and prompt.Parent.Parent.Name == "RetroWardrobe" then return false end
 
-                return PromptTable.Aura[prompt.Name] ~= nil
+                return Script.PromptTable.Aura[prompt.Name] ~= nil
             end)
 
             for _, prompt: ProximityPrompt in pairs(prompts) do
                 task.spawn(function()
                     -- checks if distance can interact with prompt and if prompt can be interacted again
-                    if Script.Functions.DistanceFromCharacter(prompt.Parent) < prompt.MaxActivationDistance and (not prompt:GetAttribute("Interactions" .. localPlayer.Name) or PromptTable.Aura[prompt.Name] or table.find(PromptTable.AuraObjects, prompt.Parent.Name)) then
-                        -- painting checks
-                        if prompt.Parent.Name == "Slot" and prompt.Parent:GetAttribute("Hint") and character then
-                            if Script.Temp.PaintingDebounce then return end
-                            
-                            local currentPainting = character:FindFirstChild("Prop")
-                            if not currentPainting and prompt.Parent:FindFirstChild("Prop") and prompt.Parent:GetAttribute("Hint") ~= prompt.Parent.Prop:GetAttribute("Hint") then
-                                return firePrompt(prompt)
+                    if Script.Functions.DistanceFromCharacter(prompt.Parent) < prompt.MaxActivationDistance and (not prompt:GetAttribute("Interactions" .. shared.LocalPlayer.Name) or Script.PromptTable.Aura[prompt.Name] or table.find(Script.PromptTable.AuraObjects, prompt.Parent.Name)) then
+                        if prompt.Parent.Name == "Slot" and prompt.Parent:GetAttribute("Hint") then
+                            if Script.Temp.PaintingDebounce[prompt] then return end
+
+                            local currentPainting = shared.Character:FindFirstChild("Prop")
+                            local slotPainting = prompt.Parent:FindFirstChild("Prop")
+
+                            local currentHint = (currentPainting and currentPainting:GetAttribute("Hint"))
+                            local slotHint = (slotPainting and slotPainting:GetAttribute("Hint"))
+                            local promptHint = prompt.Parent:GetAttribute("Hint")
+
+                            --print(currentHint, slotHint, promptHint)
+                            if slotHint ~= promptHint and (currentHint == promptHint or slotPainting) then
+                                Script.Temp.PaintingDebounce[prompt] = true
+                                shared.fireproximityprompt(prompt)
+                                task.wait(0.3)
+                                Script.Temp.PaintingDebounce[prompt] = false    
                             end
-
-                            if prompt.Parent:FindFirstChild("Prop") then 
-                                if prompt.Parent:GetAttribute("Hint") == prompt.Parent.Prop:GetAttribute("Hint") then
-                                    return
-                                end
-                            end
-
-                            if prompt.Parent:GetAttribute("Hint") == currentPainting:GetAttribute("Hint") then
-                                Script.Temp.PaintingDebounce = true
-
-                                local oldHint = currentPainting:GetAttribute("Hint")
-                                repeat task.wait()
-                                    firePrompt(prompt)
-                                until not character:FindFirstChild("Prop") or character:FindFirstChild("Prop"):GetAttribute("Hint") ~= oldHint
-
-                                task.wait(0.15)
-                                Script.Temp.PaintingDebounce = false
-                            end                            
-                            
+        
                             return
                         end
                         
-                        firePrompt(prompt)
+                        shared.fireproximityprompt(prompt)
                     end
                 end)
             end
