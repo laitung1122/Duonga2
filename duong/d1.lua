@@ -3226,9 +3226,9 @@ task.spawn(function()
             })
 
             Mines_BypassGroupBox:AddToggle("MinecartTeleportDebug", {
-                Text = "Minecart Teleport Debug",
+                Text = "Vá lỗi dịch chuyển xe",
                 Default = false,
-                Visible = false,
+                Visible = true,
             })
         end
         
