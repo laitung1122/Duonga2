@@ -2002,244 +2002,7 @@ end))
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [9] = function()local wax,script,require=ImportGlobals(9)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-Script.LoadedRooms = {}
-Script.FeatureConnections = {
-    Door = {},
-    Shell = {},
-    Room = {}
-}
-Script.ESPTable = {
-    Door = {},
-    Entity = {},
-    Battery = {},
-    Locker = {},
-    Player = {},
-    Table = {},
-    None = {}
-}
-
-Script.EntityNames = {
-    ["monster"] = "A-60",
-    ["monster2"] = "A-120",
-    ["Spirit"] = "Pnevma"
-}
-
-Script.CurrentAmbient = shared.Lighting.Ambient
-
-Script._mspaint_custom_captions = Instance.new("ScreenGui") do
-    local Frame = Instance.new("Frame", Script._mspaint_custom_captions)
-    local TextLabel = Instance.new("TextLabel", Frame)
-    local UITextSizeConstraint = Instance.new("UITextSizeConstraint", TextLabel)
-
-    Script._mspaint_custom_captions.Parent = shared.ReplicatedStorage
-    Script._mspaint_custom_captions.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-    Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-    Frame.BackgroundColor3 = shared.Library.MainColor
-    Frame.BorderColor3 = shared.Library.AccentColor
-    Frame.BorderSizePixel = 2
-    Frame.Position = UDim2.new(0.5, 0, 0.8, 0)
-    Frame.Size = UDim2.new(0, 200, 0, 75)
-    shared.Library:AddToRegistry(Frame, {
-        BackgroundColor3 = "MainColor",
-        BorderColor3 = "AccentColor"
-    })
-
-    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.BackgroundTransparency = 1.000
-    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TextLabel.BorderSizePixel = 0
-    TextLabel.Size = UDim2.new(1, 0, 1, 0)
-    TextLabel.Font = Enum.Font.Code
-    TextLabel.Text = ""
-    TextLabel.TextColor3 = shared.Library.FontColor
-    TextLabel.TextScaled = true
-    TextLabel.TextSize = 14
-    TextLabel.TextWrapped = true
-    shared.Library:AddToRegistry(TextLabel, {
-        TextColor3 = "FontColor"
-    })
-
-    UITextSizeConstraint.MaxTextSize = 35
-
-    function Script.Functions.HideCaptions()
-        Script._mspaint_custom_captions.Parent = shared.ReplicatedStorage
-    end
-
-    local CaptionsLastUsed = os.time()
-    function Script.Functions.Captions(caption: string)
-        CaptionsLastUsed = os.time()
-
-        if Script._mspaint_custom_captions.Parent == shared.ReplicatedStorage then
-            local success = pcall(function()
-                Script._mspaint_custom_captions.Parent = if gethui then gethui() else shared.CoreGui
-            end)
-
-            if not success then
-                Script._mspaint_custom_captions.Parent = shared.PlayerGui
-            end 
-        end
-        
-        TextLabel.Text = caption
-
-        task.spawn(function()
-            task.wait(5)
-            if os.time() - CaptionsLastUsed >= 5 then
-                Script.Functions.HideCaptions()
-            end
-        end)
-    end
-end
-
---// Player Variables \\--
-shared.Character = shared.LocalPlayer.Character or shared.LocalPlayer.CharacterAdded:Wait()
-shared.Humanoid = nil
-
-Script.MainUI = shared.PlayerGui:WaitForChild("MainGui")
-
---// Functions \--
-function Script.Functions.RandomString()
-    local length = math.random(10,20)
-    local array = {}
-    for i = 1, length do
-        array[i] = string.char(math.random(32, 126))
-    end
-    return table.concat(array)
-end
-
-shared.Load("Utils", "Assets")
-shared.Load("Utils", "Chat")
-shared.Load("Utils", "ESP")
-
-shared.Load("Utils", "ConnectionsFuncs")
-
---// Tabs \\--
-Script.Tabs = {
-    Main = shared.Window:AddTab("Main"),
-    Visuals = shared.Window:AddTab("Visuals")
-}
-
-shared.Load("Tabs", "Main")
-shared.Load("Tabs", "Visuals")
-
---// Metamethod hooks \\--
-if wax.shared.ExecutorSupport["hookmetamethod"] and wax.shared.ExecutorSupport["getnamecallmethod"] then
-    shared.Hooks.mtHook = hookmetamethod(game, "__namecall", function(self, ...)
-        local args = {...}
-        local namecall = getnamecallmethod()
-    
-        if getcallingscript() and namecall == "SetCore" and args[1] == "DevConsoleVisible" and args[2] == false then
-            args[2] = game:GetService("StarterGui"):GetCore("DevConsoleVisible")
-            return shared.Hooks.mtHook(self, table.unpack(args))
-        end
-    
-        return shared.Hooks.mtHook(self, ...)
-    end)
-end
-
---// Connections \\--
-shared.Connect:GiveSignal(shared.LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-    task.delay(1, Script.Functions.SetupCharacterConnection, newCharacter)
-end))
-
-shared.Connect:GiveSignal(shared.PlayerGui.ChildAdded:Connect(function(child)
-    if child.Name == "MainGui" then
-        task.delay(1, Script.Functions.SetupUIConnection, child)
-    end
-end))
-
-shared.Connect:GiveSignal(workspace.rooms.ChildAdded:Connect(function(room)
-    Script.Functions.SetupRoomConnection(room)
-end))
-shared.Connect:GiveSignal(workspace.next.ChildAdded:Connect(function(room)
-    Script.Functions.SetupRoomConnection(room)
-end))
-
---// Entity Handler
-shared.Connect:GiveSignal(workspace.ChildAdded:Connect(function(child)
-    local entityName = Script.EntityNames[child.Name]
-    if not entityName then return end
-
-    if child:FindFirstChild("wind") then
-        entityName = "A-200"
-    end
-
-    if Toggles.EntityESP.Value then
-        Script.Functions.EntityESP(child, entityName)
-    end
-
-    if Toggles.NotifyEntity.Value then
-        shared.Notify:Alert({
-            Title = "ENTITIES",
-            Description = entityName .. " has spawned!"
-        })
-    
-        if Toggles.NotifyChat.Value then
-            Script.Functions.Chat(string.format("%s %s", entityName, Options.NotifyEntityMessage.Value))
-        end
-    end
-end))
-
-shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
-    if shared.Character then
-        if shared.Humanoid then
-            if Toggles.SpeedHack.Value then shared.Humanoid.WalkSpeed = Options.WalkSpeed.Value end
-        end
-    end
-
-    if wax.shared.ExecutorSupport["getrenv"] then
-        if Toggles.InfStamina.Value then
-            getrenv()._G.stamina = 100
-        end
-    
-        if Toggles.InfFlashlight.Value then
-            getrenv()._G.flashlightcharge = 100
-        end
-    end
-end))
-
---// Load \\--
-Instance.new("BoolValue", shared.LocalPlayer).Name = "cheats"
-task.spawn(Script.Functions.SetupCharacterConnection, shared.Character)
-task.spawn(Script.Functions.SetupLightingConnection)
-task.spawn(Script.Functions.SetupUIConnection)
-
---// Unload \\--
-shared.Library:OnUnload(function()
-    if shared.Hooks.mtHook then hookmetamethod(game, "__namecall", shared.Hooks.mtHook) end
-
-    local slender = Script.MainUI and Script.MainUI:FindFirstChild("slender")
-    if slender then
-        slender.ImageTransparency = 0
-        for _, bar in pairs(slender:GetChildren()) do
-            bar.Visible = true
-        end
-    end
-
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.Destroy()
-        end
-    end
-
-    for _, category in pairs(Script.FeatureConnections) do
-        for _, connection in pairs(category) do
-            connection:Disconnect()
-        end
-    end
-
-    print("Unloading " .. shared.ScriptName .. "...")
-end)
-
-getgenv().mspaint_loaded = true
-end)() end,
-    [10] = function()local wax,script,require=ImportGlobals(10)local ImportGlobals return (function(...)--// Linoria \\--
+    [8] = function()local wax,script,require=ImportGlobals(8)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -2342,7 +2105,7 @@ end)
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [11] = function()local wax,script,require=ImportGlobals(11)local ImportGlobals return (function(...)--// Linoria \\--
+    [9] = function()local wax,script,require=ImportGlobals(9)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -2517,7 +2280,7 @@ end)
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [15] = function()local wax,script,require=ImportGlobals(15)local ImportGlobals return (function(...)--// Linoria \\--
+    [13] = function()local wax,script,require=ImportGlobals(13)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -3354,7 +3117,7 @@ Toggles.CollisionOffsetGodmode:OnChanged(function(value)
     end
 end)
 end)() end,
-    [16] = function()local wax,script,require=ImportGlobals(16)local ImportGlobals return (function(...)--// Linoria \\--
+    [14] = function()local wax,script,require=ImportGlobals(14)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -4327,7 +4090,7 @@ elseif Script.IsFools then
 end
 
 end)() end,
-    [17] = function()local wax,script,require=ImportGlobals(17)local ImportGlobals return (function(...)--// Linoria \\--
+    [15] = function()local wax,script,require=ImportGlobals(15)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -4661,7 +4424,7 @@ Options.PromptReachMultiplier:OnChanged(function(value)
     end
 end)
 end)() end,
-    [18] = function()local wax,script,require=ImportGlobals(18)local ImportGlobals return (function(...)--// Linoria \\--
+    [16] = function()local wax,script,require=ImportGlobals(16)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -5631,7 +5394,7 @@ Toggles.ViewmodelOffset:OnChanged(function(value)
     end
 end)
 end)() end,
-    [20] = function()local wax,script,require=ImportGlobals(20)local ImportGlobals return (function(...)--// Linoria \\--
+    [18] = function()local wax,script,require=ImportGlobals(18)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -5857,7 +5620,7 @@ Toggles.Twerk:OnChanged(function(value)
     shared.Twerk:Set(value)
 end)
 end)() end,
-    [22] = function()local wax,script,require=ImportGlobals(22)local ImportGlobals return (function(...)--// Linoria \\--
+    [20] = function()local wax,script,require=ImportGlobals(20)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -5909,7 +5672,7 @@ Toggles.SpeedHack:OnChanged(function(value)
     shared.Humanoid.WalkSpeed = if value then Options.WalkSpeed.Value else Script.LastSpeed
 end)
 end)() end,
-    [23] = function()local wax,script,require=ImportGlobals(23)local ImportGlobals return (function(...)--// Linoria \\--
+    [21] = function()local wax,script,require=ImportGlobals(21)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6316,7 +6079,7 @@ Options.NotifySide:OnChanged(function(value)
     shared.Library.NotifySide = value
 end)
 end)() end,
-    [27] = function()local wax,script,require=ImportGlobals(27)local ImportGlobals return (function(...)--// Linoria \\--
+    [25] = function()local wax,script,require=ImportGlobals(25)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6536,7 +6299,7 @@ function Script.Functions.GetNearestPromptWithCondition(condition)
     return nearestPrompt
 end
 end)() end,
-    [28] = function()local wax,script,require=ImportGlobals(28)local ImportGlobals return (function(...)--// Linoria \\--
+    [26] = function()local wax,script,require=ImportGlobals(26)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6787,7 +6550,7 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
     end)
 end
 end)() end,
-    [29] = function()local wax,script,require=ImportGlobals(29)local ImportGlobals return (function(...)--// Linoria \\--
+    [27] = function()local wax,script,require=ImportGlobals(27)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6889,7 +6652,7 @@ function Script.Functions.AutoBreaker(code, breakers)
     end
 end
 end)() end,
-    [30] = function()local wax,script,require=ImportGlobals(30)local ImportGlobals return (function(...)--// Linoria \\--
+    [28] = function()local wax,script,require=ImportGlobals(28)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7286,7 +7049,7 @@ function Script.Functions.SetupOtherCharacterConnection(character: Model)
 end
 
 end)() end,
-    [31] = function()local wax,script,require=ImportGlobals(31)local ImportGlobals return (function(...)--// Linoria \\--
+    [29] = function()local wax,script,require=ImportGlobals(29)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7624,7 +7387,7 @@ function Script.Functions.GuidingLightEsp(guidance)
     end)
 end
 end)() end,
-    [32] = function()local wax,script,require=ImportGlobals(32)local ImportGlobals return (function(...)--// Linoria \\--
+    [30] = function()local wax,script,require=ImportGlobals(30)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7745,7 +7508,7 @@ function Script.Functions.AvoidEntity(value: boolean, oldNoclip: boolean)
     end
 end
 end)() end,
-    [33] = function()local wax,script,require=ImportGlobals(33)local ImportGlobals return (function(...)--// Linoria \\--
+    [31] = function()local wax,script,require=ImportGlobals(31)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8272,7 +8035,7 @@ function Script.Functions.Minecart.Pathfind(room: Model, forcePathfind: boolean)
     Script.Functions.Minecart.Teleport(room)
 end
 end)() end,
-    [34] = function()local wax,script,require=ImportGlobals(34)local ImportGlobals return (function(...)--// Linoria \\--
+    [32] = function()local wax,script,require=ImportGlobals(32)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8309,7 +8072,7 @@ function Script.Functions.GetPadlockCode(paper: Tool)
     return "_____"
 end
 end)() end,
-    [35] = function()local wax,script,require=ImportGlobals(35)local ImportGlobals return (function(...)--// Linoria \\--
+    [33] = function()local wax,script,require=ImportGlobals(33)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8364,7 +8127,7 @@ function Script.Functions.IsInViewOfPlayer(instance: Instance, range: number | n
     return false
 end
 end)() end,
-    [37] = function()local wax,script,require=ImportGlobals(37)local ImportGlobals return (function(...)--// Linoria \\--
+    [35] = function()local wax,script,require=ImportGlobals(35)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8450,300 +8213,7 @@ function Script.Functions.LoadPreset(name: string)
     })
 end
 end)() end,
-    [39] = function()local wax,script,require=ImportGlobals(39)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-
---// Functions \\--
-function Script.Functions.ChildCheck(child)
-    if not child:IsA("Model") then return end
-
-    if Toggles.BatteryESP.Value and child.Name == "battery" then
-        Script.Functions.BatteryESP(child)
-    elseif Toggles.LockerESP.Value and child.Name == "hidelocker" then
-        Script.Functions.LockerESP(child)
-    elseif Toggles.TableESP.Value and child.Name == "hidetable" then
-        Script.Functions.TableESP(child)
-    end
-end
-end)() end,
-    [40] = function()local wax,script,require=ImportGlobals(40)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-
---// Functions \\--
-function Script.Functions.Chat(message: string)
-    local chatEvents = shared.ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
-    local sayMessage = chatEvents and chatEvents:FindFirstChild("SayMessageRequest")
-
-    if sayMessage then
-        sayMessage:FireServer(message, "All")
-    end
-end
-end)() end,
-    [41] = function()local wax,script,require=ImportGlobals(41)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-
---// Functions \\--
-function Script.Functions.SetupCharacterConnection(newCharacter)
-    shared.Character = newCharacter
-    shared.Humanoid = shared.Character:WaitForChild("Humanoid")
-    shared.RootPart = shared.Character:WaitForChild("HumanoidRootPart")
-end
-
-function Script.Functions.SetupLightingConnection()
-    shared.Connect:GiveSignal(shared.Lighting:GetPropertyChangedSignal("Ambient"):Connect(function()
-        if shared.Lighting.Ambient ~= Script.CurrentAmbient and shared.Lighting.Ambient ~= Color3.new(1, 1, 1) then
-            Script.CurrentAmbient = shared.Lighting.Ambient
-        end
-
-        if Toggles.Fullbright.Value then
-            shared.Lighting.Ambient = Color3.new(1, 1, 1)
-        end
-    end))
-
-    shared.Connect:GiveSignal(shared.Lighting.ChildAdded:Connect(function(child)
-        if Toggles.NoBlur.Value and child:IsA("Blur") then
-            child.Enabled = false
-        end
-    end))
-end
-
-function Script.Functions.SetupRoomConnection(room)
-    if Script.LoadedRooms[room] then return end
-    Script.LoadedRooms[room] = true
-
-    if Toggles.DoorESP.Value then
-        Script.Functions.DoorESP(room)
-    end
-
-    for _, child in pairs(room:GetDescendants()) do
-        task.spawn(Script.Functions.ChildCheck, child)
-    end
-
-    shared.Connections[room] = room.DescendantAdded:Connect(function(child)
-        task.delay(0.1, Script.Functions.ChildCheck, child)
-    end)
-end
-
-function Script.Functions.SetupUIConnection(GUI)
-    Script.MainUI = GUI or shared.PlayerGui:WaitForChild("MainGui")
-    
-    if Toggles.NoFlashlightShadow.Value then
-        local slender = Script.MainUI:WaitForChild("slender")
-        if slender then
-            slender.ImageTransparency = 1
-            for _, bar in pairs(slender:GetChildren()) do
-                bar.Visible = false
-            end
-        end
-    end
-end
-end)() end,
-    [42] = function()local wax,script,require=ImportGlobals(42)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/MS-ESP/refs/heads/main/source.lua"))()
-shared.ESPLibrary = ESPLibrary
-
-type ESP = {
-    Color: Color3,
-    IsInvisible: boolean,
-    Object: Instance,
-    Offset: Vector3,
-    MaxDistance: number,
-    Text: string,
-    TextParent: Instance,
-    Type: string,
-    OnDestroy: () -> (),
-}
-
-function Script.Functions.ESP(args: ESP)
-    if not args.Object then return Script.Functions.Warn("ESP Object is nil") end
-
-    local ESPManager = {
-        Object = args.Object,
-        Text = args.Text or "No Text",
-        Color = args.Color or Color3.new(),
-        MaxDistance = args.MaxDistance or 5000,
-        Offset = args.Offset or Vector3.zero,
-        IsInvisible = args.IsInvisible or false,
-        Type = args.Type or "None",
-        OnDestroy = args.OnDestroy or nil,
-
-        Humanoid = nil
-    }
-
-    if ESPManager.IsInvisible and ESPManager.Object.PrimaryPart then
-        if ESPManager.Object.PrimaryPart.Transparency == 1 then
-            ESPManager.Object.PrimaryPart.Transparency = 0.99
-        end
-
-        local humanoid = ESPManager.Object:FindFirstChildOfClass("Humanoid")
-        if not humanoid then humanoid = Instance.new("Humanoid", ESPManager.Object) end
-        ESPManager.Humanoid = humanoid
-    end
-
-    local ESPInstance = ESPLibrary.ESP.Highlight({
-        Name = ESPManager.Text,
-        Model = ESPManager.Object,
-        MaxDistance = ESPManager.MaxDistance,
-        StudsOffset = ESPManager.Offset,
-
-        FillColor = ESPManager.Color,
-        OutlineColor = ESPManager.Color,
-        TextColor = ESPManager.Color,
-        TextSize = Options.ESPTextSize.Value or 16,
-
-        FillTransparency = Options.ESPFillTransparency.Value,
-        OutlineTransparency = Options.ESPOutlineTransparency.Value,
-
-        Tracer = {
-            Enabled = true,
-            From = Options.ESPTracerStart.Value,
-            Color = ESPManager.Color
-        },
-        
-        Arrow = {
-            Enabled = true,
-            CenterOffset = Options.ESPArrowCenterOffset.Value,
-            Color = ESPManager.Color
-        },
-
-        OnDestroy = ESPManager.OnDestroy or function()
-            if ESPManager.Object.PrimaryPart and ESPManager.IsInvisible then ESPManager.Object.PrimaryPart.Transparency = 1 end
-            if ESPManager.Humanoid then ESPManager.Humanoid:Destroy() end
-        end
-    })
-
-    table.insert(Script.ESPTable[args.Type], ESPInstance)
-
-    return ESPInstance
-end
-
-function Script.Functions.DoorESP(room)
-    local door = room:WaitForChild("door", 5)
-
-    if door then
-        local clickDetector = door:FindFirstChild("ClickDetector")
-        if not clickDetector then return end
-
-        local roomNumber = if tonumber(room.Name) then room.Name else tostring(workspace.roomnumber.Value + 1)
-
-        local doorEsp = Script.Functions.ESP({
-            Type = "Door",
-            Object = door,
-            Text = string.format("Door %s", roomNumber),
-            Color = Options.DoorEspColor.Value,
-
-            OnDestroy = function()
-                if Script.FeatureConnections.Door[door] then Script.FeatureConnections.Door[door]:Disconnect() end
-            end
-        })
-
-        Script.FeatureConnections.Door[door] = clickDetector.AncestryChanged:Connect(function(_, parent)
-            if parent then return end
-            
-            if doorEsp then doorEsp.Destroy() end
-            if Script.FeatureConnections.Door[door] then Script.FeatureConnections.Door[door]:Disconnect() end
-        end)
-    end
-end
-
-function Script.Functions.EntityESP(entity, entityName)
-    local isInvisible = entity:IsA("BasePart") and entity.Transparency == 1
-    local entityModel = if isInvisible then Instance.new("Model") else entity
-
-    if isInvisible then
-        local entityClone = entity:Clone()
-        
-        entityClone.Parent = entityModel
-        entityModel.Parent = shared.Workspace
-    
-        entityModel.PrimaryPart = entityClone
-        entityClone:ClearAllChildren()
-        Instance.new("SpecialMesh", entityClone)
-
-        shared.Connections[entity] = shared.RunService.Heartbeat:Connect(function()
-            if entity:IsDescendantOf(workspace) then
-                entityModel:PivotTo(entity:GetPivot())
-            else
-                entityModel:Destroy()
-                shared.Connect:DisconnectSignal(shared.Connections[entity])
-            end
-        end)
-    end
-
-    Script.Functions.ESP({
-        Type = "Entity",
-        Object = entityModel,
-        Text = entityName,
-        Color = Options.EntityEspColor.Value,
-        IsInvisible = isInvisible,
-    })
-end
-
-function Script.Functions.BatteryESP(battery)
-    Script.Functions.ESP({
-        Type = "Battery",
-        Object = battery,
-        Text = "Battery",
-        Color = Options.BatteryEspColor.Value,
-        MaxDistance = 300
-    })
-end
-
-function Script.Functions.LockerESP(hideLocker)
-    local jack = hideLocker:FindFirstChild("jack")
-    local extra = if jack then " [Shell]" else ""
-
-    local lockerEsp = Script.Functions.ESP({
-        Type = "Locker",
-        Object = hideLocker,
-        Text = string.format("Locker%s", extra),
-        Color = Options.LockerEspColor.Value,
-        MaxDistance = 200,
-
-        OnDestroy = function()
-            if Script.FeatureConnections.Shell[jack] then Script.FeatureConnections.Shell[jack]:Disconnect() end
-        end
-    })
-
-    if jack then
-        Script.FeatureConnections.Shell[jack] = jack.AncestryChanged:Connect(function(_, parent)
-            if parent then return end
-
-            if lockerEsp then lockerEsp.Destroy() end
-            if Script.FeatureConnections.Shell[jack] then Script.FeatureConnections.Shell[jack]:Disconnect() end
-        end)
-    end
-end
-
-function Script.Functions.TableESP(hideTable)
-    Script.Functions.ESP({
-        Type = "Table",
-        Object = hideTable:FindFirstChild("spot"),
-        Text = "Table",
-        Color = Options.TableEspColor.Value,
-        IsInvisible = true,
-        MaxDistance = 250
-    })
-end
-end)() end,
-    [44] = function()local wax,script,require=ImportGlobals(44)local ImportGlobals return (function(...)--// Linoria \\--
+    [37] = function()local wax,script,require=ImportGlobals(37)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8767,7 +8237,7 @@ function Script.Functions.SetupBloxstrapRPCConnection()
     end))
 end
 end)() end,
-    [46] = function()local wax,script,require=ImportGlobals(46)local ImportGlobals return (function(...)local BloxstrapRPC = {}
+    [39] = function()local wax,script,require=ImportGlobals(39)local ImportGlobals return (function(...)local BloxstrapRPC = {}
 
 type RichPresence = {
     details:     string?,
@@ -8808,7 +8278,7 @@ end
 
 return BloxstrapRPC
 end)() end,
-    [47] = function()local wax,script,require=ImportGlobals(47)local ImportGlobals return (function(...)local Connect = {}
+    [40] = function()local wax,script,require=ImportGlobals(40)local ImportGlobals return (function(...)local Connect = {}
 shared.Connections = {}
 
 function Connect:GiveSignal(signal: RBXScriptConnection | RBXScriptSignal)
@@ -8825,7 +8295,7 @@ end
 
 return Connect
 end)() end,
-    [48] = function()local wax,script,require=ImportGlobals(48)local ImportGlobals return (function(...)local ExecutorSupport = {}
+    [41] = function()local wax,script,require=ImportGlobals(41)local ImportGlobals return (function(...)local ExecutorSupport = {}
 local ExecutorSupportInfo = {}
 
 local executorName = string.split(identifyexecutor() or "None", " ")[1]
@@ -9006,7 +8476,7 @@ end
 
 return ExecutorSupport
 end)() end,
-    [49] = function()local wax,script,require=ImportGlobals(49)local ImportGlobals return (function(...)local FileHelper = {}
+    [42] = function()local wax,script,require=ImportGlobals(42)local ImportGlobals return (function(...)local FileHelper = {}
 
 function FileHelper.new(basepath: string)
     local self = setmetatable({}, {
@@ -9095,7 +8565,7 @@ end
 
 return FileHelper
 end)() end,
-    [51] = function()local wax,script,require=ImportGlobals(51)local ImportGlobals return (function(...)-- Addons
+    [44] = function()local wax,script,require=ImportGlobals(44)local ImportGlobals return (function(...)-- Addons
 if getgenv().mspaint_disable_addons or getgenv().mspaint_addons_activated then 
     return {}
 end
@@ -9281,7 +8751,7 @@ end)
 
 return {}
 end)() end,
-    [52] = function()local wax,script,require=ImportGlobals(52)local ImportGlobals return (function(...)local UICreator = {}
+    [45] = function()local wax,script,require=ImportGlobals(45)local ImportGlobals return (function(...)local UICreator = {}
 
 local repo = "https://raw.githubusercontent.com/deividcomsono/LinoriaLib/refs/heads/main/"
 
@@ -9406,7 +8876,7 @@ end
 return UICreator
 
 end)() end,
-    [54] = function()local wax,script,require=ImportGlobals(54)local ImportGlobals return (function(...)local Doors = {}
+    [47] = function()local wax,script,require=ImportGlobals(47)local ImportGlobals return (function(...)local Doors = {}
 
 --// Player Variables \\--
 local mainUI
@@ -9506,7 +8976,7 @@ function Doors:Warn(options) Doors:Alert(options) end
 
 return Doors
 end)() end,
-    [55] = function()local wax,script,require=ImportGlobals(55)local ImportGlobals return (function(...)local Linoria = {}
+    [48] = function()local wax,script,require=ImportGlobals(48)local ImportGlobals return (function(...)local Linoria = {}
 
 function Linoria:Alert(options)
     if not shared.Library then return warn("No Linoria library") end
@@ -9535,7 +9005,7 @@ end
 
 return Linoria
 end)() end,
-    [56] = function()local wax,script,require=ImportGlobals(56)local ImportGlobals return (function(...)local Notify = {}
+    [49] = function()local wax,script,require=ImportGlobals(49)local ImportGlobals return (function(...)local Notify = {}
 
 local Linoria = require("Notifiers/Linoria")
 local Doors = require("Notifiers/Doors")
@@ -9572,7 +9042,7 @@ function Notify:Log(options) Notify:Notify(options) end
 
 return Notify
 end)() end,
-    [57] = function()local wax,script,require=ImportGlobals(57)local ImportGlobals return (function(...)return function(scriptType: "Utils" | "Tabs", name: string)
+    [50] = function()local wax,script,require=ImportGlobals(50)local ImportGlobals return (function(...)return function(scriptType: "Utils" | "Tabs", name: string)
     local scriptPath = script.Parent.Parent.Places[scriptType][shared.ScriptFolder or "Universal"]
 
     if shared.Mapping and shared.Mapping["Exclusions"] then
@@ -9583,7 +9053,7 @@ end)() end,
     require(scriptPath[name])
 end
 end)() end,
-    [58] = function()local wax,script,require=ImportGlobals(58)local ImportGlobals return (function(...)local Logs = {
+    [51] = function()local wax,script,require=ImportGlobals(51)local ImportGlobals return (function(...)local Logs = {
     Debug = true, --or getgenv().mspaint_dev_mode,
 
     FirstTime = true,
@@ -9636,7 +9106,7 @@ end
 
 return Logs
 end)() end,
-    [59] = function()local wax,script,require=ImportGlobals(59)local ImportGlobals return (function(...)local cloneref = (cloneref or function(instance: any) return instance end)
+    [52] = function()local wax,script,require=ImportGlobals(52)local ImportGlobals return (function(...)local cloneref = (cloneref or function(instance: any) return instance end)
 
 local Services = {}
 function Services:GetService(serviceName: string)
@@ -9656,7 +9126,7 @@ end
 
 return Services
 end)() end,
-    [61] = function()local wax,script,require=ImportGlobals(61)local ImportGlobals return (function(...)local ControlModule = if wax.shared.ExecutorSupport["require"] and shared.PlayerScripts:FindFirstChild("PlayerModule") then wax.require(shared.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")) else { replaced = true }
+    [54] = function()local wax,script,require=ImportGlobals(54)local ImportGlobals return (function(...)local ControlModule = if wax.shared.ExecutorSupport["require"] and shared.PlayerScripts:FindFirstChild("PlayerModule") then wax.require(shared.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")) else { replaced = true }
 
 if ControlModule.replaced == true then
     ControlModule = {
@@ -9719,7 +9189,7 @@ end
 
 return ControlModule
 end)() end,
-    [62] = function()local wax,script,require=ImportGlobals(62)local ImportGlobals return (function(...)local Fly = {
+    [55] = function()local wax,script,require=ImportGlobals(55)local ImportGlobals return (function(...)local Fly = {
     FlyBody = nil,
     FlyGyro = nil,
     Enabled = false, 
@@ -9782,7 +9252,7 @@ end
 
 return Fly
 end)() end,
-    [63] = function()local wax,script,require=ImportGlobals(63)local ImportGlobals return (function(...)local Twerk = {
+    [56] = function()local wax,script,require=ImportGlobals(56)local ImportGlobals return (function(...)local Twerk = {
     TwerkAnimation = nil,
     TwerkTrack = nil,
 }
@@ -9828,116 +9298,79 @@ local ObjectTree = {
         },
         {
             {
-                45,
+                38,
                 1,
                 {
                     "Utils"
                 },
                 {
                     {
-                        57,
-                        2,
-                        {
-                            "Loader"
-                        }
-                    },
-                    {
-                        49,
-                        2,
-                        {
-                            "FileHelper"
-                        }
-                    },
-                    {
-                        59,
-                        2,
-                        {
-                            "Services"
-                        }
-                    },
-                    {
-                        60,
-                        1,
-                        {
-                            "Universal"
-                        },
-                        {
-                            {
-                                62,
-                                2,
-                                {
-                                    "Fly"
-                                }
-                            },
-                            {
-                                61,
-                                2,
-                                {
-                                    "ControlModule"
-                                }
-                            },
-                            {
-                                63,
-                                2,
-                                {
-                                    "Twerk"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        47,
+                        40,
                         2,
                         {
                             "Connections"
                         }
                     },
                     {
-                        50,
+                        51,
+                        2,
+                        {
+                            "Logs"
+                        }
+                    },
+                    {
+                        52,
+                        2,
+                        {
+                            "Services"
+                        }
+                    },
+                    {
+                        43,
                         1,
                         {
                             "GUI"
                         },
                         {
                             {
-                                56,
+                                49,
                                 2,
                                 {
                                     "Notify"
                                 }
                             },
                             {
-                                53,
+                                46,
                                 1,
                                 {
                                     "Notifiers"
                                 },
                                 {
                                     {
-                                        54,
-                                        2,
-                                        {
-                                            "Doors"
-                                        }
-                                    },
-                                    {
-                                        55,
+                                        48,
                                         2,
                                         {
                                             "Linoria"
+                                        }
+                                    },
+                                    {
+                                        47,
+                                        2,
+                                        {
+                                            "Doors"
                                         }
                                     }
                                 }
                             },
                             {
-                                52,
+                                45,
                                 2,
                                 {
                                     "Creator"
                                 }
                             },
                             {
-                                51,
+                                44,
                                 2,
                                 {
                                     "Addons"
@@ -9946,33 +9379,63 @@ local ObjectTree = {
                         }
                     },
                     {
-                        58,
-                        2,
+                        53,
+                        1,
                         {
-                            "Logs"
+                            "Universal"
+                        },
+                        {
+                            {
+                                56,
+                                2,
+                                {
+                                    "Twerk"
+                                }
+                            },
+                            {
+                                55,
+                                2,
+                                {
+                                    "Fly"
+                                }
+                            },
+                            {
+                                54,
+                                2,
+                                {
+                                    "ControlModule"
+                                }
+                            }
                         }
                     },
                     {
-                        46,
+                        39,
                         2,
                         {
                             "BloxstrapRPC"
                         }
                     },
                     {
-                        48,
+                        41,
                         2,
                         {
                             "ExecutorSupport"
                         }
+                    },
+                    {
+                        50,
+                        2,
+                        {
+                            "Loader"
+                        }
+                    },
+                    {
+                        42,
+                        2,
+                        {
+                            "FileHelper"
+                        }
                     }
-                }
-            },
-            {
-                2,
-                2,
-                {
-                    "Mappings"
                 }
             },
             {
@@ -9983,42 +9446,228 @@ local ObjectTree = {
                 },
                 {
                     {
-                        4,
+                        10,
                         1,
                         {
-                            "Loaders"
+                            "Tabs"
                         },
                         {
                             {
                                 11,
-                                2,
+                                1,
                                 {
-                                    "Universal"
+                                    "Doors"
+                                },
+                                {
+                                    {
+                                        12,
+                                        1,
+                                        {
+                                            "Doors"
+                                        },
+                                        {
+                                            {
+                                                15,
+                                                2,
+                                                {
+                                                    "Main"
+                                                }
+                                            },
+                                            {
+                                                16,
+                                                2,
+                                                {
+                                                    "Visuals"
+                                                }
+                                            },
+                                            {
+                                                14,
+                                                2,
+                                                {
+                                                    "Floor"
+                                                }
+                                            },
+                                            {
+                                                13,
+                                                2,
+                                                {
+                                                    "Exploits"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        17,
+                                        1,
+                                        {
+                                            "Lobby"
+                                        },
+                                        {
+                                            {
+                                                18,
+                                                2,
+                                                {
+                                                    "Main"
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             },
                             {
-                                10,
-                                2,
-                                {
-                                    "Template"
-                                }
-                            },
-                            {
-                                8,
+                                19,
                                 1,
                                 {
                                     "R&D"
                                 },
                                 {
                                     {
-                                        9,
+                                        21,
                                         2,
                                         {
-                                            "R&D"
+                                            "Visuals"
+                                        }
+                                    },
+                                    {
+                                        20,
+                                        2,
+                                        {
+                                            "Main"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        22,
+                        1,
+                        {
+                            "Utils"
+                        },
+                        {
+                            {
+                                36,
+                                1,
+                                {
+                                    "Template"
+                                },
+                                {
+                                    {
+                                        37,
+                                        2,
+                                        {
+                                            "ConnectionsFuncs"
                                         }
                                     }
                                 }
                             },
+                            {
+                                23,
+                                1,
+                                {
+                                    "Doors"
+                                },
+                                {
+                                    {
+                                        24,
+                                        1,
+                                        {
+                                            "Doors"
+                                        },
+                                        {
+                                            {
+                                                28,
+                                                2,
+                                                {
+                                                    "ConnectionsFuncs"
+                                                }
+                                            },
+                                            {
+                                                25,
+                                                2,
+                                                {
+                                                    "Assets"
+                                                }
+                                            },
+                                            {
+                                                29,
+                                                2,
+                                                {
+                                                    "ESP"
+                                                }
+                                            },
+                                            {
+                                                32,
+                                                2,
+                                                {
+                                                    "Padlock"
+                                                }
+                                            },
+                                            {
+                                                31,
+                                                2,
+                                                {
+                                                    "Minecarts"
+                                                }
+                                            },
+                                            {
+                                                26,
+                                                2,
+                                                {
+                                                    "AutoWardrobe"
+                                                }
+                                            },
+                                            {
+                                                27,
+                                                2,
+                                                {
+                                                    "BreakerBox"
+                                                }
+                                            },
+                                            {
+                                                33,
+                                                2,
+                                                {
+                                                    "Player"
+                                                }
+                                            },
+                                            {
+                                                30,
+                                                2,
+                                                {
+                                                    "Entities"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        34,
+                                        1,
+                                        {
+                                            "Lobby"
+                                        },
+                                        {
+                                            {
+                                                35,
+                                                2,
+                                                {
+                                                    "Preset"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        4,
+                        1,
+                        {
+                            "Loaders"
+                        },
+                        {
                             {
                                 5,
                                 1,
@@ -10041,262 +9690,30 @@ local ObjectTree = {
                                         }
                                     }
                                 }
-                            }
-                        }
-                    },
-                    {
-                        24,
-                        1,
-                        {
-                            "Utils"
-                        },
-                        {
-                            {
-                                25,
-                                1,
-                                {
-                                    "Doors"
-                                },
-                                {
-                                    {
-                                        36,
-                                        1,
-                                        {
-                                            "Lobby"
-                                        },
-                                        {
-                                            {
-                                                37,
-                                                2,
-                                                {
-                                                    "Preset"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        26,
-                                        1,
-                                        {
-                                            "Doors"
-                                        },
-                                        {
-                                            {
-                                                32,
-                                                2,
-                                                {
-                                                    "Entities"
-                                                }
-                                            },
-                                            {
-                                                34,
-                                                2,
-                                                {
-                                                    "Padlock"
-                                                }
-                                            },
-                                            {
-                                                33,
-                                                2,
-                                                {
-                                                    "Minecarts"
-                                                }
-                                            },
-                                            {
-                                                35,
-                                                2,
-                                                {
-                                                    "Player"
-                                                }
-                                            },
-                                            {
-                                                28,
-                                                2,
-                                                {
-                                                    "AutoWardrobe"
-                                                }
-                                            },
-                                            {
-                                                29,
-                                                2,
-                                                {
-                                                    "BreakerBox"
-                                                }
-                                            },
-                                            {
-                                                31,
-                                                2,
-                                                {
-                                                    "ESP"
-                                                }
-                                            },
-                                            {
-                                                30,
-                                                2,
-                                                {
-                                                    "ConnectionsFuncs"
-                                                }
-                                            },
-                                            {
-                                                27,
-                                                2,
-                                                {
-                                                    "Assets"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
                             },
                             {
-                                43,
-                                1,
+                                8,
+                                2,
                                 {
                                     "Template"
-                                },
-                                {
-                                    {
-                                        44,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    }
                                 }
                             },
                             {
-                                38,
-                                1,
+                                9,
+                                2,
                                 {
-                                    "R&D"
-                                },
-                                {
-                                    {
-                                        39,
-                                        2,
-                                        {
-                                            "Assets"
-                                        }
-                                    },
-                                    {
-                                        42,
-                                        2,
-                                        {
-                                            "ESP"
-                                        }
-                                    },
-                                    {
-                                        40,
-                                        2,
-                                        {
-                                            "Chat"
-                                        }
-                                    },
-                                    {
-                                        41,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        12,
-                        1,
-                        {
-                            "Tabs"
-                        },
-                        {
-                            {
-                                13,
-                                1,
-                                {
-                                    "Doors"
-                                },
-                                {
-                                    {
-                                        19,
-                                        1,
-                                        {
-                                            "Lobby"
-                                        },
-                                        {
-                                            {
-                                                20,
-                                                2,
-                                                {
-                                                    "Main"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        14,
-                                        1,
-                                        {
-                                            "Doors"
-                                        },
-                                        {
-                                            {
-                                                15,
-                                                2,
-                                                {
-                                                    "Exploits"
-                                                }
-                                            },
-                                            {
-                                                16,
-                                                2,
-                                                {
-                                                    "Floor"
-                                                }
-                                            },
-                                            {
-                                                17,
-                                                2,
-                                                {
-                                                    "Main"
-                                                }
-                                            },
-                                            {
-                                                18,
-                                                2,
-                                                {
-                                                    "Visuals"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                21,
-                                1,
-                                {
-                                    "R&D"
-                                },
-                                {
-                                    {
-                                        22,
-                                        2,
-                                        {
-                                            "Main"
-                                        }
-                                    },
-                                    {
-                                        23,
-                                        2,
-                                        {
-                                            "Visuals"
-                                        }
-                                    }
+                                    "Universal"
                                 }
                             }
                         }
                     }
+                }
+            },
+            {
+                2,
+                2,
+                {
+                    "Mappings"
                 }
             }
         }
@@ -10309,46 +9726,41 @@ local LineOffsets = {
     142,
     [6] = 180,
     [7] = 1824,
-    [9] = 1996,
-    [10] = 2233,
-    [11] = 2336,
-    [15] = 2511,
-    [16] = 3348,
-    [17] = 4321,
-    [18] = 4655,
-    [20] = 5625,
-    [22] = 5851,
-    [23] = 5903,
-    [27] = 6310,
-    [28] = 6530,
-    [29] = 6781,
-    [30] = 6883,
-    [31] = 7280,
-    [32] = 7618,
-    [33] = 7739,
-    [34] = 8266,
-    [35] = 8303,
-    [37] = 8358,
-    [39] = 8444,
-    [40] = 8464,
-    [41] = 8481,
-    [42] = 8544,
-    [44] = 8737,
-    [46] = 8761,
-    [47] = 8802,
-    [48] = 8819,
-    [49] = 9000,
-    [51] = 9089,
-    [52] = 9275,
-    [54] = 9400,
-    [55] = 9500,
-    [56] = 9529,
-    [57] = 9566,
-    [58] = 9577,
-    [59] = 9630,
-    [61] = 9650,
-    [62] = 9713,
-    [63] = 9776
+    [8] = 1996,
+    [9] = 2099,
+    [13] = 2274,
+    [14] = 3111,
+    [15] = 4084,
+    [16] = 4418,
+    [18] = 5388,
+    [20] = 5614,
+    [21] = 5666,
+    [25] = 6073,
+    [26] = 6293,
+    [27] = 6544,
+    [28] = 6646,
+    [29] = 7043,
+    [30] = 7381,
+    [31] = 7502,
+    [32] = 8029,
+    [33] = 8066,
+    [35] = 8121,
+    [56] = 9246,
+    [40] = 8272,
+    [55] = 9183,
+    [48] = 8970,
+    [49] = 8999,
+    [39] = 8231,
+    [37] = 8207,
+    [52] = 9100,
+    [45] = 8745,
+    [42] = 8470,
+    [51] = 9047,
+    [54] = 9120,
+    [47] = 8870,
+    [50] = 9036,
+    [41] = 8289,
+    [44] = 8559
 }
 
 -- Misc AOT variable imports
