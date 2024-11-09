@@ -1,15 +1,3 @@
---[[
-    This script is NOT intended to be modified.
-    To view the source code, see the 'Src' folder on the official GitHub repository.
-
-    Authors: upio, deivid, mstudio45 & bacalhauz
-    GitHub: https://github.com/notpoiu/mspaint
-    Discord: https://discord.gg/mspaint
---]]
-
--- ++++++++ WAX BUNDLED DATA BELOW ++++++++ --
-
--- Will be used later for getting flattened globals
 local ImportGlobals
 
 -- Holds direct closure data (defining this before the DOM tree for line debugging etc)
@@ -186,545 +174,7 @@ end)() end,
     }
 }
 end)() end,
-    [6] = function()local wax,script,require=ImportGlobals(6)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-
-Script.DidGodmode = false
-
-Script.DefaultFogEnd = shared.Lighting.FogEnd
-
-Script.CurrentAmbient = shared.Lighting.Ambient
-Script.CurrentColorShift_Bottom = shared.Lighting.ColorShift_Bottom
-Script.CurrentColorShift_Top = shared.Lighting.ColorShift_Top
-if shared.Lighting:FindFirstChild("FoggyDay_Atmosphere") then
-    Script.CurrentFoggyDayDensity = shared.Lighting["FoggyDay_Atmosphere"].Density
-end
-
-Script.Physical = workspace:WaitForChild("GameObjects"):WaitForChild("Physical")
-Script.Map = Script.Physical:WaitForChild("Map")
-Script.Items = Script.Physical:WaitForChild("Items")
-Script.Employees = Script.Physical:WaitForChild("Employees")
-
-Script.FeatureConnections = {
-    Item = {},
-    Employee = {},
-    Player = {},
-    ESPTemp = {}
-}
-
-Script.ESPTable = {
-    Item = {},
-    Employee = {},
-    Player = {}
-}
-
-Script.InteractableItems = {
-	"Medkit",
-	"Pizza",
-	"Beans",
-	"Meatballs",
-	"Apple",
-	"Lemon",
-	"Lemon Slice",
-	"Burger",
-	"Banana",
-	"Hotdog",
-	"Striped Donut",
-	"Chips",
-	"Ice Cream",
-	"Chocolate",
-	"Cookie",
-	"Bloxy Soda",
-	"2 Litre Dr. Bob",
-    "Dr. Bob Soda",
-	"Water",
-	"Jeff"
-}
---// Player Variables \\--
-shared.Character = shared.LocalPlayer.Character or shared.LocalPlayer.CharacterAdded:Wait()
-shared.Humanoid = nil
-
-Script.System = shared.Character:WaitForChild("System")
-Script.Event = Script.System:WaitForChild("Event")
-Script.Action = Script.System:WaitForChild("Action")
-
-Script.DeathScreen = shared.PlayerGui:WaitForChild("DeathScreen")
-Script.Settings = shared.PlayerGui:WaitForChild("PlayerInfo"):WaitForChild("Settings")
-Script.MainGui = shared.PlayerGui:WaitForChild("MainGui")
-Script.PlayerStats = Script.MainGui:WaitForChild("PlayerStats")
-
-Script.TopBar = Script.MainGui:WaitForChild("TopBar")
-Script.Calendar = Script.TopBar:WaitForChild("Calendar")
-Script.CurrentDay = Script.Calendar:WaitForChild("Middle"):WaitForChild("CurrentDay")
-Script.TimeLeft = shared.ReplicatedStorage:WaitForChild("ServerSettings"):WaitForChild("TimeSettings"):WaitForChild("TimeLeft")
-
-Script.Source = shared.PlayerScripts:WaitForChild("source")
-Script.Client = Script.Source:WaitForChild("client")
-
-Script.ToolSystem = Script.Client:WaitForChild("ToolSystem")
-Script.WaypointsMenu = Script.Client:WaitForChild("GUI"):WaitForChild("GuiMenus"):WaitForChild("Extras"):WaitForChild("WaypointsMenu")
-
-Script.GamePassClockVisible = Script.Calendar:WaitForChild("Gamepass_Clock").Visible
-
---// Functions \\--
-Script._mspaint_custom_captions = Instance.new("ScreenGui") do
-    local Frame = Instance.new("Frame", Script._mspaint_custom_captions)
-    local TextLabel = Instance.new("TextLabel", Frame)
-    local UITextSizeConstraint = Instance.new("UITextSizeConstraint", TextLabel)
-
-    Script._mspaint_custom_captions.Parent = shared.ReplicatedStorage
-    Script._mspaint_custom_captions.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-    Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-    Frame.BackgroundColor3 = shared.Library.MainColor
-    Frame.BorderColor3 = shared.Library.AccentColor
-    Frame.BorderSizePixel = 2
-    Frame.Position = UDim2.new(0.5, 0, 0.8, 0)
-    Frame.Size = UDim2.new(0, 200, 0, 75)
-    shared.Library:AddToRegistry(Frame, {
-        BackgroundColor3 = "MainColor",
-        BorderColor3 = "AccentColor"
-    })
-
-    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.BackgroundTransparency = 1.000
-    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TextLabel.BorderSizePixel = 0
-    TextLabel.Size = UDim2.new(1, 0, 1, 0)
-    TextLabel.Font = Enum.Font.Code
-    TextLabel.Text = ""
-    TextLabel.TextColor3 = shared.Library.FontColor
-    TextLabel.TextScaled = true
-    TextLabel.TextSize = 14
-    TextLabel.TextWrapped = true
-    shared.Library:AddToRegistry(TextLabel, {
-        TextColor3 = "FontColor"
-    })
-
-    UITextSizeConstraint.MaxTextSize = 35
-
-    function Script.Functions.HideCaptions()
-        Script._mspaint_custom_captions.Parent = shared.ReplicatedStorage
-    end
-
-    local CaptionsLastUsed = os.time()
-    function Script.Functions.Captions(caption: string)
-        CaptionsLastUsed = os.time()
-
-        if Script._mspaint_custom_captions.Parent == shared.ReplicatedStorage then
-            local success = pcall(function()
-                Script._mspaint_custom_captions.Parent = if gethui then gethui() else shared.CoreGui
-            end)
-
-            if not success then
-                Script._mspaint_custom_captions.Parent = shared.PlayerGui
-            end 
-        end
-        
-        TextLabel.Text = caption
-
-        task.spawn(function()
-            task.wait(5)
-            if os.time() - CaptionsLastUsed >= 5 then
-                Script.Functions.HideCaptions()
-            end
-        end)
-    end
-end
-
-function Script.Functions.DistanceFromCharacter(position: Instance | Vector3, getPositionFromCamera: boolean | nil)
-    if not position then return 9e9 end
-    if typeof(position) == "Instance" then
-        position = position:GetPivot().Position
-    end
-
-    if getPositionFromCamera and (shared.Camera or workspace.CurrentCamera) then
-        local cameraPosition = if shared.Camera then shared.Camera.CFrame.Position else workspace.CurrentCamera.CFrame.Position
-
-        return (cameraPosition - position).Magnitude
-    end
-
-    if shared.RootPart then
-        return (shared.RootPart.Position - position).Magnitude
-    elseif shared.Camera then
-        return (shared.Camera.CFrame.Position - position).Magnitude
-    end
-
-    return 9e9
-end
-
-function Script.Functions.CameraChildAdded(child)
-    if Toggles.AutoTPWhistle.Value then
-        for playerName, _ in pairs(Options.AutoTPWhistlePlayers.Value) do
-            if child.Name == playerName .. "_EchoLocation" then
-                shared.Character:PivotTo(child.CFrame)
-            end
-        end
-    end
-end
-
-function Script.Functions.IsNaN(x)
-    return x ~= x
-end
-
-function Script.Functions.UpdateBloxstrapRPC()
-    if not wax.shared.BloxstrapRPC then return end
-    
-    wax.shared.BloxstrapRPC.SetRichPresence({
-        details = "Playing 3008 [ mspaint v3 ]",
-        state = string.lower(Script.CurrentDay.Text):gsub("^%l", string.upper),
-        largeImage = {
-            hoverText = "Using mspaint v3"
-        },
-        smallImage = {
-            assetId = 6925817108,
-            hoverText = shared.LocalPlayer.Name
-        }
-    })
-end
-
-function Script.Functions.Respawn()
-    if shared.Humanoid.Health > 0 or Script.Functions.IsNaN(shared.Humanoid.Health) then
-        shared.Character:BreakJoints()
-    end
-
-    repeat task.wait(0.1) until Script.DeathScreen.BG.Visible
-    
-    Script.Event:FireServer("Respawn")
-
-    Script.DeathScreen.DeathSound:Stop()
-    Script.DeathScreen.DeathMusic:Stop()
-end
-
-shared.Load("Utils", "ConnectionsFuncs")
-shared.Load("Utils", "ESP")
-
---// Tabs \\--
-Script.Tabs = {
-    Main = shared.Window:AddTab("Main"),
-    Exploits = shared.Window:AddTab("Exploits"),
-    Visuals = shared.Window:AddTab("Visuals"),
-}
-
-shared.Load("Tabs", "Main")
-shared.Load("Tabs", "Exploits")
-shared.Load("Tabs", "Visuals")
---// Metamethod hooks \\--
-if wax.shared.ExecutorSupport["hookmetamethod"] and wax.shared.ExecutorSupport["getnamecallmethod"] then
-    if wax.shared.ExecutorSupport["require"] then
-        Script.ToolGStep = wax.require(Script.ToolSystem).GlobalRenderStep
-    end
-
-    shared.Hooks.mtHook = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
-        local method = getnamecallmethod()
-        local args = {...}
-
-        local isAction = method == "InvokeServer" and self.Name == "Action"
-
-        if isAction then
-            local actionType = args[1]
-            local actionData = args[2]
-
-            if actionType == "Store" and args[3] ~= "_internal_origin_mspaint" then
-                if Toggles.InfiniteInventory.Value and wax.shared.ExecutorSupport["require"] then
-                    require(Script.ToolSystem).GlobalRenderStep = function() end
-                    local parentedTools = {}
-                    
-                    for _, tool in pairs(shared.LocalPlayer.Backpack:GetChildren()) do
-                        table.insert(parentedTools, tool)
-                    
-                        shared.Humanoid:EquipTool(tool)
-                        tool.Parent = workspace
-                    end
-    
-                    task.wait()
-                    local modelName = actionData.Model.Name
-    
-                    Script.Action:InvokeServer("Store", actionData, "_internal_origin_mspaint")
-                    
-                    local newTool = shared.LocalPlayer.Backpack:WaitForChild(modelName)
-    
-                    shared.Humanoid:EquipTool(newTool)
-    
-                    for _, tool in pairs(parentedTools)  do
-                        tool.Parent = shared.Character
-                        shared.Humanoid:EquipTool(tool)
-                    end
-                    
-                    shared.Humanoid:UnequipTools()
-    
-                    require(Script.ToolSystem).GlobalRenderStep = Script.ToolGStep
-
-                    return
-                end
-            end
-    
-            if actionType == "Drop" then
-                if Toggles.ThrowPowerBoost.Value then
-                    actionData.ThrowPower = Options.ThrowPower.Value
-                    actionData.Throw = true
-                    actionData.CameraCFrame = actionData.CameraCFrame * Options.ThrowPower.Value
-                end
-
-                if Toggles.DeleteObject.Value then
-                    actionData.ThrowPower = 555
-                    actionData.Throw = true
-                    actionData.CameraCFrame = actionData.CameraCFrame * -1000
-                end
-            end
-
-            return shared.Hooks.mtHook(self, table.unpack({
-                actionType,
-                actionData
-            }))
-        end
-
-        return shared.Hooks.mtHook(self, ...)
-    end))
-end
-
---// Function hooks \\--
-if wax.shared.ExecutorSupport["hookfunction"] and wax.shared.ExecutorSupport["getcallingscript"] then
-    shared.Hooks.instantInteract = hookfunction(TweenInfo.new, newcclosure(function(self, ...)
-        if not shared.Library.Unloaded then
-            if Toggles.InstantInteract.Value then
-                local caller = getcallingscript()
-    
-                local isInputController = caller and caller.Name == "InputControl"
-                local isValidArgument = self and typeof(self) == "number"
-    
-                if isInputController and isValidArgument then
-                    self = 0
-                end
-            end
-        end
-
-        return shared.Hooks.instantInteract(self, ...)
-    end))
-end
-
---// Connections \\--
-shared.Connect:GiveSignal(shared.LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-    task.delay(1, Script.Functions.SetupCharacterConnection, newCharacter)
-end))
-
-shared.Connect:GiveSignal(shared.Camera.ChildAdded:Connect(Script.Functions.CameraChildAdded))
-
-shared.Connect:GiveSignal(shared.Players.PlayerAdded:Connect(function(player)
-    task.spawn(Script.Functions.SetupOtherPlayerConnection, player)
-end))
-
---// Load \\--
-task.spawn(Script.Functions.SetupCharacterConnection, shared.Character)
-task.spawn(Script.Functions.SetupLightingConnection)
-task.spawn(Script.Functions.SetupExploitInfModulesConnection)
-task.spawn(Script.Functions.SetupBloxstrapRPCConnection)
-
-task.spawn(Script.Functions.SetupEmployeeConnection)
-task.spawn(Script.Functions.SetupItemConnection)
-task.spawn(Script.Functions.SetupOtherPlayerConnection)
-
-for _, child in pairs(shared.Camera:GetChildren()) do
-    Script.Functions.CameraChildAdded(child)
-end
-
---// Unload \\--
-shared.Library:OnUnload(function()
-    if wax.shared.ExecutorSupport["hookmetamethod"] and wax.shared.ExecutorSupport["getnamecallmethod"] then
-        hookmetamethod(game, "__namecall", shared.Hooks.mtHook)
-    end
-
-    if wax.shared.BloxstrapRPC then
-        wax.shared.BloxstrapRPC.SetRichPresence({
-            details = "<reset>",
-            state = "<reset>",
-            largeImage = {
-                reset = true
-            },
-            smallImage = {
-                reset = true
-            }
-        })
-    end
-end)
-
-getgenv().mspaint_loaded = true
-end)() end,
-    [8] = function()local wax,script,require=ImportGlobals(8)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-Script.FeatureConnections = {
-    Character = {},
-    Humanoid = {},
-    Player = {},
-    RootPart = {},
-}
-
-Script.AutoFarmStagePositions = {}
-
-Script.BoatStages = workspace:WaitForChild("BoatStages")
-Script.NormalStages = Script.BoatStages:WaitForChild("NormalStages")
-Script.ClaimGold = workspace:WaitForChild("ClaimRiverResultsGold")
-
-Script.DisableAutoFarm = false
-
-Script.AutoFarmPart = Instance.new("Part"); do
-    Script.AutoFarmPart.CanCollide = false
-    Script.AutoFarmPart.Anchored = true
-    Script.AutoFarmPart.Transparency = 1
-end
-
-shared.Character = shared.LocalPlayer.Character or shared.LocalPlayer.CharacterAdded:Wait()
-
---// Functions \\--
-function Script.Functions.UpdateBloxstrapRPC()
-    if not wax.shared.BloxstrapRPC then return end
-
-    wax.shared.BloxstrapRPC.SetRichPresence({
-        details = "Playing BABFT [ mspaint v3 ]",
-        state = #shared.Players:GetPlayers() .. " players in the server",
-        largeImage = {
-            hoverText = "Using mspaint v3"
-        },
-        smallImage = {
-            assetId = 6925817108,
-            hoverText = shared.LocalPlayer.Name
-        }
-    })
-end
-
-function Script.Functions.SetupAutoFarmVariables()
-    for i = 1, 10 do
-        table.insert(Script.AutoFarmStagePositions, Script.NormalStages:FindFirstChild("CaveStage" .. tostring(i)).DarknessPart.Position)
-    end
-
-    table.insert(Script.AutoFarmStagePositions, Script.NormalStages.TheEnd.GoldenChest.Trigger.Position + Vector3.new(0, 350, 0))
-    table.insert(Script.AutoFarmStagePositions, Script.NormalStages.TheEnd.GoldenChest.Trigger.Position)
-end
-
-function Script.Functions.AutoFarm()
-    if not shared.Character then return end
-    if not Toggles.AutoFarm.Value then return end
-
-    for idx, stagePosition in pairs(Script.AutoFarmStagePositions) do
-        if not Toggles.AutoFarm.Value or shared.Library.Unloaded then break end
-
-        if idx >= 11 and Options.AutoFarmPriority.Value == "Gold" then
-            Script.ClaimGold:FireServer()
-            Script.DisableAutoFarm = true
-            
-            shared.Humanoid.Health = 0
-            break
-        end
-
-        Script.DisableAutoFarm = false
-        Script.AutoFarmPart.Position = shared.Character:GetPivot().Position
-
-        -- TODO: move from tween to lerping
-        local partTween = shared.TweenService:Create(Script.AutoFarmPart, TweenInfo.new((shared.Character:GetPivot().Position - stagePosition).Magnitude / (Options.AutoFarmSpeed.Value * 100), Enum.EasingStyle.Linear), {
-            Position = stagePosition
-        })
-
-        partTween:Play()
-        partTween.Completed:Wait()
-
-        if Options.AutoFarmPriority.Value == "Gold" then
-            Script.ClaimGold:FireServer()
-        end
-
-        if idx == 12 then
-            Script.DisableAutoFarm = true
-
-            local newCharacter = shared.LocalPlayer.CharacterAdded:Wait()
-            Script.AutoFarmPart.Position = newCharacter:GetPivot().Position
-            
-            task.wait(0.25)
-        end
-    end
-end
-
-shared.Load("Utils", "ConnectionsFuncs")
-
---// Tabs \\--
-Script.Tabs = {
-    Main = shared.Window:AddTab("Main"),
-}
-
-shared.Load("Tabs", "Main")
-
---// Local Player Connection \\--
-shared.Connect:GiveSignal(shared.LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-    task.delay(1, Script.Functions.SetupCharacterConnection, newCharacter)
-end))
-
---// Run Service \\--
-shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
-    if shared.Character then
-        if shared.Humanoid then
-            if Toggles.SpeedHack.Value then shared.Humanoid.WalkSpeed = Options.WalkSpeed.Value end
-            if Toggles.JumpPowerHack.Value then shared.Humanoid.JumpPower = Options.JumpPower.Value end
-        end
-
-        if Toggles.Noclip.Value then
-            for _, part in pairs(shared.Character:GetDescendants()) do
-                if not part:IsA("BasePart") then continue end
-                part.CanCollide = false
-            end        
-        end
-        
-        if Toggles.AutoFarm.Value and Script.AutoFarmPart and not Script.DisableAutoFarm then
-            if shared.Character.PrimaryPart then
-                shared.Character.PrimaryPart.Velocity = Vector3.zero
-            end
-
-            shared.Character:PivotTo(Script.AutoFarmPart.CFrame)
-        end
-    end
-end))
-
---// Load \\--
-Script.Functions.UpdateBloxstrapRPC()
-
-task.spawn(Script.Functions.SetupAutoFarmVariables)
-task.spawn(Script.Functions.SetupCharacterConnection, shared.Character)
-task.spawn(Script.Functions.SetupBloxstrapRPCConnection)
-
---// Unload \\--
-shared.Library:OnUnload(function()
-    if wax.shared.BloxstrapRPC then
-        wax.shared.BloxstrapRPC.SetRichPresence({
-            details = "<reset>",
-            state = "<reset>",
-            largeImage = {
-                reset = true
-            },
-            smallImage = {
-                reset = true
-            }
-        })
-    end
-
-    for _, category in pairs(Script.FeatureConnections) do
-        for _, connection in pairs(category) do
-            connection:Disconnect()
-        end
-    end
-
-    Script.AutoFarmPart:Destroy()
-
-    shared.Twerk:Disable()
-end)
-
-getgenv().mspaint_loaded = true
-end)() end,
-    [10] = function()local wax,script,require=ImportGlobals(10)local ImportGlobals return (function(...)--// Loading Wait \\--
+    [6] = function()local wax,script,require=ImportGlobals(6)local ImportGlobals return (function(...)--// Loading Wait \\--
 if shared.LocalPlayer and shared.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and shared.LocalPlayer.PlayerGui.LoadingUI.Enabled then
     print("[mspaint] Waiting for game to load...")
     repeat task.wait() until not shared.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and true or not shared.LocalPlayer.PlayerGui.LoadingUI.Enabled
@@ -2368,7 +1818,7 @@ shared.SubFolder = Script.Floor.Value
 getgenv().mspaint_loaded = true
 
 end)() end,
-    [11] = function()local wax,script,require=ImportGlobals(11)local ImportGlobals return (function(...)--// Loading Wait \\--
+    [7] = function()local wax,script,require=ImportGlobals(7)local ImportGlobals return (function(...)--// Loading Wait \\--
 if shared.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and shared.LocalPlayer.PlayerGui.LoadingUI.Enabled then
     repeat task.wait() until not shared.LocalPlayer.PlayerGui.LoadingUI.Enabled
 end
@@ -2540,7 +1990,7 @@ end))
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [13] = function()local wax,script,require=ImportGlobals(13)local ImportGlobals return (function(...)--// Linoria \\--
+    [9] = function()local wax,script,require=ImportGlobals(9)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -2777,7 +2227,7 @@ end)
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [14] = function()local wax,script,require=ImportGlobals(14)local ImportGlobals return (function(...)--// Linoria \\--
+    [10] = function()local wax,script,require=ImportGlobals(10)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -2880,7 +2330,7 @@ end)
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [15] = function()local wax,script,require=ImportGlobals(15)local ImportGlobals return (function(...)--// Linoria \\--
+    [11] = function()local wax,script,require=ImportGlobals(11)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -3055,889 +2505,7 @@ end)
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [18] = function()local wax,script,require=ImportGlobals(18)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-local Tabs = Script.Tabs
-
---// Exploits \\--
-local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
-    TrollingGroupBox:AddToggle("ThrowPowerBoost",{
-        Text = "Throw Power Boost",
-        Default = false,
-        Visible = wax.shared.ExecutorSupport["hookmetamethod"] and wax.shared.ExecutorSupport["getnamecallmethod"],
-    })
-
-    TrollingGroupBox:AddSlider("ThrowPower", {
-        Text = "Throw Power",
-        Default = 10,
-        Min = 1,
-        Max = 100,
-        Rounding = 1,
-        Compact = true,
-        Visible = wax.shared.ExecutorSupport["hookmetamethod"] and wax.shared.ExecutorSupport["getnamecallmethod"],
-    })
-
-    TrollingGroupBox:AddToggle("DeleteObject", {
-        Text = "FE Delete Object",
-        Default = false,
-        Visible = wax.shared.ExecutorSupport["hookmetamethod"] and wax.shared.ExecutorSupport["getnamecallmethod"],
-    })
-
-    TrollingGroupBox:AddToggle("Twerk",{
-        Text = "Twerk",
-        Default = false,
-    })
-
-    TrollingGroupBox:AddDivider()
-
-    TrollingGroupBox:AddToggle("DeleteAura", {
-        Text = "FE Delete Aura",
-        Default = false,
-        Risky = true,
-        Tooltip = "Delete objects within a certain range of your character, this can kick you from the game and i'm too lazy to fix it."
-    })
-
-    TrollingGroupBox:AddSlider("DeleteAuraRange", {
-        Text = "Delete Aura Range",
-        Default = 15,
-        Min = 1,
-        Max = 30,
-        Rounding = 1,
-        Compact = true
-    })
-end
-
-local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
-    BypassGroupBox:AddToggle("Godmode", {
-        Text = "Godmode",
-        Default = false
-    })
-
-    BypassGroupBox:AddToggle("InfiniteHunger", {
-        Text = "Disable Hunger",
-        Default = false,
-        Tooltip = "You will never get hungry, incompatible with Godmode."
-    })
-
-    BypassGroupBox:AddToggle("InfiniteEnergy", {
-        Text = "Infinite Energy",
-        Default = false,
-        Tooltip = "You will never get tired, incompatible with Godmode."
-    })
-
-    BypassGroupBox:AddToggle("InfiniteInventory", {
-        Text = "Infinite Inventory",
-        Default = false,
-        Visible = wax.shared.ExecutorSupport["require"] and wax.shared.ExecutorSupport["hookmetamethod"] and wax.shared.ExecutorSupport["getnamecallmethod"],
-    })
-end
-
-Toggles.Godmode:OnChanged(function(value)
-    if value then
-        Script.DidGodmode = true
-
-        repeat task.wait() until #Script.Map.Floor:GetChildren() > 0
-
-        Script.Event:FireServer("FallDamage", {
-            Sliding = false,
-            OriginalDamage = (0/0),
-            Sound = "LR^SS",
-            Softened = true,
-            Broken = false,
-            Model = Script.Map.Floor:FindFirstChildOfClass("Model"),
-            Range = 19,
-            Damage = (0/0)
-        })
-
-    else
-        if not Script.DidGodmode then return end
-        Script.DidGodmode = false
-
-        Script.Functions.Respawn()
-    end
-end)
-
-Toggles.InfiniteHunger:OnChanged(function(value)
-    if value and not Toggles.Godmode.Value then
-        Script.Event:FireServer("DecreaseStat", {
-            Stats = {
-                Hunger = -100
-            }
-        })
-    end
-end)
-
-Toggles.InfiniteEnergy:OnChanged(function(value)
-    if value and not Toggles.Godmode.Value then
-        Script.Event:FireServer("DecreaseStat", {
-            Stats = {
-                Energy = -100
-            }
-        })
-    end
-end)
-
-local DeleteAuraParams = OverlapParams.new()
-DeleteAuraParams.FilterType = Enum.RaycastFilterType.Exclude
-DeleteAuraParams.FilterDescendantsInstances = {shared.Character, shared.Camera}
-
-Toggles.DeleteAura:OnChanged(function(value)
-    if value then
-        repeat task.wait(0.15)
-            local CloseParts = workspace:GetPartBoundsInBox(shared.RootPart.CFrame, Vector3.new(Options.DeleteAuraRange.Value, Options.DeleteAuraRange.Value, Options.DeleteAuraRange.Value), DeleteAuraParams)
-            
-            for _, part in pairs(CloseParts) do 
-                local targetFurniture = part:FindFirstAncestorOfClass("Model") or part.Parent
-                if shared.Players:GetPlayerFromCharacter(targetFurniture) then continue end
-
-                if targetFurniture and targetFurniture:IsA("Model") and targetFurniture.PrimaryPart then
-                    local isClose = shared.Character and Script.Functions.DistanceFromCharacter(part) <= 9
-                    local isAbleToPickup = not targetFurniture:GetAttribute("Busy")
-                    
-                    if not isClose or not isAbleToPickup then continue end
-
-                    Script.Action:InvokeServer("Pickup", {["Model"] = targetFurniture})
-                    
-                    Script.Action:InvokeServer("Drop", {
-                        EndCFrame = CFrame.new(shared.RootPart.Position + Vector3.new(
-                            math.random(1, 5),
-                            math.random(5, 8),
-                            math.random(1, 5)
-                        )),
-
-                        CameraCFrame = Vector3.new(0.9865860342979431, 0.16270768642425537, -0.013206666335463524) * 250,
-                        ThrowPower = 555,
-                        Throw = true
-                    })
-                end
-            end
-        until not Toggles.DeleteAura.Value or shared.Library.Unloaded
-    end
-end)
-
-Toggles.Twerk:OnChanged(function(value)
-    shared.Twerk:Set(value)
-end)
-end)() end,
-    [19] = function()local wax,script,require=ImportGlobals(19)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-local Tabs = Script.Tabs
-
-Script.LastSpeed = if shared.Humanoid then shared.Humanoid.WalkSpeed else 16
-
---// Main \\--
-local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
-    PlayerGroupBox:AddToggle("SpeedHack", {
-        Text = "Speed Hack",
-        Default = false
-    })
-
-    PlayerGroupBox:AddSlider("WalkSpeed", {
-        Text = "Walk Speed",
-        Default = 16,
-        Min = 0,
-        Max = 100,
-        Rounding = 0,
-        Compact = true
-    })
-
-    PlayerGroupBox:AddToggle("JumpPowerHack", {
-        Text = "Jump Power Hack",
-        Default = false
-    })
-
-    PlayerGroupBox:AddSlider("JumpPower", {
-        Text = "Jump Power",
-        Default = 50,
-        Min = 0,
-        Max = 200,
-        Rounding = 0,
-        Compact = true
-    })
-
-    PlayerGroupBox:AddDivider()
-
-    PlayerGroupBox:AddToggle("InstantInteract", {
-        Text = "Instant Interact",
-        Default = false,
-        Visible = wax.shared.ExecutorSupport["hookfunction"] and wax.shared.ExecutorSupport["getcallingscript"]
-    })
-
-    PlayerGroupBox:AddToggle("NoFall", {
-        Text = "No Fall",
-        Default = false
-    })
-
-    PlayerGroupBox:AddDivider()
-
-    PlayerGroupBox:AddToggle("Noclip", {
-        Text = "Noclip",
-        Default = false
-    }):AddKeyPicker("NoclipKey", {
-        Mode = "Toggle",
-        Default = "N",
-        Text = "Noclip",
-        SyncToggleState = true
-    })
-
-    PlayerGroupBox:AddToggle("Fly", {
-        Text = "Fly",
-        Default = false
-    }):AddKeyPicker("FlyKey", {
-        Mode = "Toggle",
-        Default = "F",
-        Text = "Fly",
-        SyncToggleState = true
-    })
-    
-    PlayerGroupBox:AddSlider("FlySpeed", {
-        Text = "Fly Speed",
-        Default = 16,
-        Min = 0,
-        Max = 100,
-        Rounding = 0,
-        Compact = true
-    })
-end
-
-local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
-    AutomationGroupBox:AddToggle("AutoRespawn", {
-        Text = "Auto Respawn",
-        Default = false
-    })
-
-    AutomationGroupBox:AddToggle("AutoPush", {
-        Text = "Auto Push Employees",
-        Default = false
-    })
-
-    AutomationGroupBox:AddDivider()
-
-    AutomationGroupBox:AddToggle("AutoTPWhistle", {
-        Text = "Enable player whistle teleport",
-        Default = false
-    })
-
-    AutomationGroupBox:AddDropdown("AutoTPWhistlePlayers", {
-        SpecialType = "Player",
-        Multi = true,
-        Text = "Go to player(s)'s whistle."
-    })
-end
-
-local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
-    MiscGroupBox:AddButton({
-        Text = "Respawn",
-        Func = function()
-            Script.Functions.Respawn()
-        end,
-        DoubleClick = true
-    })
-
-    MiscGroupBox:AddButton({
-        Text = "Rejoin",
-        Func = function()
-            if #shared.Players:GetPlayers() <= 1 then
-                shared.TeleportService:Teleport(game.PlaceId, shared.LocalPlayer)
-                return
-            end
-
-            shared.TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, shared.LocalPlayer)
-        end,
-        DoubleClick = true
-    })
-
-    MiscGroupBox:AddButton({
-        Text = "Instant Leave",
-        Func = function()
-            task.delay(0.1, function() game:Shutdown() end)
-            shared.LocalPlayer:Kick("Bye bye! :Content:")
-        end,
-        DoubleClick = true
-    })
-end
-
---// Player \\--
-Toggles.SpeedHack:OnChanged(function(value)
-    if not shared.Humanoid then return end
-
-    if value then
-        Script.LastSpeed = shared.Humanoid.WalkSpeed
-    end
-
-    shared.Humanoid.WalkSpeed = if value then Options.WalkSpeed.Value else Script.LastSpeed
-end)
-
-Options.WalkSpeed:OnChanged(function(value)
-    if not shared.Humanoid then return end
-
-    if shared.Humanoid.WalkSpeed ~= value then
-        if Toggles.SpeedHack.Value then shared.Humanoid.WalkSpeed = value end
-    end
-end)
-
-Toggles.JumpPowerHack:OnChanged(function(value)
-    if not shared.Humanoid then return end
-
-    if value then
-        Script.LastJumpPower = if shared.Humanoid.UseJumpPower then shared.Humanoid.JumpPower else shared.Humanoid.JumpHeight
-    end
-
-    if shared.Humanoid.UseJumpPower then
-        shared.Humanoid.JumpPower = if value then Options.JumpPower.Value else Script.LastJumpPower
-    else
-        shared.Humanoid.JumpHeight = if value then Options.JumpPower.Value else Script.LastJumpPower
-    end
-end)
-
-Options.JumpPower:OnChanged(function(value)
-    if not shared.Humanoid then return end
-
-    if shared.Humanoid.UseJumpPower then
-        if shared.Humanoid.JumpPower ~= value then
-            if Toggles.JumpPowerHack.Value then shared.Humanoid.JumpPower = value end
-        end
-    else
-        if shared.Humanoid.JumpHeight ~= value then
-            if Toggles.JumpPowerHack.Value then shared.Humanoid.JumpHeight = value end
-        end
-    end
-end)
-
-Toggles.NoFall:OnChanged(function(value)
-    local fallDamage = shared.Character and shared.Character:FindFirstChild("FallDamage")
-    
-    if fallDamage then
-        fallDamage.Enabled = not value
-    end
-end)
-
-Toggles.Noclip:OnChanged(function(value)
-    if not shared.Character then return end
-
-    for _, part in pairs(shared.Character:GetDescendants()) do
-        if not part:IsA("BasePart") then continue end
-        part.CanCollide = not value
-
-        shared.Connect:GiveSignal(part:GetPropertyChangedSignal("CanCollide"):Connect(function()
-            part.CanCollide = not Toggles.Noclip.Value
-        end))
-    end
-end)
-
-Toggles.Fly:OnChanged(function(value)
-    if not shared.Fly.FlyBody then shared.Fly:Setup() end
-
-    shared.Fly:Set(value)
-end)
-
-Options.FlySpeed:OnChanged(function(value)
-    shared.Fly:SetSpeed(value)
-end)
-
-Toggles.AutoPush:OnChanged(function(value)
-    if value then
-        task.spawn(function()
-            repeat task.wait(0.1)
-                for _, employee in pairs(Script.Employees:GetChildren()) do
-                    if Script.Functions.DistanceFromCharacter(employee) <= 20 and employee:FindFirstChild("Enemy") then
-                        Script.Action:InvokeServer("ShoveEmployee", {
-                            Humanoid = employee.Enemy
-                        })
-                    end
-                end
-            until not Toggles.AutoPush.Value or shared.Library.Unloaded
-        end)
-    end
-end)
-end)() end,
-    [20] = function()local wax,script,require=ImportGlobals(20)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-local Tabs = Script.Tabs
-
---// Visuals \\--
-local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
-    local ESPTab = ESPTabBox:AddTab("ESP") do
-        ESPTab:AddToggle("PlayerESP", {
-            Text = "Player",
-            Default = false,
-        }):AddColorPicker("PlayerEspColor", {
-            Default = Color3.new(1, 1, 1),
-        })
-
-        ESPTab:AddToggle("EmployeeESP", {
-            Text = "Employee",
-            Default = false,
-        }):AddColorPicker("EmployeeEspColor", {
-            Default = Color3.new(1, 0, 0),
-        })
-
-        ESPTab:AddToggle("ItemESP", {
-            Text = "Item",
-            Default = false,
-        }):AddColorPicker("ItemEspColor", {
-            Default = Color3.new(1, 0, 1),
-        })
-    end
-
-    local ESPSettingsTab = ESPTabBox:AddTab("Settings") do
-        ESPSettingsTab:AddToggle("ESPRainbow", {
-            Text = "Rainbow ESP",
-            Default = false,
-        })
-
-        ESPSettingsTab:AddDivider()
-
-        ESPSettingsTab:AddToggle("ESPHighlight", {
-            Text = "Enable Highlight",
-            Default = true
-        })
-
-        ESPSettingsTab:AddSlider("ESPFillTransparency", {
-            Text = "Fill Transparency",
-            Default = 0.75,
-            Min = 0,
-            Max = 1,
-            Rounding = 2
-        })
-    
-        ESPSettingsTab:AddSlider("ESPOutlineTransparency", {
-            Text = "Outline Transparency",
-            Default = 0,
-            Min = 0,
-            Max = 1,
-            Rounding = 2
-        })
-
-        ESPSettingsTab:AddDivider()
-
-        ESPSettingsTab:AddToggle("ESPDistance", {
-            Text = "Show Distance",
-            Default = true
-        })
-    
-        ESPSettingsTab:AddSlider("ESPTextSize", {
-            Text = "Text Size",
-            Default = 22,
-            Min = 16,
-            Max = 26,
-            Rounding = 0
-        })
-    
-        ESPSettingsTab:AddDivider()
-
-        ESPSettingsTab:AddToggle("ESPTracer", {
-            Text = "Enable Tracer",
-            Default = false
-        })
-
-        ESPSettingsTab:AddDropdown("ESPTracerStart", {
-            AllowNull = false,
-            Values = {"Bottom", "Center", "Top", "Mouse"},
-            Default = "Bottom",
-            Multi = false,
-
-            Text = "Tracer Start Position"
-        })
-
-        ESPSettingsTab:AddDivider()
-
-        ESPSettingsTab:AddToggle("ESPArrow", {
-            Text = "Enable Arrow",
-            Default = false
-        })
-
-        ESPSettingsTab:AddSlider("ESPArrowCenterOffset", {
-            Text = "Arrow Center Offset",
-            Default = 300,
-            Min = 0,
-            Max = 500,
-            Rounding = 0
-        })
-    end
-end
-
-local SelfGroupBox = Tabs.Visuals:AddRightGroupbox("Self") do
-    SelfGroupBox:AddSlider("FOV", {
-        Text = "Field of View",
-        Default = 90,
-        Min = 50,
-        Max = 120,
-        Rounding = 0
-    })
-    
-    SelfGroupBox:AddToggle("NoCamShake", {
-        Text = "No Camera Shake",
-        Default = false
-    })
-
-    SelfGroupBox:AddToggle("Fullbright", {
-        Text = "Fullbright",
-        Default = false
-    })
-
-    SelfGroupBox:AddToggle("NoFog", {
-        Text = "No Fog",
-        Default = false
-    })
-
-    if wax.shared.ExecutorSupport["require"] then
-        SelfGroupBox:AddDivider()
-    end
-
-    SelfGroupBox:AddToggle("DeathWaypoint", {
-        Text = "Death Waypoint",
-        Default = false,
-        Visible = wax.shared.ExecutorSupport["require"]
-    })
-
-    SelfGroupBox:AddToggle("PersonalWatch", {
-        Text = "Personal Watch",
-        Default = false,
-        Visible = wax.shared.ExecutorSupport["require"]
-    })
-
-    SelfGroupBox:AddSlider("MaxWaypoints", {
-        Text = "Max Waypoints",
-        Default = if wax.shared.ExecutorSupport["require"] then require(Script.WaypointsMenu).waypoint_limit else 4,
-        Min = 0,
-        Max = 100,
-        Rounding = 0,
-        Compact = true,
-        Visible = wax.shared.ExecutorSupport["require"]
-    })
-end
-
---// ESP \\--
-Toggles.PlayerESP:OnChanged(function(value)
-    if not value then
-        for _, connection in pairs(Script.FeatureConnections.Player) do
-            connection:Disconnect()
-        end
-        for _, esp in pairs(Script.ESPTable.Player) do
-            esp.Destroy()
-        end
-    end
-end)
-
-Toggles.EmployeeESP:OnChanged(function(value)
-    if not value then
-        for _, esp in pairs(Script.ESPTable.Employee) do
-            esp.Destroy()
-        end
-    end
-end)
-
-Toggles.ItemESP:OnChanged(function(value)
-    if not value then
-        for _, esp in pairs(Script.ESPTable.Item) do
-            esp.Destroy()
-        end
-    end
-end)
-
---// ESP Settings \\--
-Toggles.ESPRainbow:OnChanged(function(value)
-    shared.ESPLibrary.Rainbow.Set(value)
-end)
-
-Toggles.ESPHighlight:OnChanged(function(value)
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.SetVisible(value, false)
-        end
-    end
-end)
-
-Options.ESPFillTransparency:OnChanged(function(value)
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.Update({ FillTransparency = value })
-        end
-    end
-end)
-
-Options.ESPOutlineTransparency:OnChanged(function(value)
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.Update({ OutlineTransparency = value })
-        end
-    end
-end)
-
-Toggles.ESPDistance:OnChanged(function(value)
-    shared.ESPLibrary.Distance.Set(value)
-end)
-
-Options.ESPTextSize:OnChanged(function(value)
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.Update({ TextSize = value })
-        end
-    end
-end)
-
-Toggles.ESPTracer:OnChanged(function(value)
-    shared.ESPLibrary.Tracers.Set(value)
-end)
-
-Options.ESPTracerStart:OnChanged(function(value)
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.Update({ Tracer = { From = value } })
-        end
-    end
-end)
-
-Toggles.ESPArrow:OnChanged(function(value)
-    shared.ESPLibrary.Arrows.Set(value)
-end)
-
-Options.ESPArrowCenterOffset:OnChanged(function(value)
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.Update({ Arrow = { CenterOffset = value } })
-        end
-    end
-end)
-
---// Self \\--
-Options.FOV:OnChanged(function(value)
-    Script.Settings:SetAttribute("FieldOfView", value)
-end)
-
-Toggles.NoCamShake:OnChanged(function(value)
-    Script.Settings:SetAttribute("CameraShake", not value)
-end)
-
-Toggles.Fullbright:OnChanged(function(value)
-    if value then
-        shared.Lighting.Ambient = Color3.new(1, 1, 1)
-        shared.Lighting.ColorShift_Bottom = Color3.new(1, 1, 1)
-        shared.Lighting.ColorShift_Top = Color3.new(1, 1, 1)
-    else
-        shared.Lighting.Ambient = Script.CurrentAmbient
-        shared.Lighting.ColorShift_Bottom = Script.CurrentColorShift_Bottom
-        shared.Lighting.ColorShift_Top = Script.CurrentColorShift_Top
-    end
-end)
-
-Toggles.NoFog:OnChanged(function(value)
-    if value then
-        shared.Lighting.FogEnd = 9e9
-
-        if shared.Lighting:FindFirstChild("FoggyDay_Atmosphere") then
-            shared.Lighting["FoggyDay_Atmosphere"].Density = 0
-        end
-    else
-        shared.Lighting.FogEnd = Script.DefaultFogEnd
-
-        if shared.Lighting:FindFirstChild("FoggyDay_Atmosphere") and Script["CurrentFoggyDayDensity"] then
-            shared.Lighting["FoggyDay_Atmosphere"].Density = Script.CurrentFoggyDayDensity
-        end
-    end
-end)
-
-Toggles.PersonalWatch:OnChanged(function(value)
-    if wax.shared.ExecutorSupport["require"] then
-        if value then
-            Script.Calendar["Gamepass_Clock"].Visible = true
-            while Toggles.PersonalWatch.Value and task.wait() do
-                Script.Calendar["Gamepass_Clock"].Text = require(shared.ReplicatedStorage.Modules.Date).GetTimeInClockFormat(Script.TimeLeft.Value)
-                
-                if Script.TimeLeft.Value == 5 then
-                    Script.Calendar["Gamepass_Clock"].Countdown.Playing = true
-                end
-            end
-        else
-            Script.Calendar["Gamepass_Clock"].Visible = Script.GamePassClockVisible
-        end
-    end
-end)
-
-Toggles.DeathWaypoint:OnChanged(function(value)
-    if wax.shared.ExecutorSupport["require"] then
-        require(Script.WaypointsMenu).create_death = value
-        require(Script.WaypointsMenu).death_waypoint = value
-    end
-end)
-
-Options.MaxWaypoints:OnChanged(function(value)
-    if wax.shared.ExecutorSupport["require"] then
-        require(Script.WaypointsMenu).waypoint_limit = value
-    end
-end)
-end)() end,
-    [22] = function()local wax,script,require=ImportGlobals(22)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-local Tabs = Script.Tabs
-
-Script.LastVoidValue = workspace.FallenPartsDestroyHeight
-Script.LastSpeed = if shared.Humanoid then shared.Humanoid.WalkSpeed else 16
-
---// Main \\--
-local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
-    PlayerGroupBox:AddToggle("SpeedHack", {
-        Text = "Speed Hack",
-        Default = false
-    })
-
-    PlayerGroupBox:AddSlider("WalkSpeed", {
-        Text = "Walk Speed",
-        Default = 16,
-        Min = 0,
-        Max = 100,
-        Rounding = 0,
-        Compact = true
-    })
-
-    PlayerGroupBox:AddToggle("JumpPowerHack", {
-        Text = "Jump Power Hack",
-        Default = false
-    })
-
-    PlayerGroupBox:AddSlider("JumpPower", {
-        Text = "Jump Power",
-        Default = 50,
-        Min = 0,
-        Max = 200,
-        Rounding = 0,
-        Compact = true
-    })
-
-    PlayerGroupBox:AddDivider()
-
-    PlayerGroupBox:AddToggle("Noclip", {
-        Text = "Noclip",
-        Default = false
-    }):AddKeyPicker("NoclipKey", {
-        Mode = "Toggle",
-        Default = "N",
-        Text = "Noclip",
-        SyncToggleState = true
-    })
-
-    PlayerGroupBox:AddToggle("Fly", {
-        Text = "Fly",
-        Default = false
-    }):AddKeyPicker("FlyKey", {
-        Mode = "Toggle",
-        Default = "F",
-        Text = "Fly",
-        SyncToggleState = true
-    })
-    
-    PlayerGroupBox:AddSlider("FlySpeed", {
-        Text = "Fly Speed",
-        Default = 16,
-        Min = 0,
-        Max = 100,
-        Rounding = 0,
-        Compact = true
-    })
-
-    PlayerGroupBox:AddToggle("Twerk", {
-        Text = "Twerk",
-        Default = false
-    })
-end
-
-local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
-    AutomationGroupBox:AddToggle("AutoFarm", {
-        Text = "Auto Farm",
-        Default = false
-    })
-
-    AutomationGroupBox:AddSlider("AutoFarmSpeed", {
-        Text = "Auto Farm Speed",
-        Default = 5,
-        Min = 1,
-        Max = 6,
-        Rounding = 1,
-        Compact = true
-    })
-
-    AutomationGroupBox:AddDropdown("AutoFarmPriority", {
-        Text = "Auto Farm Priority",
-        AllowNull = false,
-        Values = {"Gold Blocks", "Gold"},
-        Default = "Gold Blocks",
-        Multi = false,
-    })
-end
-
---// Player \\--
-Toggles.SpeedHack:OnChanged(function(value)
-    if not shared.Humanoid then return end
-
-    if value then
-        Script.LastSpeed = shared.Humanoid.WalkSpeed
-    end
-
-    shared.Humanoid.WalkSpeed = if value then Options.WalkSpeed.Value else Script.LastSpeed
-end)
-
-Toggles.JumpPowerHack:OnChanged(function(value)
-    if not shared.Humanoid then return end
-
-    if value then
-        Script.LastJumpPower = if shared.Humanoid.UseJumpPower then shared.Humanoid.JumpPower else shared.Humanoid.JumpHeight
-    end
-
-    if shared.Humanoid.UseJumpPower then
-        shared.Humanoid.JumpPower = if value then Options.JumpPower.Value else Script.LastJumpPower
-    else
-        shared.Humanoid.JumpHeight = if value then Options.JumpPower.Value else Script.LastJumpPower
-    end
-end)
-
-Toggles.Noclip:OnChanged(function(value)
-    if not shared.Character then return end
-
-    for _, part in pairs(shared.Character:GetDescendants()) do
-        if not part:IsA("BasePart") then continue end
-        part.CanCollide = value
-    end
-end)
-
-Toggles.Fly:OnChanged(function(value)
-    if not shared.Fly.FlyBody then shared.Fly:Setup() end
-
-    shared.Fly:Set(value)
-end)
-
-Options.FlySpeed:OnChanged(function(value)
-    shared.Fly:SetSpeed(value)
-end)
-
-Toggles.Twerk:OnChanged(function(value)
-    shared.Twerk:Set(value)
-end)
-
---// Automation \\--
-Toggles.AutoFarm:OnChanged(function(value)
-    if value then
-        Script.Functions.AutoFarm()
-    end
-end)
-end)() end,
-    [25] = function()local wax,script,require=ImportGlobals(25)local ImportGlobals return (function(...)--// Linoria \\--
+    [15] = function()local wax,script,require=ImportGlobals(15)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -4774,7 +3342,7 @@ Toggles.CollisionOffsetGodmode:OnChanged(function(value)
     end
 end)
 end)() end,
-    [26] = function()local wax,script,require=ImportGlobals(26)local ImportGlobals return (function(...)--// Linoria \\--
+    [16] = function()local wax,script,require=ImportGlobals(16)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -5747,7 +4315,7 @@ elseif Script.IsFools then
 end
 
 end)() end,
-    [27] = function()local wax,script,require=ImportGlobals(27)local ImportGlobals return (function(...)--// Linoria \\--
+    [17] = function()local wax,script,require=ImportGlobals(17)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6081,7 +4649,7 @@ Options.PromptReachMultiplier:OnChanged(function(value)
     end
 end)
 end)() end,
-    [28] = function()local wax,script,require=ImportGlobals(28)local ImportGlobals return (function(...)--// Linoria \\--
+    [18] = function()local wax,script,require=ImportGlobals(18)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7051,7 +5619,7 @@ Toggles.ViewmodelOffset:OnChanged(function(value)
     end
 end)
 end)() end,
-    [30] = function()local wax,script,require=ImportGlobals(30)local ImportGlobals return (function(...)--// Linoria \\--
+    [20] = function()local wax,script,require=ImportGlobals(20)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7277,7 +5845,7 @@ Toggles.Twerk:OnChanged(function(value)
     shared.Twerk:Set(value)
 end)
 end)() end,
-    [32] = function()local wax,script,require=ImportGlobals(32)local ImportGlobals return (function(...)--// Linoria \\--
+    [22] = function()local wax,script,require=ImportGlobals(22)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7329,7 +5897,7 @@ Toggles.SpeedHack:OnChanged(function(value)
     shared.Humanoid.WalkSpeed = if value then Options.WalkSpeed.Value else Script.LastSpeed
 end)
 end)() end,
-    [33] = function()local wax,script,require=ImportGlobals(33)local ImportGlobals return (function(...)--// Linoria \\--
+    [23] = function()local wax,script,require=ImportGlobals(23)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7736,7 +6304,7 @@ Options.NotifySide:OnChanged(function(value)
     shared.Library.NotifySide = value
 end)
 end)() end,
-    [35] = function()local wax,script,require=ImportGlobals(35)local ImportGlobals return (function(...)--// Linoria \\--
+    [25] = function()local wax,script,require=ImportGlobals(25)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7812,7 +6380,7 @@ Toggles.Twerk:OnChanged(function(value)
     shared.Twerk:Set(value)
 end)
 end)() end,
-    [36] = function()local wax,script,require=ImportGlobals(36)local ImportGlobals return (function(...)--// Linoria \\--
+    [26] = function()local wax,script,require=ImportGlobals(26)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7949,7 +6517,7 @@ Options.FlySpeed:OnChanged(function(value)
     shared.Fly:SetSpeed(value)
 end)
 end)() end,
-    [37] = function()local wax,script,require=ImportGlobals(37)local ImportGlobals return (function(...)--// Linoria \\--
+    [27] = function()local wax,script,require=ImportGlobals(27)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8240,489 +6808,7 @@ Toggles.AntiLag:OnChanged(function(value)
     shared.Lighting.GlobalShadows = not value
 end)
 end)() end,
-    [40] = function()local wax,script,require=ImportGlobals(40)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-
---// Functions \\--
-function Script.Functions.SetupCharacterConnection(newCharacter)
-    shared.Character = newCharacter
-    shared.Humanoid = shared.Character:WaitForChild("Humanoid")
-
-    Script.System = shared.Character:WaitForChild("System")
-    Script.Event = Script.System:WaitForChild("Event")
-    Script.Action = Script.System:WaitForChild("Action")
-
-    Script.Functions.SetupCharacterDeathConnection(newCharacter)
-
-    if shared.Humanoid then
-        Script.LastSpeed = shared.Humanoid.WalkSpeed
-        Script.LastJumpPower = shared.Humanoid.UseJumpPower and shared.Humanoid.JumpPower or shared.Humanoid.JumpHeight
-
-        if Toggles.SpeedHack.Value then shared.Humanoid.WalkSpeed = Options.WalkSpeed.Value end
-        
-        if Toggles.JumpPowerHack.Value then
-            if shared.Humanoid.UseJumpPower then
-                shared.Humanoid.JumpPower = Options.JumpPower.Value
-            else
-                shared.Humanoid.JumpHeight = Options.JumpPower.Value
-            end
-        end
-
-        shared.Twerk:Setup()
-        if Toggles.Twerk.Value then
-            shared.Twerk:Enable()
-        end
-
-        shared.Connect:GiveSignal(shared.Humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
-            if shared.Humanoid.WalkSpeed ~= Options.WalkSpeed.Value then
-                Script.LastSpeed = shared.Humanoid.WalkSpeed
-                if Toggles.SpeedHack.Value then shared.Humanoid.WalkSpeed = Options.WalkSpeed.Value end
-            end
-        end))
-
-        shared.Connect:GiveSignal(shared.Humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
-            if not shared.Humanoid.UseJumpPower then return end
-            if shared.Humanoid.JumpPower ~= Options.JumpPower.Value then
-                Script.LastJumpPower = shared.Humanoid.JumpPower
-                if Toggles.JumpPowerHack.Value then shared.Humanoid.JumpPower = Options.JumpPower.Value end
-            end
-        end))
-        shared.Connect:GiveSignal(shared.Humanoid:GetPropertyChangedSignal("JumpHeight"):Connect(function()
-            if shared.Humanoid.UseJumpPower then return end
-            if shared.Humanoid.JumpHeight ~= Options.JumpPower.Value then
-                Script.LastJumpPower = shared.Humanoid.JumpHeight
-                if Toggles.JumpPowerHack.Value then shared.Humanoid.JumpHeight = Options.JumpPower.Value end
-            end
-        end))
-    end
-
-    if Toggles.Godmode.Value then
-        Script.DidGodmode = true
-
-        repeat task.wait() until #Script.Map.Floor:GetChildren() > 0
-        
-        Script.Event:FireServer("FallDamage", {
-            Sliding = false,
-            OriginalDamage = (0/0),
-            Sound = "LR^SS",
-            Softened = true,
-            Broken = false,
-            Model = Script.Map.Floor:FindFirstChildOfClass("Model"),
-            Range = 19,
-            Damage = (0/0)
-        })
-    end
-
-    if Toggles.NoFall.Value then
-        local fallDamage = shared.Character:WaitForChild("FallDamage")
-        if fallDamage then
-            fallDamage.Enabled = false
-        end
-    end
-
-    shared.RootPart = shared.Character:WaitForChild("HumanoidRootPart")
-end
-
-function Script.Functions.SetupCharacterDeathConnection(newCharacter)
-    shared.Connect:GiveSignal(newCharacter:WaitForChild("Humanoid").Died:Connect(function()
-        if Toggles.AutoRespawn.Value then
-            Script.Functions.Respawn()
-        end
-    end))
-end
-
-function Script.Functions.SetupLightingConnection()
-    shared.Connect:GiveSignal(shared.Lighting:GetPropertyChangedSignal("Ambient"):Connect(function()
-        if shared.Lighting.Ambient ~= Script.CurrentAmbient and shared.Lighting.Ambient ~= Color3.new(1, 1, 1) then
-            Script.CurrentAmbient = shared.Lighting.Ambient
-        end
-
-        if Toggles.Fullbright.Value then
-            shared.Lighting.Ambient = Color3.new(1, 1, 1)
-        end
-    end))
-
-    shared.Connect:GiveSignal(shared.Lighting:GetPropertyChangedSignal("ColorShift_Bottom"):Connect(function()
-        if shared.Lighting.ColorShift_Bottom ~= Script.CurrentColorShift_Bottom and shared.Lighting.ColorShift_Bottom ~= Color3.new(1, 1, 1) then
-            Script.CurrentColorShift_Bottom = shared.Lighting.ColorShift_Bottom
-        end
-
-        if Toggles.Fullbright.Value then
-            shared.Lighting.ColorShift_Bottom = Color3.new(1, 1, 1)
-        end
-    end))
-
-    shared.Connect:GiveSignal(shared.Lighting:GetPropertyChangedSignal("ColorShift_Top"):Connect(function()
-        if shared.Lighting.ColorShift_Top ~= Script.CurrentColorShift_Top and shared.Lighting.ColorShift_Top ~= Color3.new(1, 1, 1) then
-            Script.CurrentColorShift_Top = shared.Lighting.ColorShift_Top
-        end
-
-        if Toggles.Fullbright.Value then
-            shared.Lighting.ColorShift_Top = Color3.new(1, 1, 1)
-        end
-    end))
-
-    if shared.Lighting:FindFirstChild("FoggyDay_Atmosphere") then
-        shared.Connect:GiveSignal(shared.Lighting["FoggyDay_Atmosphere"]:GetPropertyChangedSignal("Density"):Connect(function()
-            if shared.Lighting["FoggyDay_Atmosphere"].Density ~= Script.CurrentFoggyDayDensity and shared.Lighting["FoggyDay_Atmosphere"].Density ~= 0 then
-                Script.CurrentFoggyDayDensity = shared.Lighting["FoggyDay_Atmosphere"].Density
-            end
-
-            if Toggles.NoFog.Value then
-                shared.Lighting["FoggyDay_Atmosphere"].Density = 0
-            end
-        end))
-    end
-
-    if Toggles.Fullbright.Value then
-        shared.Lighting.Ambient = Color3.new(1, 1, 1)
-        shared.Lighting.ColorShift_Bottom = Color3.new(1, 1, 1)
-        shared.Lighting.ColorShift_Top = Color3.new(1, 1, 1)
-    end
-
-    if Toggles.NoFog.Value then
-        shared.Lighting.FogEnd = 9e9
-
-        if shared.Lighting:FindFirstChild("FoggyDay_Atmosphere") then
-            shared.Lighting["FoggyDay_Atmosphere"].Density = 0
-        end
-    end
-end
-
-function Script.Functions.SetupBloxstrapRPCConnection()
-    if not wax.shared.BloxstrapRPC then return end
-
-    shared.Connect:GiveSignal(Script.CurrentDay:GetPropertyChangedSignal("Text"):Connect(function()
-        Script.Functions.UpdateBloxstrapRPC()
-    end))
-
-    Script.Functions.UpdateBloxstrapRPC()
-end
-
-function Script.Functions.IsLoaded(model)
-    return model.PrimaryPart ~= nil
-end
-
-function Script.Functions.SetupChild(child, options)
-    if not Script.Functions.IsLoaded(child) then
-        child:GetPropertyChangedSignal("PrimaryPart"):Wait()
-    end
-
-    repeat task.wait() until options["Condition"]() or shared.Library.Unloaded
-    if shared.Library.Unloaded then return end
-
-    local esp = Script.Functions[options["ESPfunction"]](child)
-
-    local shouldDestroyESP = false
-    if Script.Functions.IsLoaded(child) then
-        task.spawn(function()
-            child:GetPropertyChangedSignal("PrimaryPart"):Wait()
-            shouldDestroyESP = true
-        end)
-
-        task.spawn(function()
-            repeat task.wait() until shouldDestroyESP or not options["Condition"]() or shared.Library.Unloaded
-            shouldDestroyESP = true
-        end)
-    end
-    
-    repeat task.wait() until shouldDestroyESP
-    esp.Destroy()
-
-    if shared.Library.Unloaded then return end
-    Script.Functions.SetupChild(child, options)
-end
-
-function Script.Functions.SetupExploitInfModulesConnection()
-    shared.Connect:GiveSignal(Script.PlayerStats:WaitForChild("Energy").Value:GetPropertyChangedSignal("Text"):Connect(function()
-        if Toggles.InfiniteEnergy.Value and not (Toggles.CollisionOffsetGodmode.Value or shared.Library.IsMobile or Options.CollisionOffsetGodmodeKey:GetState()) then
-            Script.Event:FireServer("DecreaseStat", {
-                Stats = {
-                    Energy = -100
-                }
-            })
-        end
-    end))
-
-    shared.Connect:GiveSignal(Script.PlayerStats:WaitForChild("Hunger").Value:GetPropertyChangedSignal("Text"):Connect(function()
-        if Toggles.InfiniteHunger.Value and not (Toggles.CollisionOffsetGodmode.Value or shared.Library.IsMobile or Options.CollisionOffsetGodmodeKey:GetState()) then
-            Script.Event:FireServer("DecreaseStat", {
-                Stats = {
-                    Hunger = -100
-                }
-            })
-        end
-    end))
-end
-
-function Script.Functions.SetupOtherPlayerConnection()
-    for _, player in pairs(shared.Players:GetPlayers()) do
-        if player == shared.LocalPlayer then continue end
-
-        task.spawn(Script.Functions.SetupChild, player.Character, {
-            Condition = function()
-                return Toggles.PlayerESP and Toggles.PlayerESP.Value
-            end,
-            ESPfunction = "PlayerESP",
-            Descendant = player.Character.Parent
-        })
-    end
-
-    shared.Connect:GiveSignal(shared.Players.PlayerAdded:Connect(function(player)
-        if player == shared.LocalPlayer then return end
-
-        task.spawn(Script.Functions.SetupChild, player.Character, {
-            Condition = function()
-                return Toggles.PlayerESP and Toggles.PlayerESP.Value
-            end,
-            ESPfunction = "PlayerESP",
-            Descendant = player.Character.Parent
-        })
-    end))
-end
-
-
-function Script.Functions.SetupEmployeeConnection()
-    for _, employee in ipairs(Script.Employees:GetChildren()) do
-        task.spawn(Script.Functions.SetupChild, employee, {
-            Condition = function()
-                return Toggles.EmployeeESP and Toggles.EmployeeESP.Value
-            end,
-            ESPfunction = "EmployeeESP",
-            Descendant = Script.Employees
-        })
-    end
-
-    shared.Connect:GiveSignal(Script.Employees.ChildAdded:Connect(function(employee)
-        task.spawn(Script.Functions.SetupChild, employee, {
-            Condition = function()
-                return Toggles.EmployeeESP and Toggles.EmployeeESP.Value
-            end,
-            ESPfunction = "EmployeeESP",
-            Descendant = Script.Employees
-        })
-    end))
-end
-
-
-function Script.Functions.SetupItemConnection()
-    for _, item in ipairs(Script.Items:GetChildren()) do
-        task.spawn(Script.Functions.SetupChild, item, {
-            Condition = function()
-                return Toggles.ItemESP and Toggles.ItemESP.Value
-            end,
-            ESPfunction = "ItemESP",
-            Descendant = Script.Items
-        })
-    end
-
-    shared.Connect:GiveSignal(Script.Items.ChildAdded:Connect(function(item)
-        task.spawn(Script.Functions.SetupChild, item, {
-            Condition = function()
-                return Toggles.ItemESP and Toggles.ItemESP.Value
-            end,
-            ESPfunction = "ItemESP",
-            Descendant = Script.Items
-        })
-    end))
-end
-end)() end,
-    [41] = function()local wax,script,require=ImportGlobals(41)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/MS-ESP/refs/heads/main/source.lua"))()
-shared.ESPLibrary = ESPLibrary
-
-type ESP = {
-    Color: Color3,
-    IsEntity: boolean,
-    IsDoubleDoor: boolean,
-    Object: Instance,
-    Offset: Vector3,
-    Text: string,
-    TextParent: Instance,
-    Type: string
-}
-
-function Script.Functions.ESP(args: ESP)
-    if not args.Object then return Script.Functions.Warn("ESP Object is nil") end
-
-    local ESPManager = {
-        Object = args.Object,
-        Text = args.Text or "No Text",
-        Color = args.Color or Color3.new(),
-        MaxDistance = args.MaxDistance or 5000,
-        Offset = args.Offset or Vector3.zero,
-        IsEntity = args.IsEntity or false,
-        IsDoubleDoor = args.IsDoubleDoor or false,
-        Type = args.Type or "None",
-        OnDestroy = args.OnDestroy or nil,
-
-        Invisible = false,
-        Humanoid = nil
-    }
-
-    if ESPManager.IsEntity and ESPManager.Object.PrimaryPart then
-        if ESPManager.Object.PrimaryPart.Transparency == 1 then
-            ESPManager.Invisible = true
-            ESPManager.Object.PrimaryPart.Transparency = 0.99
-        end
-
-        local humanoid = ESPManager.Object:FindFirstChildOfClass("Humanoid")
-        if not humanoid then humanoid = Instance.new("Humanoid", ESPManager.Object) end
-        ESPManager.Humanoid = humanoid
-    end
-
-    local ESPInstance = ESPLibrary.ESP.Highlight({
-        Name = ESPManager.Text,
-        Model = ESPManager.Object,
-        MaxDistance = ESPManager.MaxDistance,
-        StudsOffset = ESPManager.Offset,
-
-        FillColor = ESPManager.Color,
-        OutlineColor = ESPManager.Color,
-        TextColor = ESPManager.Color,
-        TextSize = Options.ESPTextSize.Value or 16,
-
-        FillTransparency = Options.ESPFillTransparency.Value,
-        OutlineTransparency = Options.ESPOutlineTransparency.Value,
-
-        Tracer = {
-            Enabled = Toggles.ESPTracer.Value,
-            From = Options.ESPTracerStart.Value,
-            Color = ESPManager.Color
-        },
-        
-        Arrow = {
-            Enabled = Toggles.ESPArrow.Value,
-            CenterOffset = Options.ESPArrowCenterOffset.Value,
-            Color = ESPManager.Color
-        },
-
-        OnDestroy = ESPManager.OnDestroy or function()
-            if ESPManager.Object.PrimaryPart and ESPManager.Invisible then ESPManager.Object.PrimaryPart.Transparency = 1 end
-            if ESPManager.Humanoid then ESPManager.Humanoid:Destroy() end
-        end
-    })
-
-    table.insert(Script.ESPTable[args.Type], ESPInstance)
-
-    return ESPInstance
-end
-
-function Script.Functions.PlayerESP(character: Model)
-    if not (character and character.PrimaryPart and character:FindFirstChild("Humanoid") and character.Humanoid.Health > 0) then return end
-
-    local playerEsp = Script.Functions.ESP({
-        Type = "Player",
-        Object = character,
-        Text = string.format("%s [%.1f]", character.Name, character.Humanoid.Health),
-        TextParent = character.PrimaryPart,
-        Color = Options.PlayerEspColor.Value
-    })
-
-    Script.FeatureConnections.Player[character.Name] = character.Humanoid.HealthChanged:Connect(function(newHealth)
-        if newHealth > 0 then
-            playerEsp.SetText(string.format("%s [%.1f]", character.Name, newHealth))
-        else
-            if Script.FeatureConnections.Player[character.Name] then Script.FeatureConnections.Player[character.Name]:Disconnect() end
-            playerEsp.Destroy()
-        end
-    end)
-
-    return playerEsp
-end
-
-function Script.Functions.EmployeeESP(employee: Model)
-    if not (employee and employee.PrimaryPart and employee:FindFirstChild("Enemy")) then return end
-
-    return Script.Functions.ESP({
-        Type = "Employee",
-        Object = employee,
-        Text = employee.Name,
-        TextParent = employee.PrimaryPart,
-        Color = Options.EmployeeEspColor.Value
-    })
-end
-
-function Script.Functions.ItemESP(item: Model)
-    if not (item and item.PrimaryPart) then return end
-
-    return Script.Functions.ESP({
-        Type = "Item",
-        Object = item,
-        Text = item.Name,
-        TextParent = item.PrimaryPart,
-        Color = Options.ItemEspColor.Value
-    })
-end
-end)() end,
-    [43] = function()local wax,script,require=ImportGlobals(43)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-
---// Functions \\--
-function Script.Functions.SetupCharacterConnection(newCharacter)
-    shared.Character = newCharacter
-    shared.Humanoid = shared.Character:WaitForChild("Humanoid")
-    if shared.Humanoid then
-        Script.LastSpeed = shared.Humanoid.WalkSpeed
-
-        shared.Twerk:Setup()
-        if Toggles.Twerk.Value then
-            shared.Twerk:Enable()
-        end
-
-        shared.Connect:GiveSignal(shared.Humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
-            if shared.Humanoid.WalkSpeed ~= Options.WalkSpeed.Value then
-                Script.LastSpeed = shared.Humanoid.WalkSpeed
-                if Toggles.SpeedHack.Value then shared.Humanoid.WalkSpeed = Options.WalkSpeed.Value end
-            end
-        end))
-
-
-        shared.Connect:GiveSignal(shared.Humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
-            if not shared.Humanoid.UseJumpPower then return end
-            if shared.Humanoid.JumpPower ~= Options.JumpPower.Value then
-                Script.LastJumpPower = shared.Humanoid.JumpPower
-                if Toggles.JumpPowerHack.Value then shared.Humanoid.JumpPower = Options.JumpPower.Value end
-            end
-        end))
-        shared.Connect:GiveSignal(shared.Humanoid:GetPropertyChangedSignal("JumpHeight"):Connect(function()
-            if shared.Humanoid.UseJumpPower then return end
-            if shared.Humanoid.JumpHeight ~= Options.JumpPower.Value then
-                Script.LastJumpPower = shared.Humanoid.JumpHeight
-                if Toggles.JumpPowerHack.Value then shared.Humanoid.JumpHeight = Options.JumpPower.Value end
-            end
-        end))
-    end
-
-    shared.RootPart = shared.Character:WaitForChild("HumanoidRootPart")
-
-    task.delay(0.25, Script.Functions.AutoFarm)
-end
-
-function Script.Functions.SetupBloxstrapRPCConnection()
-    shared.Connect:GiveSignal(shared.Players.PlayerAdded:Connect(function(player)
-        Script.Functions.UpdateBloxstrapRPC()
-    end))
-
-    shared.Connect:GiveSignal(shared.Players.PlayerRemoving:Connect(function(player)
-        Script.Functions.UpdateBloxstrapRPC()
-    end))
-end
-end)() end,
-    [46] = function()local wax,script,require=ImportGlobals(46)local ImportGlobals return (function(...)--// Linoria \\--
+    [31] = function()local wax,script,require=ImportGlobals(31)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8942,7 +7028,7 @@ function Script.Functions.GetNearestPromptWithCondition(condition)
     return nearestPrompt
 end
 end)() end,
-    [47] = function()local wax,script,require=ImportGlobals(47)local ImportGlobals return (function(...)--// Linoria \\--
+    [32] = function()local wax,script,require=ImportGlobals(32)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -9193,7 +7279,7 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
     end)
 end
 end)() end,
-    [48] = function()local wax,script,require=ImportGlobals(48)local ImportGlobals return (function(...)--// Linoria \\--
+    [33] = function()local wax,script,require=ImportGlobals(33)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -9295,7 +7381,7 @@ function Script.Functions.AutoBreaker(code, breakers)
     end
 end
 end)() end,
-    [49] = function()local wax,script,require=ImportGlobals(49)local ImportGlobals return (function(...)--// Linoria \\--
+    [34] = function()local wax,script,require=ImportGlobals(34)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -9692,7 +7778,7 @@ function Script.Functions.SetupOtherCharacterConnection(character: Model)
 end
 
 end)() end,
-    [50] = function()local wax,script,require=ImportGlobals(50)local ImportGlobals return (function(...)--// Linoria \\--
+    [35] = function()local wax,script,require=ImportGlobals(35)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10030,7 +8116,7 @@ function Script.Functions.GuidingLightEsp(guidance)
     end)
 end
 end)() end,
-    [51] = function()local wax,script,require=ImportGlobals(51)local ImportGlobals return (function(...)--// Linoria \\--
+    [36] = function()local wax,script,require=ImportGlobals(36)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10151,7 +8237,7 @@ function Script.Functions.AvoidEntity(value: boolean, oldNoclip: boolean)
     end
 end
 end)() end,
-    [52] = function()local wax,script,require=ImportGlobals(52)local ImportGlobals return (function(...)--// Linoria \\--
+    [37] = function()local wax,script,require=ImportGlobals(37)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10678,7 +8764,7 @@ function Script.Functions.Minecart.Pathfind(room: Model, forcePathfind: boolean)
     Script.Functions.Minecart.Teleport(room)
 end
 end)() end,
-    [53] = function()local wax,script,require=ImportGlobals(53)local ImportGlobals return (function(...)--// Linoria \\--
+    [38] = function()local wax,script,require=ImportGlobals(38)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10715,7 +8801,7 @@ function Script.Functions.GetPadlockCode(paper: Tool)
     return "_____"
 end
 end)() end,
-    [54] = function()local wax,script,require=ImportGlobals(54)local ImportGlobals return (function(...)--// Linoria \\--
+    [39] = function()local wax,script,require=ImportGlobals(39)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10770,7 +8856,7 @@ function Script.Functions.IsInViewOfPlayer(instance: Instance, range: number | n
     return false
 end
 end)() end,
-    [56] = function()local wax,script,require=ImportGlobals(56)local ImportGlobals return (function(...)--// Linoria \\--
+    [41] = function()local wax,script,require=ImportGlobals(41)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10856,7 +8942,7 @@ function Script.Functions.LoadPreset(name: string)
     })
 end
 end)() end,
-    [58] = function()local wax,script,require=ImportGlobals(58)local ImportGlobals return (function(...)--// Linoria \\--
+    [43] = function()local wax,script,require=ImportGlobals(43)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10876,7 +8962,7 @@ function Script.Functions.ChildCheck(child)
     end
 end
 end)() end,
-    [59] = function()local wax,script,require=ImportGlobals(59)local ImportGlobals return (function(...)--// Linoria \\--
+    [44] = function()local wax,script,require=ImportGlobals(44)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10893,7 +8979,7 @@ function Script.Functions.Chat(message: string)
     end
 end
 end)() end,
-    [60] = function()local wax,script,require=ImportGlobals(60)local ImportGlobals return (function(...)--// Linoria \\--
+    [45] = function()local wax,script,require=ImportGlobals(45)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -10956,7 +9042,7 @@ function Script.Functions.SetupUIConnection(GUI)
     end
 end
 end)() end,
-    [61] = function()local wax,script,require=ImportGlobals(61)local ImportGlobals return (function(...)--// Linoria \\--
+    [46] = function()local wax,script,require=ImportGlobals(46)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -11149,7 +9235,7 @@ function Script.Functions.TableESP(hideTable)
     })
 end
 end)() end,
-    [63] = function()local wax,script,require=ImportGlobals(63)local ImportGlobals return (function(...)--// Linoria \\--
+    [48] = function()local wax,script,require=ImportGlobals(48)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -11173,7 +9259,7 @@ function Script.Functions.SetupBloxstrapRPCConnection()
     end))
 end
 end)() end,
-    [65] = function()local wax,script,require=ImportGlobals(65)local ImportGlobals return (function(...)--// Linoria \\--
+    [50] = function()local wax,script,require=ImportGlobals(50)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -11242,7 +9328,7 @@ function Script.Functions.GetClosestFromCharacter()
     return closestCharacter
 end
 end)() end,
-    [66] = function()local wax,script,require=ImportGlobals(66)local ImportGlobals return (function(...)--// Linoria \\--
+    [51] = function()local wax,script,require=ImportGlobals(51)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -11271,7 +9357,7 @@ end
 
 
 end)() end,
-    [67] = function()local wax,script,require=ImportGlobals(67)local ImportGlobals return (function(...)--// Linoria \\--
+    [52] = function()local wax,script,require=ImportGlobals(52)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -11353,7 +9439,7 @@ function Script.Functions.SetupBloxstrapRPCConnection()
     end))
 end
 end)() end,
-    [68] = function()local wax,script,require=ImportGlobals(68)local ImportGlobals return (function(...)--// Linoria \\--
+    [53] = function()local wax,script,require=ImportGlobals(53)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -11462,7 +9548,7 @@ function Script.Functions.PlayerESP(player: Player)
     end)
 end
 end)() end,
-    [69] = function()local wax,script,require=ImportGlobals(69)local ImportGlobals return (function(...)--// Linoria \\--
+    [54] = function()local wax,script,require=ImportGlobals(54)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -11491,7 +9577,7 @@ function Script.Functions.DistanceFromCharacter(position: Instance | Vector3, ge
     return 9e9
 end
 end)() end,
-    [71] = function()local wax,script,require=ImportGlobals(71)local ImportGlobals return (function(...)local BloxstrapRPC = {}
+    [56] = function()local wax,script,require=ImportGlobals(56)local ImportGlobals return (function(...)local BloxstrapRPC = {}
 
 type RichPresence = {
     details:     string?,
@@ -11532,7 +9618,7 @@ end
 
 return BloxstrapRPC
 end)() end,
-    [72] = function()local wax,script,require=ImportGlobals(72)local ImportGlobals return (function(...)local Connect = {}
+    [57] = function()local wax,script,require=ImportGlobals(57)local ImportGlobals return (function(...)local Connect = {}
 shared.Connections = {}
 
 function Connect:GiveSignal(signal: RBXScriptConnection | RBXScriptSignal)
@@ -11549,7 +9635,7 @@ end
 
 return Connect
 end)() end,
-    [73] = function()local wax,script,require=ImportGlobals(73)local ImportGlobals return (function(...)local ExecutorSupport = {}
+    [58] = function()local wax,script,require=ImportGlobals(58)local ImportGlobals return (function(...)local ExecutorSupport = {}
 local ExecutorSupportInfo = {}
 
 local executorName = string.split(identifyexecutor() or "None", " ")[1]
@@ -11730,7 +9816,7 @@ end
 
 return ExecutorSupport
 end)() end,
-    [74] = function()local wax,script,require=ImportGlobals(74)local ImportGlobals return (function(...)local FileHelper = {}
+    [59] = function()local wax,script,require=ImportGlobals(59)local ImportGlobals return (function(...)local FileHelper = {}
 
 function FileHelper.new(basepath: string)
     local self = setmetatable({}, {
@@ -11819,531 +9905,7 @@ end
 
 return FileHelper
 end)() end,
-    [81] = function()local wax,script,require=ImportGlobals(81)local ImportGlobals return (function(...)local Notify = {}
-
-local Linoria = require("Notifiers/Linoria")
-local Doors = require("Notifiers/Doors")
-
-function Notify:Notify(options)
-    if shared.NotifyStyle == "Linoria" then
-        local linoriaMessage = options["LinoriaMessage"] or options.Description
-        options.Description = linoriaMessage
-
-        Linoria:Notify(options)
-    elseif shared.NotifyStyle == "Doors" and shared.ScriptName == "DOORS" then
-        options["Warning"] = nil
-        Doors:Notify(options)
-    end
-end
-
-function Notify:Alert(options)
-    if shared.NotifyStyle == "Linoria" then
-        local linoriaMessage = options["LinoriaMessage"] or options.Description
-        options.Description = linoriaMessage
-
-        Linoria:Alert(options)
-    elseif shared.NotifyStyle == "Doors" and shared.ScriptName == "DOORS" then
-        if options.Warning then
-            options["Warning"] = nil
-            Doors:Alert(options)
-        else
-            Doors:Notify(options)
-        end
-    end
-end
-
-function Notify:Log(options) Notify:Notify(options) end
-
-return Notify
-end)() end,
-    [80] = function()local wax,script,require=ImportGlobals(80)local ImportGlobals return (function(...)local Linoria = {}
-
-function Linoria:Alert(options)
-    if not shared.Library then return warn("No Linoria library") end
-    Linoria:Notify(options)
-
-    if shared.CheckToggle("NotifySound", true) then
-        local sound = Instance.new("Sound", shared.SoundService) do
-            sound.SoundId = "rbxassetid://4590662766"
-            sound.Volume = shared.NotifyVolume
-            sound.PlayOnRemove = true
-            sound:Destroy()
-        end
-    end
-end
-
-function Linoria:Notify(options)
-    if not shared.Library then return warn("No Linoria library") end
-    
-    options = shared.Script.Functions.EnforceTypes(options, {
-        Description = "No Message",
-        Time = 5,
-    })
-
-    shared.Library:Notify(options.Description, options.Time)
-end
-
-return Linoria
-end)() end,
-    [86] = function()local wax,script,require=ImportGlobals(86)local ImportGlobals return (function(...)local ControlModule = if wax.shared.ExecutorSupport["require"] and shared.PlayerScripts:FindFirstChild("PlayerModule") then wax.require(shared.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")) else { replaced = true }
-
-if ControlModule.replaced == true then
-    ControlModule = {
-        replaced = true,
-
-        GamepadMoveVector = Vector3.zero,
-        ThumbstickMoveVector = Vector3.zero,
-        ThumbstickRadius = 15,
-        TouchInput = nil,
-        TouchStartPosition = nil,
-    }
-
-    function ControlModule:GetMoveVector(): Vector3
-        local x, z = 0, 0
-
-        if shared.UserInputService:IsKeyDown(Enum.KeyCode.W) then z -= 1 end
-        if shared.UserInputService:IsKeyDown(Enum.KeyCode.S) then z += 1 end
-        if shared.UserInputService:IsKeyDown(Enum.KeyCode.A) then x -= 1 end
-        if shared.UserInputService:IsKeyDown(Enum.KeyCode.D) then x += 1 end
-
-        return Vector3.new(x, 0, z) + ControlModule.ThumbstickMoveVector + ControlModule.GamepadMoveVector
-    end
-
-    shared.Connect:GiveSignal(shared.UserInputService.InputChanged:Connect(function(input, gameProcessed)
-        if gameProcessed then return end
-    
-        if input.UserInputType == Enum.UserInputType.Gamepad1 and input.KeyCode == Enum.KeyCode.Thumbstick1  then
-            ControlModule.GamepadMoveVector = Vector3.new(input.Position.X, 0, -input.Position.Y)
-        end
-    end))
-    
-    shared.Connect:GiveSignal(shared.UserInputService.TouchStarted:Connect(function(input)
-        ControlModule.TouchInput = input
-        ControlModule.TouchStartPosition = input.Position
-    end))
-    
-    shared.Connect:GiveSignal(shared.UserInputService.TouchMoved:Connect(function(input)
-        if input ~= ControlModule.TouchInput then return end
-        
-        if ControlModule.TouchStartPosition and input.Position then
-            local moveDirection = (input.Position - ControlModule.TouchStartPosition).Unit
-            local distance = (input.Position - ControlModule.TouchStartPosition).Magnitude
-    
-            if distance > ControlModule.ThumbstickRadius then
-                distance = ControlModule.ThumbstickRadius
-            end
-    
-            local adjustedDistance = distance / ControlModule.ThumbstickRadius
-            ControlModule.ThumbstickMoveVector = Vector3.new(moveDirection.X * adjustedDistance, 0, moveDirection.Y * adjustedDistance)
-        end
-    end))
-    
-    shared.Connect:GiveSignal(shared.UserInputService.TouchEnded:Connect(function(input)
-        if input ~= ControlModule.TouchInput then return end
-        
-        ControlModule.ThumbstickMoveVector = Vector3.new(0, 0, 0)
-        ControlModule.TouchInput = nil
-    end))
-end
-
-return ControlModule
-end)() end,
-    [79] = function()local wax,script,require=ImportGlobals(79)local ImportGlobals return (function(...)local Doors = {}
-
---// Player Variables \\--
-local mainUI
-
---// Functions \\--
-function Doors:Notify(unsafeOptions)
-    assert(typeof(unsafeOptions) == "table", "Expected a table as options argument but got " .. typeof(unsafeOptions))
-
-    mainUI = mainUI or shared.PlayerGui:WaitForChild("MainUI", 2.5)
-    if not mainUI then return end
-
-    local options = shared.Script.Functions.EnforceTypes(unsafeOptions, {
-        Title = "No Title",
-        Description = "No Text",
-        Reason = "",
-        NotificationType = "NOTIFICATION",
-        Image = "6023426923",
-        Color = nil,
-        Time = nil,
-
-        TweenDuration = 0.8
-    })
-
-    local acheivement = mainUI.AchievementsHolder.Achievement:Clone()
-    acheivement.Size = UDim2.new(0, 0, 0, 0)
-    acheivement.Frame.Position = UDim2.new(1.1, 0, 0, 0)
-    acheivement.Name = "LiveAchievement"
-    acheivement.Visible = true
-
-    acheivement.Frame.TextLabel.Text = options.NotificationType
-
-    if options.Color ~= nil then
-        acheivement.Frame.TextLabel.TextColor3 = options.Color
-        acheivement.Frame.UIStroke.Color = options.Color
-        acheivement.Frame.Glow.ImageColor3 = options.Color
-    end
-    
-    acheivement.Frame.Details.Desc.Text = tostring(options.Description)
-    acheivement.Frame.Details.Title.Text = tostring(options.Title)
-    acheivement.Frame.Details.Reason.Text = tostring(options.Reason or "")
-
-    if options.Image:match("rbxthumb://") or options.Image:match("rbxassetid://") then
-        acheivement.Frame.ImageLabel.Image = tostring(options.Image or "rbxassetid://0")
-    else
-        acheivement.Frame.ImageLabel.Image = "rbxassetid://" .. tostring(options.Image or "0")
-    end
-
-    acheivement.Parent = mainUI.AchievementsHolder
-    acheivement.Sound.SoundId = "rbxassetid://10469938989"
-
-    acheivement.Sound.Volume = 1
-
-    if shared.Toggles.NotifySound.Value then
-        acheivement.Sound:Play()
-    end
-
-    task.spawn(function()
-        acheivement:TweenSize(UDim2.new(1, 0, 0.2, 0), "In", "Quad", options.TweenDuration, true)
-    
-        task.wait(0.8)
-    
-        acheivement.Frame:TweenPosition(UDim2.new(0, 0, 0, 0), "Out", "Quad", 0.5, true)
-    
-        shared.TweenService:Create(acheivement.Frame.Glow, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.In),{
-            ImageTransparency = 1
-        }):Play()
-    
-        if options.Time ~= nil then
-            if typeof(options.Time) == "number" then
-                task.wait(options.Time)
-            elseif typeof(options.Time) == "Instance" then
-                options.Time.Destroying:Wait()
-            end
-        else
-            task.wait(5)
-        end
-    
-        acheivement.Frame:TweenPosition(UDim2.new(1.1, 0, 0, 0), "In", "Quad", 0.5, true)
-        task.wait(0.5)
-        acheivement:TweenSize(UDim2.new(1, 0, -0.1, 0), "InOut", "Quad", 0.5, true)
-        task.wait(0.5)
-        acheivement:Destroy()
-    end)
-end
-
-function Doors:Alert(options)
-    assert(typeof(options) == "table", "Expected a table as options argument but got " .. typeof(options))
-
-    options["NotificationType"] = "WARNING"
-    options["Color"] = Color3.new(1, 0, 0)
-    options["TweenDuration"] = 0.3
-
-    Doors:Notify(options)
-end
-
-function Doors:Warn(options) Doors:Alert(options) end
-
-return Doors
-end)() end,
-    [83] = function()local wax,script,require=ImportGlobals(83)local ImportGlobals return (function(...)local Logs = {
-    Debug = true, --or getgenv().mspaint_dev_mode,
-
-    FirstTime = true,
-    Folder = "mspaint/logs",
-    FileName = nil
-}
-Logs.FileHelper = wax.shared.FileHelper.new(Logs.Folder)
-
---// Functions \\--
-function TableToMessage(tbl: table)
-    for idx, val in ipairs(tbl) do
-        tbl[idx] = tostring(val)
-    end
-    
-    return table.concat(tbl, " ")
-end
-
-function GenerateLogFileName()
-    local date = os.date("*t")
-    return string.format(
-        "log_%04d-%02d-%02d_%02d-%02d-%02d.log",
-        date.year, date.month, date.day,
-        date.hour, date.min, date.sec
-    )
-end
-
-function Log(prefix: string, func, ...)
-    local message = string.format("[%s] ", prefix) .. TableToMessage({ ... })
-    local printer = func or print
-    printer(message)
-
-    task.spawn(function()
-        if wax.shared.ExecutorSupport["_SupportsFileSystem"] then
-            if not Logs.FileName then 
-                Logs.FileName = GenerateLogFileName() 
-            end
-        
-            Logs.FileHelper.AppendFile(Logs.FileName, message)
-        end
-    end)
-end
-
-function Logs:Log(...) Log("INFO", print, ...) end
-function Logs:Warn(...) Log("WARN", warn, ...) end
-function Logs:Error(...) Log("ERROR", error, ...) end
-function Logs:Debug(...) 
-    if not Logs.Debug then return end
-    Log("DEBUG", print, ...) 
-end
-
-return Logs
-end)() end,
-    [88] = function()local wax,script,require=ImportGlobals(88)local ImportGlobals return (function(...)local Twerk = {
-    TwerkAnimation = nil,
-    TwerkTrack = nil,
-}
-
-function Twerk:Setup()
-    if not Twerk.TwerkAnimation then
-        Twerk.TwerkAnimation = Instance.new("Animation")
-        Twerk.TwerkAnimation.AnimationId = "rbxassetid://12874447851"
-    end
-    if not shared.Humanoid then return end
-
-    Twerk.TwerkTrack = shared.Humanoid:LoadAnimation(Twerk.TwerkAnimation)
-    Twerk.TwerkTrack.Looped = true
-end
-
-function Twerk:Set(value: boolean)
-    if not shared.Humanoid then return end
-    
-    if not Twerk.TwerkAnimation then Twerk:Setup() end
-    if not Twerk.TwerkTrack then return end
-
-    if value then
-        Twerk.TwerkTrack:Play()
-    else
-        Twerk.TwerkTrack:Stop()
-    end
-end
-
-function Twerk:Enable() Twerk:Set(true) end
-function Twerk:Disable() Twerk:Set(false) end
-
-return Twerk
-end)() end,
-    [77] = function()local wax,script,require=ImportGlobals(77)local ImportGlobals return (function(...)local UICreator = {}
-
-local repo = "https://raw.githubusercontent.com/deividcomsono/LinoriaLib/refs/heads/main/"
-
-shared.Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
-shared.SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
-
-shared.Toggles = getgenv().Linoria.Toggles
-shared.Options = getgenv().Linoria.Options
-
-getgenv()._internal_unload_mspaint = function()
-    getgenv().mspaint_loading = false
-    getgenv().mspaint_loaded = false
-    task.spawn(shared.Library.Unload)
-end
-
-function UICreator:CreateWindow()
-    local Window = shared.Library:CreateWindow({
-        Title = "mspaint v3 | " .. shared.ScriptName,
-        Center = true,
-        AutoShow = true,
-        Resizable = true,
-        NotifySide = "Right",
-        ShowCustomCursor = true,
-        TabPadding = 2,
-        MenuFadeTime = 0
-    })
-
-    --// Notificatins \\--
-    shared.NotifyStyle = "Linoria"
-    shared.NotifyVolume = 2
-    shared.Notify = require("Notify")
-
-    --// Checker \\--
-    shared.CheckToggle = function(toggleName: string, value: boolean)
-        return shared.Toggles[toggleName] and shared.Toggles[toggleName].Value == value
-    end
-    shared.CheckOption = function(optionName: string, value: any)
-        return shared.Options[optionName] and (typeof(shared.Options[optionName].Value) == "table" and shared.Options[optionName].Value[value] or shared.Options[optionName].Value == value)
-    end
-
-    --// Unload Handler \\--
-    shared.Library:OnUnload(function()
-        print("Unloading...")
-
-        shared.Fly:Stop()
-
-        for _, connection in pairs(shared.Connections) do
-            connection:Disconnect()
-        end
-
-        getgenv().mspaint_loading = false
-        getgenv().mspaint_loaded = false
-        shared.Library.Unloaded = true
-        print("Unloaded!")
-    end)
-
-    return Window
-end
-
-function UICreator:CreateSettingsTab()
-    local SettingsTab = shared.Window:AddTab("UI Settings")
-
-    local MenuGroup = SettingsTab:AddLeftGroupbox("Menu")
-    local CreditsGroup = SettingsTab:AddRightGroupbox("Credits")
-
-    MenuGroup:AddToggle("ExecuteOnTeleport", { Default = false, Text = "Execute On Teleport" })
-    MenuGroup:AddToggle("KeybindMenuOpen", { Default = false, Text = "Open Keybind Menu", Callback = function(value) shared.Library.KeybindFrame.Visible = value end})
-    MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) shared.Library.ShowCustomCursor = Value end})
-    MenuGroup:AddDivider()
-    MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-    MenuGroup:AddButton("Join Discord", function()
-        local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
-        Inviter.Join("https://discord.com/invite/cfyMptntHr")
-        Inviter.Prompt({
-            name = "mspaint",
-            invite = "https://discord.com/invite/cfyMptntHr",
-        })
-    end):AddButton("Copy Link", function()
-        if setclipboard then
-            setclipboard("https://discord.com/invite/cfyMptntHr")
-            shared.Library:Notify("Copied discord link to clipboard!")
-        else
-            shared.Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
-        end
-    end)
-    MenuGroup:AddButton("Unload", function() shared.Library:Unload() end)
-
-    CreditsGroup:AddLabel("Developers:")
-    CreditsGroup:AddLabel("upio - owner")
-    CreditsGroup:AddLabel("deividcomsono - main script dev")
-    CreditsGroup:AddLabel("mstudio45")
-    CreditsGroup:AddLabel("bacalhauz")
-
-    shared.Library.ToggleKeybind = shared.Options.MenuKeybind
-
-    ThemeManager:SetLibrary(shared.Library)
-    shared.SaveManager:SetLibrary(shared.Library)
-
-    shared.SaveManager:IgnoreThemeSettings()
-
-    shared.SaveManager:SetFolder("mspaint/" .. string.lower(shared.ScriptLoader))
-    if shared.SubFolder then
-        shared.SaveManager:SetSubFolder(shared.SubFolder)
-    end
-
-    shared.SaveManager:BuildConfigSection(SettingsTab)
-    ThemeManager:ApplyToTab(SettingsTab)
-
-    shared.SaveManager:LoadAutoloadConfig()
-
-    shared.Connect:GiveSignal(shared.LocalPlayer.OnTeleport:Connect(function()
-        if not shared.Toggles.ExecuteOnTeleport.Value or getgenv().queued_to_teleport then return end
-
-        getgenv().queued_to_teleport = true
-        queue_on_teleport([[ loadstring(game:HttpGet("https://github.com/notpoiu/mspaint/releases/latest/download/Script.luau"))() ]])
-    end))
-
-    return SettingsTab
-end
-
-return UICreator
-
-end)() end,
-    [87] = function()local wax,script,require=ImportGlobals(87)local ImportGlobals return (function(...)local Fly = {
-    FlyBody = nil,
-    FlyGyro = nil,
-    Enabled = false, 
-    Speed = 15
-}
-
-function Fly:Setup()
-    local flyBody = Instance.new("BodyVelocity")
-    flyBody.Velocity = Vector3.zero
-    flyBody.MaxForce = Vector3.one * 9e9
-
-    local flyGyro = Instance.new("BodyGyro")
-    flyGyro.P = 9e4
-    flyGyro.MaxTorque = Vector3.one * 9e9
-
-    Fly.FlyBody = flyBody
-    Fly.FlyGyro = flyGyro
-
-    shared.Connections["Fly"] = shared.RunService.RenderStepped:Connect(function()
-        if not Fly.Enabled or (if shared.Library then shared.Library.Unloaded == true else true) then return end
-
-        local velocity = Vector3.zero
-        local moveVector = shared.ControlModule:GetMoveVector()
-        velocity = -((shared.Camera.CFrame.LookVector * moveVector.Z) - (shared.Camera.CFrame.RightVector * moveVector.X))
-
-        if shared.UserInputService:IsKeyDown(Enum.KeyCode.Space) then velocity += shared.Camera.CFrame.UpVector end
-        if shared.UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then velocity -= shared.Camera.CFrame.UpVector end
-        
-        Fly.FlyBody.Velocity = velocity * Fly.Speed
-        Fly.FlyGyro.CFrame = shared.Camera.CFrame
-    end)
-end
-
-function Fly:Stop()
-    if shared.Humanoid then shared.Humanoid.PlatformStand = false end
-
-    shared.Connect:DisconnectSignal(shared.Connections["Fly"])
-    if Fly.FlyBody then Fly.FlyBody:Destroy() end
-    if Fly.FlyGyro then Fly.FlyGyro:Destroy() end
-end
-
-function Fly:Set(value: boolean)
-    if not shared.RootPart then
-        return warn("shared.RootPart is nil.")
-    end
-
-    Fly.Enabled = value
-    if shared.Humanoid then shared.Humanoid.PlatformStand = value end
-    Fly.FlyBody.Parent = if value then shared.RootPart else nil
-    Fly.FlyGyro.Parent = if value then shared.RootPart else nil
-end
-
-function Fly:Enable() Fly:Set(true) end
-function Fly:Disable() Fly:Set(false) end
-function Fly:Toggle() Fly:Set(not Fly.Enabled) end
-
-function Fly:SetSpeed(speed: number)
-    Fly.Speed = speed
-end
-
-return Fly
-end)() end,
-    [84] = function()local wax,script,require=ImportGlobals(84)local ImportGlobals return (function(...)local cloneref = (cloneref or function(instance: any) return instance end)
-
-local Services = {}
-function Services:GetService(serviceName: string)
-    if shared[serviceName] then return shared[serviceName] end
-
-    local service = cloneref(game:GetService(serviceName))
-    shared[serviceName] = service
-
-    return service
-end
-
-function Services:GetServices(serviceNames: table)
-    for _, serviceName: string in ipairs(serviceNames) do
-        Services:GetService(serviceName)
-    end
-end
-
-return Services
-end)() end,
-    [76] = function()local wax,script,require=ImportGlobals(76)local ImportGlobals return (function(...)-- Addons
+    [61] = function()local wax,script,require=ImportGlobals(61)local ImportGlobals return (function(...)-- Addons
 if getgenv().mspaint_disable_addons or getgenv().mspaint_addons_activated then 
     return {}
 end
@@ -12529,7 +10091,298 @@ end)
 
 return {}
 end)() end,
-    [82] = function()local wax,script,require=ImportGlobals(82)local ImportGlobals return (function(...)return function(scriptType: "Utils" | "Tabs", name: string)
+    [62] = function()local wax,script,require=ImportGlobals(62)local ImportGlobals return (function(...)local UICreator = {}
+
+local repo = "https://raw.githubusercontent.com/deividcomsono/LinoriaLib/refs/heads/main/"
+
+shared.Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+shared.SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+
+shared.Toggles = getgenv().Linoria.Toggles
+shared.Options = getgenv().Linoria.Options
+
+getgenv()._internal_unload_mspaint = function()
+    getgenv().mspaint_loading = false
+    getgenv().mspaint_loaded = false
+    task.spawn(shared.Library.Unload)
+end
+
+function UICreator:CreateWindow()
+    local Window = shared.Library:CreateWindow({
+        Title = "mspaint v3 | " .. shared.ScriptName,
+        Center = true,
+        AutoShow = true,
+        Resizable = true,
+        NotifySide = "Right",
+        ShowCustomCursor = true,
+        TabPadding = 2,
+        MenuFadeTime = 0
+    })
+
+    --// Notificatins \\--
+    shared.NotifyStyle = "Linoria"
+    shared.NotifyVolume = 2
+    shared.Notify = require("Notify")
+
+    --// Checker \\--
+    shared.CheckToggle = function(toggleName: string, value: boolean)
+        return shared.Toggles[toggleName] and shared.Toggles[toggleName].Value == value
+    end
+    shared.CheckOption = function(optionName: string, value: any)
+        return shared.Options[optionName] and (typeof(shared.Options[optionName].Value) == "table" and shared.Options[optionName].Value[value] or shared.Options[optionName].Value == value)
+    end
+
+    --// Unload Handler \\--
+    shared.Library:OnUnload(function()
+        print("Unloading...")
+
+        shared.Fly:Stop()
+
+        for _, connection in pairs(shared.Connections) do
+            connection:Disconnect()
+        end
+
+        getgenv().mspaint_loading = false
+        getgenv().mspaint_loaded = false
+        shared.Library.Unloaded = true
+        print("Unloaded!")
+    end)
+
+    return Window
+end
+
+function UICreator:CreateSettingsTab()
+    local SettingsTab = shared.Window:AddTab("UI Settings")
+
+    local MenuGroup = SettingsTab:AddLeftGroupbox("Menu")
+    local CreditsGroup = SettingsTab:AddRightGroupbox("Credits")
+
+    MenuGroup:AddToggle("ExecuteOnTeleport", { Default = false, Text = "Execute On Teleport" })
+    MenuGroup:AddToggle("KeybindMenuOpen", { Default = false, Text = "Open Keybind Menu", Callback = function(value) shared.Library.KeybindFrame.Visible = value end})
+    MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) shared.Library.ShowCustomCursor = Value end})
+    MenuGroup:AddDivider()
+    MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
+    MenuGroup:AddButton("Join Discord", function()
+        local Inviter = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
+        Inviter.Join("https://discord.com/invite/cfyMptntHr")
+        Inviter.Prompt({
+            name = "mspaint",
+            invite = "https://discord.com/invite/cfyMptntHr",
+        })
+    end):AddButton("Copy Link", function()
+        if setclipboard then
+            setclipboard("https://discord.com/invite/cfyMptntHr")
+            shared.Library:Notify("Copied discord link to clipboard!")
+        else
+            shared.Library:Notify("Discord link: https://discord.com/invite/cfyMptntHr", 10)
+        end
+    end)
+    MenuGroup:AddButton("Unload", function() shared.Library:Unload() end)
+
+    CreditsGroup:AddLabel("Developers:")
+    CreditsGroup:AddLabel("upio - owner")
+    CreditsGroup:AddLabel("deividcomsono - main script dev")
+    CreditsGroup:AddLabel("mstudio45")
+    CreditsGroup:AddLabel("bacalhauz")
+
+    shared.Library.ToggleKeybind = shared.Options.MenuKeybind
+
+    ThemeManager:SetLibrary(shared.Library)
+    shared.SaveManager:SetLibrary(shared.Library)
+
+    shared.SaveManager:IgnoreThemeSettings()
+
+    shared.SaveManager:SetFolder("mspaint/" .. string.lower(shared.ScriptLoader))
+    if shared.SubFolder then
+        shared.SaveManager:SetSubFolder(shared.SubFolder)
+    end
+
+    shared.SaveManager:BuildConfigSection(SettingsTab)
+    ThemeManager:ApplyToTab(SettingsTab)
+
+    shared.SaveManager:LoadAutoloadConfig()
+
+    shared.Connect:GiveSignal(shared.LocalPlayer.OnTeleport:Connect(function()
+        if not shared.Toggles.ExecuteOnTeleport.Value or getgenv().queued_to_teleport then return end
+
+        getgenv().queued_to_teleport = true
+        queue_on_teleport([[ loadstring(game:HttpGet("https://github.com/notpoiu/mspaint/releases/latest/download/Script.luau"))() ]])
+    end))
+
+    return SettingsTab
+end
+
+return UICreator
+
+end)() end,
+    [64] = function()local wax,script,require=ImportGlobals(64)local ImportGlobals return (function(...)local Doors = {}
+
+--// Player Variables \\--
+local mainUI
+
+--// Functions \\--
+function Doors:Notify(unsafeOptions)
+    assert(typeof(unsafeOptions) == "table", "Expected a table as options argument but got " .. typeof(unsafeOptions))
+
+    mainUI = mainUI or shared.PlayerGui:WaitForChild("MainUI", 2.5)
+    if not mainUI then return end
+
+    local options = shared.Script.Functions.EnforceTypes(unsafeOptions, {
+        Title = "No Title",
+        Description = "No Text",
+        Reason = "",
+        NotificationType = "NOTIFICATION",
+        Image = "6023426923",
+        Color = nil,
+        Time = nil,
+
+        TweenDuration = 0.8
+    })
+
+    local acheivement = mainUI.AchievementsHolder.Achievement:Clone()
+    acheivement.Size = UDim2.new(0, 0, 0, 0)
+    acheivement.Frame.Position = UDim2.new(1.1, 0, 0, 0)
+    acheivement.Name = "LiveAchievement"
+    acheivement.Visible = true
+
+    acheivement.Frame.TextLabel.Text = options.NotificationType
+
+    if options.Color ~= nil then
+        acheivement.Frame.TextLabel.TextColor3 = options.Color
+        acheivement.Frame.UIStroke.Color = options.Color
+        acheivement.Frame.Glow.ImageColor3 = options.Color
+    end
+    
+    acheivement.Frame.Details.Desc.Text = tostring(options.Description)
+    acheivement.Frame.Details.Title.Text = tostring(options.Title)
+    acheivement.Frame.Details.Reason.Text = tostring(options.Reason or "")
+
+    if options.Image:match("rbxthumb://") or options.Image:match("rbxassetid://") then
+        acheivement.Frame.ImageLabel.Image = tostring(options.Image or "rbxassetid://0")
+    else
+        acheivement.Frame.ImageLabel.Image = "rbxassetid://" .. tostring(options.Image or "0")
+    end
+
+    acheivement.Parent = mainUI.AchievementsHolder
+    acheivement.Sound.SoundId = "rbxassetid://10469938989"
+
+    acheivement.Sound.Volume = 1
+
+    if shared.Toggles.NotifySound.Value then
+        acheivement.Sound:Play()
+    end
+
+    task.spawn(function()
+        acheivement:TweenSize(UDim2.new(1, 0, 0.2, 0), "In", "Quad", options.TweenDuration, true)
+    
+        task.wait(0.8)
+    
+        acheivement.Frame:TweenPosition(UDim2.new(0, 0, 0, 0), "Out", "Quad", 0.5, true)
+    
+        shared.TweenService:Create(acheivement.Frame.Glow, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.In),{
+            ImageTransparency = 1
+        }):Play()
+    
+        if options.Time ~= nil then
+            if typeof(options.Time) == "number" then
+                task.wait(options.Time)
+            elseif typeof(options.Time) == "Instance" then
+                options.Time.Destroying:Wait()
+            end
+        else
+            task.wait(5)
+        end
+    
+        acheivement.Frame:TweenPosition(UDim2.new(1.1, 0, 0, 0), "In", "Quad", 0.5, true)
+        task.wait(0.5)
+        acheivement:TweenSize(UDim2.new(1, 0, -0.1, 0), "InOut", "Quad", 0.5, true)
+        task.wait(0.5)
+        acheivement:Destroy()
+    end)
+end
+
+function Doors:Alert(options)
+    assert(typeof(options) == "table", "Expected a table as options argument but got " .. typeof(options))
+
+    options["NotificationType"] = "WARNING"
+    options["Color"] = Color3.new(1, 0, 0)
+    options["TweenDuration"] = 0.3
+
+    Doors:Notify(options)
+end
+
+function Doors:Warn(options) Doors:Alert(options) end
+
+return Doors
+end)() end,
+    [65] = function()local wax,script,require=ImportGlobals(65)local ImportGlobals return (function(...)local Linoria = {}
+
+function Linoria:Alert(options)
+    if not shared.Library then return warn("No Linoria library") end
+    Linoria:Notify(options)
+
+    if shared.CheckToggle("NotifySound", true) then
+        local sound = Instance.new("Sound", shared.SoundService) do
+            sound.SoundId = "rbxassetid://4590662766"
+            sound.Volume = shared.NotifyVolume
+            sound.PlayOnRemove = true
+            sound:Destroy()
+        end
+    end
+end
+
+function Linoria:Notify(options)
+    if not shared.Library then return warn("No Linoria library") end
+    
+    options = shared.Script.Functions.EnforceTypes(options, {
+        Description = "No Message",
+        Time = 5,
+    })
+
+    shared.Library:Notify(options.Description, options.Time)
+end
+
+return Linoria
+end)() end,
+    [66] = function()local wax,script,require=ImportGlobals(66)local ImportGlobals return (function(...)local Notify = {}
+
+local Linoria = require("Notifiers/Linoria")
+local Doors = require("Notifiers/Doors")
+
+function Notify:Notify(options)
+    if shared.NotifyStyle == "Linoria" then
+        local linoriaMessage = options["LinoriaMessage"] or options.Description
+        options.Description = linoriaMessage
+
+        Linoria:Notify(options)
+    elseif shared.NotifyStyle == "Doors" and shared.ScriptName == "DOORS" then
+        options["Warning"] = nil
+        Doors:Notify(options)
+    end
+end
+
+function Notify:Alert(options)
+    if shared.NotifyStyle == "Linoria" then
+        local linoriaMessage = options["LinoriaMessage"] or options.Description
+        options.Description = linoriaMessage
+
+        Linoria:Alert(options)
+    elseif shared.NotifyStyle == "Doors" and shared.ScriptName == "DOORS" then
+        if options.Warning then
+            options["Warning"] = nil
+            Doors:Alert(options)
+        else
+            Doors:Notify(options)
+        end
+    end
+end
+
+function Notify:Log(options) Notify:Notify(options) end
+
+return Notify
+end)() end,
+    [67] = function()local wax,script,require=ImportGlobals(67)local ImportGlobals return (function(...)return function(scriptType: "Utils" | "Tabs", name: string)
     local scriptPath = script.Parent.Parent.Places[scriptType][shared.ScriptFolder or "Universal"]
 
     if shared.Mapping and shared.Mapping["Exclusions"] then
@@ -12539,6 +10392,239 @@ end)() end,
     
     require(scriptPath[name])
 end
+end)() end,
+    [68] = function()local wax,script,require=ImportGlobals(68)local ImportGlobals return (function(...)local Logs = {
+    Debug = true, --or getgenv().mspaint_dev_mode,
+
+    FirstTime = true,
+    Folder = "mspaint/logs",
+    FileName = nil
+}
+Logs.FileHelper = wax.shared.FileHelper.new(Logs.Folder)
+
+--// Functions \\--
+function TableToMessage(tbl: table)
+    for idx, val in ipairs(tbl) do
+        tbl[idx] = tostring(val)
+    end
+    
+    return table.concat(tbl, " ")
+end
+
+function GenerateLogFileName()
+    local date = os.date("*t")
+    return string.format(
+        "log_%04d-%02d-%02d_%02d-%02d-%02d.log",
+        date.year, date.month, date.day,
+        date.hour, date.min, date.sec
+    )
+end
+
+function Log(prefix: string, func, ...)
+    local message = string.format("[%s] ", prefix) .. TableToMessage({ ... })
+    local printer = func or print
+    printer(message)
+
+    task.spawn(function()
+        if wax.shared.ExecutorSupport["_SupportsFileSystem"] then
+            if not Logs.FileName then 
+                Logs.FileName = GenerateLogFileName() 
+            end
+        
+            Logs.FileHelper.AppendFile(Logs.FileName, message)
+        end
+    end)
+end
+
+function Logs:Log(...) Log("INFO", print, ...) end
+function Logs:Warn(...) Log("WARN", warn, ...) end
+function Logs:Error(...) Log("ERROR", error, ...) end
+function Logs:Debug(...) 
+    if not Logs.Debug then return end
+    Log("DEBUG", print, ...) 
+end
+
+return Logs
+end)() end,
+    [69] = function()local wax,script,require=ImportGlobals(69)local ImportGlobals return (function(...)local cloneref = (cloneref or function(instance: any) return instance end)
+
+local Services = {}
+function Services:GetService(serviceName: string)
+    if shared[serviceName] then return shared[serviceName] end
+
+    local service = cloneref(game:GetService(serviceName))
+    shared[serviceName] = service
+
+    return service
+end
+
+function Services:GetServices(serviceNames: table)
+    for _, serviceName: string in ipairs(serviceNames) do
+        Services:GetService(serviceName)
+    end
+end
+
+return Services
+end)() end,
+    [71] = function()local wax,script,require=ImportGlobals(71)local ImportGlobals return (function(...)local ControlModule = if wax.shared.ExecutorSupport["require"] and shared.PlayerScripts:FindFirstChild("PlayerModule") then wax.require(shared.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")) else { replaced = true }
+
+if ControlModule.replaced == true then
+    ControlModule = {
+        replaced = true,
+
+        GamepadMoveVector = Vector3.zero,
+        ThumbstickMoveVector = Vector3.zero,
+        ThumbstickRadius = 15,
+        TouchInput = nil,
+        TouchStartPosition = nil,
+    }
+
+    function ControlModule:GetMoveVector(): Vector3
+        local x, z = 0, 0
+
+        if shared.UserInputService:IsKeyDown(Enum.KeyCode.W) then z -= 1 end
+        if shared.UserInputService:IsKeyDown(Enum.KeyCode.S) then z += 1 end
+        if shared.UserInputService:IsKeyDown(Enum.KeyCode.A) then x -= 1 end
+        if shared.UserInputService:IsKeyDown(Enum.KeyCode.D) then x += 1 end
+
+        return Vector3.new(x, 0, z) + ControlModule.ThumbstickMoveVector + ControlModule.GamepadMoveVector
+    end
+
+    shared.Connect:GiveSignal(shared.UserInputService.InputChanged:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+    
+        if input.UserInputType == Enum.UserInputType.Gamepad1 and input.KeyCode == Enum.KeyCode.Thumbstick1  then
+            ControlModule.GamepadMoveVector = Vector3.new(input.Position.X, 0, -input.Position.Y)
+        end
+    end))
+    
+    shared.Connect:GiveSignal(shared.UserInputService.TouchStarted:Connect(function(input)
+        ControlModule.TouchInput = input
+        ControlModule.TouchStartPosition = input.Position
+    end))
+    
+    shared.Connect:GiveSignal(shared.UserInputService.TouchMoved:Connect(function(input)
+        if input ~= ControlModule.TouchInput then return end
+        
+        if ControlModule.TouchStartPosition and input.Position then
+            local moveDirection = (input.Position - ControlModule.TouchStartPosition).Unit
+            local distance = (input.Position - ControlModule.TouchStartPosition).Magnitude
+    
+            if distance > ControlModule.ThumbstickRadius then
+                distance = ControlModule.ThumbstickRadius
+            end
+    
+            local adjustedDistance = distance / ControlModule.ThumbstickRadius
+            ControlModule.ThumbstickMoveVector = Vector3.new(moveDirection.X * adjustedDistance, 0, moveDirection.Y * adjustedDistance)
+        end
+    end))
+    
+    shared.Connect:GiveSignal(shared.UserInputService.TouchEnded:Connect(function(input)
+        if input ~= ControlModule.TouchInput then return end
+        
+        ControlModule.ThumbstickMoveVector = Vector3.new(0, 0, 0)
+        ControlModule.TouchInput = nil
+    end))
+end
+
+return ControlModule
+end)() end,
+    [72] = function()local wax,script,require=ImportGlobals(72)local ImportGlobals return (function(...)local Fly = {
+    FlyBody = nil,
+    FlyGyro = nil,
+    Enabled = false, 
+    Speed = 15
+}
+
+function Fly:Setup()
+    local flyBody = Instance.new("BodyVelocity")
+    flyBody.Velocity = Vector3.zero
+    flyBody.MaxForce = Vector3.one * 9e9
+
+    local flyGyro = Instance.new("BodyGyro")
+    flyGyro.P = 9e4
+    flyGyro.MaxTorque = Vector3.one * 9e9
+
+    Fly.FlyBody = flyBody
+    Fly.FlyGyro = flyGyro
+
+    shared.Connections["Fly"] = shared.RunService.RenderStepped:Connect(function()
+        if not Fly.Enabled or (if shared.Library then shared.Library.Unloaded == true else true) then return end
+
+        local velocity = Vector3.zero
+        local moveVector = shared.ControlModule:GetMoveVector()
+        velocity = -((shared.Camera.CFrame.LookVector * moveVector.Z) - (shared.Camera.CFrame.RightVector * moveVector.X))
+
+        if shared.UserInputService:IsKeyDown(Enum.KeyCode.Space) then velocity += shared.Camera.CFrame.UpVector end
+        if shared.UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then velocity -= shared.Camera.CFrame.UpVector end
+        
+        Fly.FlyBody.Velocity = velocity * Fly.Speed
+        Fly.FlyGyro.CFrame = shared.Camera.CFrame
+    end)
+end
+
+function Fly:Stop()
+    if shared.Humanoid then shared.Humanoid.PlatformStand = false end
+
+    shared.Connect:DisconnectSignal(shared.Connections["Fly"])
+    if Fly.FlyBody then Fly.FlyBody:Destroy() end
+    if Fly.FlyGyro then Fly.FlyGyro:Destroy() end
+end
+
+function Fly:Set(value: boolean)
+    if not shared.RootPart then
+        return warn("shared.RootPart is nil.")
+    end
+
+    Fly.Enabled = value
+    if shared.Humanoid then shared.Humanoid.PlatformStand = value end
+    Fly.FlyBody.Parent = if value then shared.RootPart else nil
+    Fly.FlyGyro.Parent = if value then shared.RootPart else nil
+end
+
+function Fly:Enable() Fly:Set(true) end
+function Fly:Disable() Fly:Set(false) end
+function Fly:Toggle() Fly:Set(not Fly.Enabled) end
+
+function Fly:SetSpeed(speed: number)
+    Fly.Speed = speed
+end
+
+return Fly
+end)() end,
+    [73] = function()local wax,script,require=ImportGlobals(73)local ImportGlobals return (function(...)local Twerk = {
+    TwerkAnimation = nil,
+    TwerkTrack = nil,
+}
+
+function Twerk:Setup()
+    if not Twerk.TwerkAnimation then
+        Twerk.TwerkAnimation = Instance.new("Animation")
+        Twerk.TwerkAnimation.AnimationId = "rbxassetid://12874447851"
+    end
+    if not shared.Humanoid then return end
+
+    Twerk.TwerkTrack = shared.Humanoid:LoadAnimation(Twerk.TwerkAnimation)
+    Twerk.TwerkTrack.Looped = true
+end
+
+function Twerk:Set(value: boolean)
+    if not shared.Humanoid then return end
+    
+    if not Twerk.TwerkAnimation then Twerk:Setup() end
+    if not Twerk.TwerkTrack then return end
+
+    if value then
+        Twerk.TwerkTrack:Play()
+    else
+        Twerk.TwerkTrack:Stop()
+    end
+end
+
+function Twerk:Enable() Twerk:Set(true) end
+function Twerk:Disable() Twerk:Set(false) end
+
+return Twerk
 end)() end
 } -- [RefId] = Closure
 
@@ -12552,121 +10638,56 @@ local ObjectTree = {
         },
         {
             {
-                70,
+                55,
                 1,
                 {
                     "Utils"
                 },
                 {
                     {
-                        72,
-                        2,
-                        {
-                            "Connections"
-                        }
-                    },
-                    {
-                        84,
-                        2,
-                        {
-                            "Services"
-                        }
-                    },
-                    {
-                        82,
-                        2,
-                        {
-                            "Loader"
-                        }
-                    },
-                    {
-                        85,
-                        1,
-                        {
-                            "Universal"
-                        },
-                        {
-                            {
-                                88,
-                                2,
-                                {
-                                    "Twerk"
-                                }
-                            },
-                            {
-                                87,
-                                2,
-                                {
-                                    "Fly"
-                                }
-                            },
-                            {
-                                86,
-                                2,
-                                {
-                                    "ControlModule"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        71,
-                        2,
-                        {
-                            "BloxstrapRPC"
-                        }
-                    },
-                    {
-                        83,
-                        2,
-                        {
-                            "Logs"
-                        }
-                    },
-                    {
-                        75,
+                        60,
                         1,
                         {
                             "GUI"
                         },
                         {
                             {
-                                77,
-                                2,
-                                {
-                                    "Creator"
-                                }
-                            },
-                            {
-                                76,
+                                61,
                                 2,
                                 {
                                     "Addons"
                                 }
                             },
                             {
-                                81,
+                                62,
+                                2,
+                                {
+                                    "Creator"
+                                }
+                            },
+                            {
+                                66,
                                 2,
                                 {
                                     "Notify"
                                 }
                             },
                             {
-                                78,
+                                63,
                                 1,
                                 {
                                     "Notifiers"
                                 },
                                 {
                                     {
-                                        80,
+                                        65,
                                         2,
                                         {
                                             "Linoria"
                                         }
                                     },
                                     {
-                                        79,
+                                        64,
                                         2,
                                         {
                                             "Doors"
@@ -12677,17 +10698,82 @@ local ObjectTree = {
                         }
                     },
                     {
-                        73,
+                        59,
+                        2,
+                        {
+                            "FileHelper"
+                        }
+                    },
+                    {
+                        56,
+                        2,
+                        {
+                            "BloxstrapRPC"
+                        }
+                    },
+                    {
+                        68,
+                        2,
+                        {
+                            "Logs"
+                        }
+                    },
+                    {
+                        67,
+                        2,
+                        {
+                            "Loader"
+                        }
+                    },
+                    {
+                        58,
                         2,
                         {
                             "ExecutorSupport"
                         }
                     },
                     {
-                        74,
+                        70,
+                        1,
+                        {
+                            "Universal"
+                        },
+                        {
+                            {
+                                73,
+                                2,
+                                {
+                                    "Twerk"
+                                }
+                            },
+                            {
+                                72,
+                                2,
+                                {
+                                    "Fly"
+                                }
+                            },
+                            {
+                                71,
+                                2,
+                                {
+                                    "ControlModule"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        69,
                         2,
                         {
-                            "FileHelper"
+                            "Services"
+                        }
+                    },
+                    {
+                        57,
+                        2,
+                        {
+                            "Connections"
                         }
                     }
                 }
@@ -12700,19 +10786,259 @@ local ObjectTree = {
                 },
                 {
                     {
-                        16,
+                        28,
+                        1,
+                        {
+                            "Utils"
+                        },
+                        {
+                            {
+                                42,
+                                1,
+                                {
+                                    "R&D"
+                                },
+                                {
+                                    {
+                                        46,
+                                        2,
+                                        {
+                                            "ESP"
+                                        }
+                                    },
+                                    {
+                                        43,
+                                        2,
+                                        {
+                                            "Assets"
+                                        }
+                                    },
+                                    {
+                                        44,
+                                        2,
+                                        {
+                                            "Chat"
+                                        }
+                                    },
+                                    {
+                                        45,
+                                        2,
+                                        {
+                                            "ConnectionsFuncs"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                29,
+                                1,
+                                {
+                                    "Doors"
+                                },
+                                {
+                                    {
+                                        30,
+                                        1,
+                                        {
+                                            "Doors"
+                                        },
+                                        {
+                                            {
+                                                32,
+                                                2,
+                                                {
+                                                    "AutoWardrobe"
+                                                }
+                                            },
+                                            {
+                                                33,
+                                                2,
+                                                {
+                                                    "BreakerBox"
+                                                }
+                                            },
+                                            {
+                                                31,
+                                                2,
+                                                {
+                                                    "Assets"
+                                                }
+                                            },
+                                            {
+                                                35,
+                                                2,
+                                                {
+                                                    "ESP"
+                                                }
+                                            },
+                                            {
+                                                36,
+                                                2,
+                                                {
+                                                    "Entities"
+                                                }
+                                            },
+                                            {
+                                                39,
+                                                2,
+                                                {
+                                                    "Player"
+                                                }
+                                            },
+                                            {
+                                                37,
+                                                2,
+                                                {
+                                                    "Minecarts"
+                                                }
+                                            },
+                                            {
+                                                34,
+                                                2,
+                                                {
+                                                    "ConnectionsFuncs"
+                                                }
+                                            },
+                                            {
+                                                38,
+                                                2,
+                                                {
+                                                    "Padlock"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        40,
+                                        1,
+                                        {
+                                            "Lobby"
+                                        },
+                                        {
+                                            {
+                                                41,
+                                                2,
+                                                {
+                                                    "Preset"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                47,
+                                1,
+                                {
+                                    "Template"
+                                },
+                                {
+                                    {
+                                        48,
+                                        2,
+                                        {
+                                            "ConnectionsFuncs"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                49,
+                                1,
+                                {
+                                    "Universal"
+                                },
+                                {
+                                    {
+                                        53,
+                                        2,
+                                        {
+                                            "ESP"
+                                        }
+                                    },
+                                    {
+                                        50,
+                                        2,
+                                        {
+                                            "Aimbot"
+                                        }
+                                    },
+                                    {
+                                        51,
+                                        2,
+                                        {
+                                            "Assets"
+                                        }
+                                    },
+                                    {
+                                        54,
+                                        2,
+                                        {
+                                            "Player"
+                                        }
+                                    },
+                                    {
+                                        52,
+                                        2,
+                                        {
+                                            "ConnectionsFuncs"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        12,
                         1,
                         {
                             "Tabs"
                         },
                         {
                             {
+                                24,
+                                1,
+                                {
+                                    "Universal"
+                                },
+                                {
+                                    {
+                                        25,
+                                        2,
+                                        {
+                                            "Exploits"
+                                        }
+                                    },
+                                    {
+                                        27,
+                                        2,
+                                        {
+                                            "Visuals"
+                                        }
+                                    },
+                                    {
+                                        26,
+                                        2,
+                                        {
+                                            "Main"
+                                        }
+                                    }
+                                }
+                            },
+                            {
                                 21,
                                 1,
                                 {
-                                    "Babft"
+                                    "R&D"
                                 },
                                 {
+                                    {
+                                        23,
+                                        2,
+                                        {
+                                            "Visuals"
+                                        }
+                                    },
                                     {
                                         22,
                                         2,
@@ -12723,51 +11049,21 @@ local ObjectTree = {
                                 }
                             },
                             {
-                                17,
-                                1,
-                                {
-                                    "3008"
-                                },
-                                {
-                                    {
-                                        19,
-                                        2,
-                                        {
-                                            "Main"
-                                        }
-                                    },
-                                    {
-                                        20,
-                                        2,
-                                        {
-                                            "Visuals"
-                                        }
-                                    },
-                                    {
-                                        18,
-                                        2,
-                                        {
-                                            "Exploits"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                23,
+                                13,
                                 1,
                                 {
                                     "Doors"
                                 },
                                 {
                                     {
-                                        29,
+                                        19,
                                         1,
                                         {
                                             "Lobby"
                                         },
                                         {
                                             {
-                                                30,
+                                                20,
                                                 2,
                                                 {
                                                     "Main"
@@ -12776,93 +11072,40 @@ local ObjectTree = {
                                         }
                                     },
                                     {
-                                        24,
+                                        14,
                                         1,
                                         {
                                             "Doors"
                                         },
                                         {
                                             {
-                                                27,
-                                                2,
-                                                {
-                                                    "Main"
-                                                }
-                                            },
-                                            {
-                                                28,
+                                                18,
                                                 2,
                                                 {
                                                     "Visuals"
                                                 }
                                             },
                                             {
-                                                26,
-                                                2,
-                                                {
-                                                    "Floor"
-                                                }
-                                            },
-                                            {
-                                                25,
+                                                15,
                                                 2,
                                                 {
                                                     "Exploits"
                                                 }
+                                            },
+                                            {
+                                                17,
+                                                2,
+                                                {
+                                                    "Main"
+                                                }
+                                            },
+                                            {
+                                                16,
+                                                2,
+                                                {
+                                                    "Floor"
+                                                }
                                             }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                34,
-                                1,
-                                {
-                                    "Universal"
-                                },
-                                {
-                                    {
-                                        36,
-                                        2,
-                                        {
-                                            "Main"
-                                        }
-                                    },
-                                    {
-                                        37,
-                                        2,
-                                        {
-                                            "Visuals"
-                                        }
-                                    },
-                                    {
-                                        35,
-                                        2,
-                                        {
-                                            "Exploits"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                31,
-                                1,
-                                {
-                                    "R&D"
-                                },
-                                {
-                                    {
-                                        33,
-                                        2,
-                                        {
-                                            "Visuals"
-                                        }
-                                    },
-                                    {
-                                        32,
-                                        2,
-                                        {
-                                            "Main"
                                         }
                                     }
                                 }
@@ -12877,37 +11120,28 @@ local ObjectTree = {
                         },
                         {
                             {
+                                11,
+                                2,
+                                {
+                                    "Universal"
+                                }
+                            },
+                            {
                                 5,
                                 1,
                                 {
-                                    "3008"
+                                    "Doors"
                                 },
                                 {
                                     {
                                         6,
                                         2,
                                         {
-                                            "3008"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                9,
-                                1,
-                                {
-                                    "Doors"
-                                },
-                                {
-                                    {
-                                        10,
-                                        2,
-                                        {
                                             "Doors"
                                         }
                                     },
                                     {
-                                        11,
+                                        7,
                                         2,
                                         {
                                             "Lobby"
@@ -12916,289 +11150,24 @@ local ObjectTree = {
                                 }
                             },
                             {
-                                14,
+                                10,
                                 2,
                                 {
                                     "Template"
                                 }
                             },
                             {
-                                7,
-                                1,
-                                {
-                                    "Babft"
-                                },
-                                {
-                                    {
-                                        8,
-                                        2,
-                                        {
-                                            "Babft"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                12,
+                                8,
                                 1,
                                 {
                                     "R&D"
                                 },
                                 {
                                     {
-                                        13,
+                                        9,
                                         2,
                                         {
                                             "R&D"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                15,
-                                2,
-                                {
-                                    "Universal"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        38,
-                        1,
-                        {
-                            "Utils"
-                        },
-                        {
-                            {
-                                57,
-                                1,
-                                {
-                                    "R&D"
-                                },
-                                {
-                                    {
-                                        58,
-                                        2,
-                                        {
-                                            "Assets"
-                                        }
-                                    },
-                                    {
-                                        61,
-                                        2,
-                                        {
-                                            "ESP"
-                                        }
-                                    },
-                                    {
-                                        60,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    },
-                                    {
-                                        59,
-                                        2,
-                                        {
-                                            "Chat"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                64,
-                                1,
-                                {
-                                    "Universal"
-                                },
-                                {
-                                    {
-                                        67,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    },
-                                    {
-                                        66,
-                                        2,
-                                        {
-                                            "Assets"
-                                        }
-                                    },
-                                    {
-                                        65,
-                                        2,
-                                        {
-                                            "Aimbot"
-                                        }
-                                    },
-                                    {
-                                        68,
-                                        2,
-                                        {
-                                            "ESP"
-                                        }
-                                    },
-                                    {
-                                        69,
-                                        2,
-                                        {
-                                            "Player"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                42,
-                                1,
-                                {
-                                    "Babft"
-                                },
-                                {
-                                    {
-                                        43,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                62,
-                                1,
-                                {
-                                    "Template"
-                                },
-                                {
-                                    {
-                                        63,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                39,
-                                1,
-                                {
-                                    "3008"
-                                },
-                                {
-                                    {
-                                        40,
-                                        2,
-                                        {
-                                            "ConnectionsFuncs"
-                                        }
-                                    },
-                                    {
-                                        41,
-                                        2,
-                                        {
-                                            "ESP"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                44,
-                                1,
-                                {
-                                    "Doors"
-                                },
-                                {
-                                    {
-                                        55,
-                                        1,
-                                        {
-                                            "Lobby"
-                                        },
-                                        {
-                                            {
-                                                56,
-                                                2,
-                                                {
-                                                    "Preset"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        45,
-                                        1,
-                                        {
-                                            "Doors"
-                                        },
-                                        {
-                                            {
-                                                51,
-                                                2,
-                                                {
-                                                    "Entities"
-                                                }
-                                            },
-                                            {
-                                                50,
-                                                2,
-                                                {
-                                                    "ESP"
-                                                }
-                                            },
-                                            {
-                                                53,
-                                                2,
-                                                {
-                                                    "Padlock"
-                                                }
-                                            },
-                                            {
-                                                49,
-                                                2,
-                                                {
-                                                    "ConnectionsFuncs"
-                                                }
-                                            },
-                                            {
-                                                52,
-                                                2,
-                                                {
-                                                    "Minecarts"
-                                                }
-                                            },
-                                            {
-                                                47,
-                                                2,
-                                                {
-                                                    "AutoWardrobe"
-                                                }
-                                            },
-                                            {
-                                                46,
-                                                2,
-                                                {
-                                                    "Assets"
-                                                }
-                                            },
-                                            {
-                                                48,
-                                                2,
-                                                {
-                                                    "BreakerBox"
-                                                }
-                                            },
-                                            {
-                                                54,
-                                                2,
-                                                {
-                                                    "Player"
-                                                }
-                                            }
                                         }
                                     }
                                 }
@@ -13223,64 +11192,55 @@ local LineOffsets = {
     8,
     142,
     [6] = 180,
-    [8] = 548,
-    [10] = 718,
-    [11] = 2362,
-    [13] = 2534,
-    [14] = 2771,
-    [15] = 2874,
-    [18] = 3049,
-    [19] = 3217,
-    [20] = 3453,
-    [22] = 3774,
-    [25] = 3931,
-    [26] = 4768,
-    [27] = 5741,
-    [28] = 6075,
-    [30] = 7045,
-    [32] = 7271,
-    [33] = 7323,
-    [35] = 7730,
-    [36] = 7806,
-    [37] = 7943,
-    [40] = 8234,
-    [41] = 8525,
-    [43] = 8658,
-    [46] = 8716,
-    [47] = 8936,
-    [48] = 9187,
-    [49] = 9289,
-    [50] = 9686,
-    [51] = 10024,
-    [52] = 10145,
-    [53] = 10672,
-    [54] = 10709,
-    [56] = 10764,
-    [58] = 10850,
-    [59] = 10870,
-    [60] = 10887,
-    [61] = 10950,
-    [63] = 11143,
-    [65] = 11167,
-    [66] = 11236,
-    [67] = 11265,
-    [68] = 11347,
-    [69] = 11456,
-    [71] = 11485,
-    [72] = 11526,
-    [73] = 11543,
-    [74] = 11724,
-    [81] = 11813,
-    [80] = 11850,
-    [86] = 11879,
-    [79] = 11942,
-    [83] = 12042,
-    [88] = 12095,
-    [76] = 12337,
-    [87] = 12254,
-    [84] = 12317,
-    [77] = 12129,
-    [82] = 12523
+    [7] = 1824,
+    [9] = 1996,
+    [10] = 2233,
+    [11] = 2336,
+    [15] = 2511,
+    [16] = 3348,
+    [17] = 4321,
+    [18] = 4655,
+    [20] = 5625,
+    [22] = 5851,
+    [23] = 5903,
+    [25] = 6310,
+    [26] = 6386,
+    [27] = 6523,
+    [31] = 6814,
+    [32] = 7034,
+    [33] = 7285,
+    [34] = 7387,
+    [35] = 7784,
+    [36] = 8122,
+    [37] = 8243,
+    [38] = 8770,
+    [39] = 8807,
+    [41] = 8862,
+    [43] = 8948,
+    [44] = 8968,
+    [45] = 8985,
+    [46] = 9048,
+    [48] = 9241,
+    [50] = 9265,
+    [51] = 9334,
+    [52] = 9363,
+    [53] = 9445,
+    [54] = 9554,
+    [56] = 9583,
+    [57] = 9624,
+    [58] = 9641,
+    [59] = 9822,
+    [61] = 9911,
+    [62] = 10097,
+    [64] = 10222,
+    [65] = 10322,
+    [66] = 10351,
+    [67] = 10388,
+    [68] = 10399,
+    [69] = 10452,
+    [71] = 10472,
+    [72] = 10535,
+    [73] = 10598
 }
 
 -- Misc AOT variable imports
