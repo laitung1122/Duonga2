@@ -3705,6 +3705,11 @@ elseif Script.IsRooms then
             Toggles.AntiA90:SetValue(true)
             local lastRoomValue = 0
 
+            shared.Notify:Log({
+                Title = "Duong Api",
+                Description = "Đang chạy, đừng điểu khiển :v tránh lỗi",
+            })
+
             local function createNewBlockedPoint(point: PathWaypoint)
                 local block = Instance.new("Part", _internal_mspaint_pathfinding_block)
                 local pathMod = Instance.new("PathfindingModifier", block)
@@ -3732,10 +3737,6 @@ elseif Script.IsRooms then
                     lastRoomValue = latestRoom.Value
                 end
                 
-                Script.Functions.Log({
-                    Title = "Dương-Api",
-                    Description = "Xác định thành công!\nđiểm đến: " .. pathfindingGoal.Parent.Name .. "\ntạo diểm chấm...",
-                }, Toggles.AutoRoomsDebug.Value)
 
                 local path = PathfindingService:CreatePath({
                     AgentCanJump = false,
@@ -3747,10 +3748,6 @@ elseif Script.IsRooms then
                     }
                 })
 
-                Script.Functions.Log({
-                    Title = "Dương-Api",
-                    Description = "Đang tạo đường dẫn " .. pathfindingGoal.Parent.Name .. "...",
-                }, Toggles.AutoRoomsDebug.Value)
 
                 path:ComputeAsync(rootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
                 local waypoints = path:GetWaypoints()
