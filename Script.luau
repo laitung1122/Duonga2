@@ -1,13 +1,8 @@
 local ImportGlobals
-
--- Holds direct closure data (defining this before the DOM tree for line debugging etc)
 local ClosureBindings = {
-    function()local wax,script,require=ImportGlobals(1)local ImportGlobals return (function(...)if getgenv().mspaint_loading then print("[mspaint] Loading stopped. (ERROR: Loading)"); return end
-if getgenv().mspaint_loaded then print("[mspaint] Loading stopped. (ERROR: Already loaded)"); return end
-
+    function()local wax,script,require=ImportGlobals(1)local ImportGlobals return (function(...)if getgenv().mspaint_loading then print("[Dương Api] Đã dừng tải(lỗi)"); return end
+if getgenv().mspaint_loaded then print("[Dương Api] Không thể tải lại script khi đã chạy"); return end
 getgenv().mspaint_loading = true
-
---// Loading Wait \\--
 if not game:IsLoaded() then game.Loaded:Wait() end
 
 --// Services \\--
@@ -18,14 +13,11 @@ Services:GetServices({
     "TextChatService",
     "ProximityPromptService",
     "PathfindingService",
-
     "CoreGui",
     "StarterGui",
-
     "Workspace",
     "Lighting",
     "ReplicatedStorage",
-
     "HttpService",
     "RunService",
     "SoundService",
@@ -130,7 +122,7 @@ require("Utils/GUI/Addons")
 
 shared.Notify:Alert({
     Title = "Dương Api",
-    Description = "Cảm ơn vì đã sài dự án của tôi\n Fb: Dương Ausus!"
+    Description = "Cảm ơn vì đã sài dự án"
 })
 
 getgenv().mspaint_loading = false
@@ -147,36 +139,16 @@ end)() end,
         }
     },
 
-    -- Regular 3008
-    [1000233041] = {
-        ["Folder"] = "3008",
-        ["Main"] = "3008",
-        ["Name"] = "3008"
-    },
-
-    -- 100 Players 3008
-    [3462404408] = {
-        ["Folder"] = "3008",
-        ["Main"] = "3008",
-        ["Name"] = "3008"
-    },
-
     [2091953627] = {
         ["Folder"] = "R&D",
         ["Main"] = "R&D",
         ["Name"] = "R&D"
-    },
-
-    [210851291] = {
-        ["Folder"] = "Babft",
-        ["Main"] = "Babft",
-        ["Name"] = "Build A Boat For Treasure"
     }
 }
 end)() end,
-    [6] = function()local wax,script,require=ImportGlobals(6)local ImportGlobals return (function(...)--// Loading Wait \\--
+    [6] = function()local wax,script,require=ImportGlobals(6)local ImportGlobals return (function(...)
 if shared.LocalPlayer and shared.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and shared.LocalPlayer.PlayerGui.LoadingUI.Enabled then
-    print("[mspaint] Waiting for game to load...")
+    print("[Dương Api] Đang chờ game tải...")
     repeat task.wait() until not shared.LocalPlayer.PlayerGui:FindFirstChild("LoadingUI") and true or not shared.LocalPlayer.PlayerGui.LoadingUI.Enabled
 end
 
@@ -212,9 +184,9 @@ Script.ESPTable = {
 
 Script.Functions.Minecart = {
     pathfindQueue = {},
-    Pathfind = function(...) return true end, --thanks wax, really cool module loading fr fr dawg
-    Teleport = function(...) return true end, --thanks wax, really cool module loading fr fr dawg
-    DrawNodes = function(...) return true end, --thanks wax, really cool module loading fr fr dawg
+    Pathfind = function(...) return true end,
+    Teleport = function(...) return true end,
+    DrawNodes = function(...) return true end,
 
     debug = function(...)
         --if Toggles.MinecartTeleportDebug.Value == false then return end
@@ -223,11 +195,11 @@ Script.Functions.Minecart = {
         for _, v in pairs({ ... }) do
             table.insert(msg, tostring(v))
         end
-        -- shared.Notify:Alert({
-        --     Title = "[DEBUG Minecart TP]",
-        --     Description = table.concat(msg, " "),
-        --     Reason = ""
-        -- })
+         shared.Notify:Alert({
+           Title = "[Đang vá lỗi]",
+            Description = table.concat(msg, " "),
+             Reason = ""
+        })
     end
 }
 
@@ -516,7 +488,7 @@ Script.Tracks = {
 }
 
 function Script.Functions.Warn(message: string)
-    warn("WARN - mspaint:", message)
+    warn("Cảnh báo - DươngApi:", message)
 end
 
 Script._mspaint_custom_captions = Instance.new("ScreenGui"); do
@@ -602,17 +574,17 @@ function Script.Functions.NotifyGlitch()
     if Options.NotifyEntity.Value["Void/Glitch"] and Script.LatestRoom.Value > Script.CurrentRoom + Script.VoidThresholdValues[Script.Floor.Value] and Script.Alive and not table.find(Script.Temp.VoidGlitchNotifiedRooms, Script.CurrentRoom) then
         table.insert(Script.Temp.VoidGlitchNotifiedRooms, Script.CurrentRoom)
 
-        local message = "Void/Glitch sẽ xuất hiện khi mở cửa tiếp theo."
+        local message = "Void/Glitch is coming once the next door is opened."
 
         if Script.IsRooms then
             local roomsLeft = (6 - (Script.LatestRoom.Value - Script.CurrentRoom))
-            message = "Void/Glitch đang đến " .. (if roomsLeft == 0 then " cửa tiếp theo đã mở." else "trong " .. roomsLeft .. " phòng") .. "."
+            message = "Void/Glitch is coming " .. (if roomsLeft == 0 then "once the next door is opened." else "in " .. roomsLeft .. " rooms") .. "."
         end
 
         shared.Notify:Alert({
             Title = "ENTITIES",
             Description = message,
-            Reason = "Đi đến phòng tiếp theo để né tránh.",
+            Reason = "Go to the next room to avoid it.",
 
             Warning = true
         })
@@ -641,11 +613,11 @@ function Script.Functions.UpdateRPC()
     end
 
     wax.shared.BloxstrapRPC.SetRichPresence({
-        details = "Đang chơi DOORS [ Dương Api V2 ]",
+        details = "Playing DOORS [ mspaint v3 ]",
         state = roomNumberPrefix .. prettifiedRoomNumber .. " (" .. if Script.PrettyFloorName[Script.Floor.Value] then Script.PrettyFloorName[Script.Floor.Value] else ("The " .. Script.Floor.Value)  .. ")",
         largeImage = {
             assetId = Script.FloorImages[Script.Floor.Value] or 16875079348,
-            hoverText = "Sử dụng Dương Api V2"
+            hoverText = "Using mspaint v3"
         },
         smallImage = {
             assetId = 6925817108,
@@ -847,7 +819,7 @@ shared.Connect:GiveSignal(workspace.ChildAdded:Connect(function(child)
                         shared.Notify:Alert({
                             Title = "ENTITIES",
                             Description = string.format("%s %s", shortName, Options.NotifyEntityMessage.Value),
-                            Reason = (not Script.EntityTable.NotifyReason[child.Name].Spawned and "Hãy tìm mơi trú ẩn!" or nil),
+                            Reason = (not Script.EntityTable.NotifyReason[child.Name].Spawned and "Go find a hiding place!" or nil),
                             Image = Script.EntityTable.NotifyReason[child.Name].Image,
 
                             Warning = true
@@ -863,7 +835,7 @@ shared.Connect:GiveSignal(workspace.ChildAdded:Connect(function(child)
             shared.Notify:Alert({
                 Title = "ENTITIES",
                 Description = string.format("%s %s", shortName, Options.NotifyEntityMessage.Value),
-                Reason = (not Script.EntityTable.NotifyReason[child.Name].Spawned and "Hãy tìm mơi trú ẩn!" or nil),
+                Reason = (not Script.EntityTable.NotifyReason[child.Name].Spawned and "Go find a hiding place!" or nil),
                 Image = Script.EntityTable.NotifyReason[child.Name].Image,
 
                 Warning = true
@@ -1084,11 +1056,11 @@ shared.Connect:GiveSignal(shared.LocalPlayer.CharacterAdded:Connect(function(new
 
         if Toggles.FakeRevive.Value then
             shared.Notify:Alert({
-                Title = "Giả hồi sinh",
-                Description = "Bạn đã hồi sinh. Tự động dừng lại.",
-                Reason = "Bật lại để chạy thêm",
+                Title = "Fake Revive",
+                Description = "You have revived, fake revive has stopped working.",
+                Reason = "Enable it again to start fake revive",
 
-                LinoriaMessage = "Giả hồi sinh đã dừng hoạt động, bật lại để chạy",
+                LinoriaMessage = "Fake Revive has stopped working, enable it again to start fake revive",
             })
             Toggles.FakeRevive:SetValue(false)
         end
@@ -1202,11 +1174,11 @@ shared.Connect:GiveSignal(shared.LocalPlayer:GetAttributeChangedSignal("CurrentR
     if Script.IsMines and Script.Bypassed and currentRoomModel:GetAttribute("RawName") == "HaltHallway" then
         Script.Bypassed = false
         shared.Notify:Alert({
-            Title = "Dương Api",
-            Description = "Half đã phá hủy bỏ qua gian lận.",
-            Reason = "Hãy lên thang để sửa lại lỗi.",
+            Title = "Anticheat Bypass",
+            Description = "Halt has broken anticheat bypass.",
+            Reason = "Please go on a ladder again to fix it.",
 
-            LinoriaMessage = "Half đã phá hủy bỏ qua gian lận, Hãy lên thang để sửa lại lỗi.",
+            LinoriaMessage = "Halt has broken anticheat bypass, please go on a ladder again to fix it.",
         })
 
         Options.WalkSpeed:SetMax(Toggles.SpeedBypass.Value and 75 or (Toggles.EnableJump.Value and 18 or 22))
@@ -1511,9 +1483,9 @@ shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
                         local result = Anchor:FindFirstChildOfClass("RemoteFunction"):InvokeServer(CurrentGameState.AnchorCode)
                         if result then
                             shared.Notify:Alert({
-                                Title = "Tự động giải mã trụ điện",
-                                Description = "giải mã trụ" .. CurrentAnchor .. " Thành công!",
-                                Reason = "giải mã thành công với code: " .. CurrentGameState.AnchorCode,
+                                Title = "Auto Anchor Solver",
+                                Description = "Solved Anchor " .. CurrentAnchor .. " successfully!",
+                                Reason = "Solved anchor with the code " .. CurrentGameState.AnchorCode,
                             })
                         end
                     end)
@@ -1523,8 +1495,8 @@ shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
             local HoldingItem = Script.Temp.HoldingItem
             if HoldingItem and not shared.isnetworkowner(HoldingItem) then
                 shared.Notify:Alert({
-                    Title = "Dương Api",
-                    Description = "Bạn không còn giữ được vật phẩm này lâu do mạng đổi!",
+                    Title = "Banana/Jeff Throw",
+                    Description = "You are no longer holding the item due to network owner change!",
                 })
                 Script.Temp.HoldingItem = nil
             end
@@ -1615,7 +1587,7 @@ end))
 task.spawn(Script.Functions.SetupCharacterConnection, shared.Character)
 
 shared.Library:OnUnload(function()
-    print("Dừng tải doors")
+    print("Unloading DOORS...")
     if shared.Hooks.mtHook then hookmetamethod(game, "__namecall", shared.Hooks.mtHook) end
     if shared.Hooks._fixDistanceFromCharacter then hookmetamethod(shared.Hooks.LocalPlayer, "__namecall", shared.Hooks._fixDistanceFromCharacter) end
 
@@ -1811,7 +1783,7 @@ shared.Library:OnUnload(function()
     workspace.Terrain.WaterWaveSpeed = 8
     shared.Lighting.GlobalShadows = true
 
-    print("Ngừng tải doors")
+    print("Unloaded DOORS!")
 end)
 
 shared.SubFolder = Script.Floor.Value
@@ -1990,7 +1962,244 @@ end))
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [8] = function()local wax,script,require=ImportGlobals(8)local ImportGlobals return (function(...)--// Linoria \\--
+    [9] = function()local wax,script,require=ImportGlobals(9)local ImportGlobals return (function(...)--// Linoria \\--
+local Toggles = shared.Toggles
+local Options = shared.Options
+
+--// Variables \\--
+local Script = shared.Script
+Script.LoadedRooms = {}
+Script.FeatureConnections = {
+    Door = {},
+    Shell = {},
+    Room = {}
+}
+Script.ESPTable = {
+    Door = {},
+    Entity = {},
+    Battery = {},
+    Locker = {},
+    Player = {},
+    Table = {},
+    None = {}
+}
+
+Script.EntityNames = {
+    ["monster"] = "A-60",
+    ["monster2"] = "A-120",
+    ["Spirit"] = "Pnevma"
+}
+
+Script.CurrentAmbient = shared.Lighting.Ambient
+
+Script._mspaint_custom_captions = Instance.new("ScreenGui") do
+    local Frame = Instance.new("Frame", Script._mspaint_custom_captions)
+    local TextLabel = Instance.new("TextLabel", Frame)
+    local UITextSizeConstraint = Instance.new("UITextSizeConstraint", TextLabel)
+
+    Script._mspaint_custom_captions.Parent = shared.ReplicatedStorage
+    Script._mspaint_custom_captions.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    Frame.BackgroundColor3 = shared.Library.MainColor
+    Frame.BorderColor3 = shared.Library.AccentColor
+    Frame.BorderSizePixel = 2
+    Frame.Position = UDim2.new(0.5, 0, 0.8, 0)
+    Frame.Size = UDim2.new(0, 200, 0, 75)
+    shared.Library:AddToRegistry(Frame, {
+        BackgroundColor3 = "MainColor",
+        BorderColor3 = "AccentColor"
+    })
+
+    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.BackgroundTransparency = 1.000
+    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TextLabel.BorderSizePixel = 0
+    TextLabel.Size = UDim2.new(1, 0, 1, 0)
+    TextLabel.Font = Enum.Font.Code
+    TextLabel.Text = ""
+    TextLabel.TextColor3 = shared.Library.FontColor
+    TextLabel.TextScaled = true
+    TextLabel.TextSize = 14
+    TextLabel.TextWrapped = true
+    shared.Library:AddToRegistry(TextLabel, {
+        TextColor3 = "FontColor"
+    })
+
+    UITextSizeConstraint.MaxTextSize = 35
+
+    function Script.Functions.HideCaptions()
+        Script._mspaint_custom_captions.Parent = shared.ReplicatedStorage
+    end
+
+    local CaptionsLastUsed = os.time()
+    function Script.Functions.Captions(caption: string)
+        CaptionsLastUsed = os.time()
+
+        if Script._mspaint_custom_captions.Parent == shared.ReplicatedStorage then
+            local success = pcall(function()
+                Script._mspaint_custom_captions.Parent = if gethui then gethui() else shared.CoreGui
+            end)
+
+            if not success then
+                Script._mspaint_custom_captions.Parent = shared.PlayerGui
+            end 
+        end
+        
+        TextLabel.Text = caption
+
+        task.spawn(function()
+            task.wait(5)
+            if os.time() - CaptionsLastUsed >= 5 then
+                Script.Functions.HideCaptions()
+            end
+        end)
+    end
+end
+
+--// Player Variables \\--
+shared.Character = shared.LocalPlayer.Character or shared.LocalPlayer.CharacterAdded:Wait()
+shared.Humanoid = nil
+
+Script.MainUI = shared.PlayerGui:WaitForChild("MainGui")
+
+--// Functions \--
+function Script.Functions.RandomString()
+    local length = math.random(10,20)
+    local array = {}
+    for i = 1, length do
+        array[i] = string.char(math.random(32, 126))
+    end
+    return table.concat(array)
+end
+
+shared.Load("Utils", "Assets")
+shared.Load("Utils", "Chat")
+shared.Load("Utils", "ESP")
+
+shared.Load("Utils", "ConnectionsFuncs")
+
+--// Tabs \\--
+Script.Tabs = {
+    Main = shared.Window:AddTab("Main"),
+    Visuals = shared.Window:AddTab("Visuals")
+}
+
+shared.Load("Tabs", "Main")
+shared.Load("Tabs", "Visuals")
+
+--// Metamethod hooks \\--
+if wax.shared.ExecutorSupport["hookmetamethod"] and wax.shared.ExecutorSupport["getnamecallmethod"] then
+    shared.Hooks.mtHook = hookmetamethod(game, "__namecall", function(self, ...)
+        local args = {...}
+        local namecall = getnamecallmethod()
+    
+        if getcallingscript() and namecall == "SetCore" and args[1] == "DevConsoleVisible" and args[2] == false then
+            args[2] = game:GetService("StarterGui"):GetCore("DevConsoleVisible")
+            return shared.Hooks.mtHook(self, table.unpack(args))
+        end
+    
+        return shared.Hooks.mtHook(self, ...)
+    end)
+end
+
+--// Connections \\--
+shared.Connect:GiveSignal(shared.LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    task.delay(1, Script.Functions.SetupCharacterConnection, newCharacter)
+end))
+
+shared.Connect:GiveSignal(shared.PlayerGui.ChildAdded:Connect(function(child)
+    if child.Name == "MainGui" then
+        task.delay(1, Script.Functions.SetupUIConnection, child)
+    end
+end))
+
+shared.Connect:GiveSignal(workspace.rooms.ChildAdded:Connect(function(room)
+    Script.Functions.SetupRoomConnection(room)
+end))
+shared.Connect:GiveSignal(workspace.next.ChildAdded:Connect(function(room)
+    Script.Functions.SetupRoomConnection(room)
+end))
+
+--// Entity Handler
+shared.Connect:GiveSignal(workspace.ChildAdded:Connect(function(child)
+    local entityName = Script.EntityNames[child.Name]
+    if not entityName then return end
+
+    if child:FindFirstChild("wind") then
+        entityName = "A-200"
+    end
+
+    if Toggles.EntityESP.Value then
+        Script.Functions.EntityESP(child, entityName)
+    end
+
+    if Toggles.NotifyEntity.Value then
+        shared.Notify:Alert({
+            Title = "ENTITIES",
+            Description = entityName .. " has spawned!"
+        })
+    
+        if Toggles.NotifyChat.Value then
+            Script.Functions.Chat(string.format("%s %s", entityName, Options.NotifyEntityMessage.Value))
+        end
+    end
+end))
+
+shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
+    if shared.Character then
+        if shared.Humanoid then
+            if Toggles.SpeedHack.Value then shared.Humanoid.WalkSpeed = Options.WalkSpeed.Value end
+        end
+    end
+
+    if wax.shared.ExecutorSupport["getrenv"] then
+        if Toggles.InfStamina.Value then
+            getrenv()._G.stamina = 100
+        end
+    
+        if Toggles.InfFlashlight.Value then
+            getrenv()._G.flashlightcharge = 100
+        end
+    end
+end))
+
+--// Load \\--
+Instance.new("BoolValue", shared.LocalPlayer).Name = "cheats"
+task.spawn(Script.Functions.SetupCharacterConnection, shared.Character)
+task.spawn(Script.Functions.SetupLightingConnection)
+task.spawn(Script.Functions.SetupUIConnection)
+
+--// Unload \\--
+shared.Library:OnUnload(function()
+    if shared.Hooks.mtHook then hookmetamethod(game, "__namecall", shared.Hooks.mtHook) end
+
+    local slender = Script.MainUI and Script.MainUI:FindFirstChild("slender")
+    if slender then
+        slender.ImageTransparency = 0
+        for _, bar in pairs(slender:GetChildren()) do
+            bar.Visible = true
+        end
+    end
+
+    for _, espType in pairs(Script.ESPTable) do
+        for _, esp in pairs(espType) do
+            esp.Destroy()
+        end
+    end
+
+    for _, category in pairs(Script.FeatureConnections) do
+        for _, connection in pairs(category) do
+            connection:Disconnect()
+        end
+    end
+
+    print("Unloading " .. shared.ScriptName .. "...")
+end)
+
+getgenv().mspaint_loaded = true
+end)() end,
+    [10] = function()local wax,script,require=ImportGlobals(10)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -2093,182 +2302,7 @@ end)
 
 getgenv().mspaint_loaded = true
 end)() end,
-    [9] = function()local wax,script,require=ImportGlobals(9)local ImportGlobals return (function(...)--// Linoria \\--
-local Toggles = shared.Toggles
-local Options = shared.Options
-
---// Variables \\--
-local Script = shared.Script
-Script.FeatureConnections = {
-    Character = {},
-    Humanoid = {},
-    Player = {},
-    RootPart = {},
-}
-Script.ESPTable = {
-    Player = {},
-    None = {}
-}
-Script.AimbotTween = nil
-
-shared.Character = shared.LocalPlayer.Character or shared.LocalPlayer.CharacterAdded:Wait()
-Script.GameName = "a roblox experience"
-
---// Functions \\--
-function Script.Functions.UpdateBloxstrapRPC()
-    if not wax.shared.BloxstrapRPC then return end
-
-    wax.shared.BloxstrapRPC.SetRichPresence({
-        details = "Đang chơi " .. Script.GameName .. " [ Dương Api V2 ]",
-        state = #shared.Players:GetPlayers() .. " người chơi trong server",
-        largeImage = {
-            hoverText = "Dương Api V2"
-        },
-        smallImage = {
-            assetId = 6925817108,
-            hoverText = shared.LocalPlayer.Name
-        }
-    })
-end
-
-
-shared.Load("Utils", "Player")
-shared.Load("Utils", "Assets")
-shared.Load("Utils", "Aimbot")
-shared.Load("Utils", "ESP")
-
-shared.Load("Utils", "ConnectionsFuncs")
-
---// Tabs \\--
-Script.Tabs = {
-    Main = shared.Window:AddTab("Main"),
-    Exploits = shared.Window:AddTab("Exploits"),
-    Visuals = shared.Window:AddTab("Visuals")
-}
-
-shared.Load("Tabs", "Main")
-shared.Load("Tabs", "Exploits")
-shared.Load("Tabs", "Visuals")
-
---// Code \\--
-
---// Players Connection \\--
-for _, player in pairs(shared.Players:GetPlayers()) do
-    if player == shared.LocalPlayer then continue end
-    Script.Functions.SetupOtherPlayerConnection(player)
-end
-shared.Connect:GiveSignal(shared.Players.PlayerAdded:Connect(Script.Functions.SetupOtherPlayerConnection))
-
---// Local Player Connection \\--
-shared.Connect:GiveSignal(shared.LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-    task.delay(1, Script.Functions.SetupCharacterConnection, newCharacter)
-end))
-
-shared.Connect:GiveSignal(shared.ProximityPromptService.PromptButtonHoldBegan:Connect(function(prompt)
-    if Toggles.InstaInteract.Value then
-        shared.fireproximityprompt(prompt)
-    end
-end))
-
---// Run Service \\--
-shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
-    if shared.Character then
-        if shared.Humanoid then
-            if Toggles.SpeedHack.Value then shared.Humanoid.WalkSpeed = Options.WalkSpeed.Value end
-            if Toggles.JumpPowerHack.Value then shared.Humanoid.JumpPower = Options.JumpPower.Value end
-        end
-
-        if Toggles.Noclip.Value then
-            for _, part in pairs(shared.Character:GetDescendants()) do
-                if not part:IsA("BasePart") then continue end
-                part.CanCollide = false
-            end        
-        end
-
-        if Toggles.EnableAimbot.Value and (shared.Library.IsMobile or Options.EnableAimbotKey:GetState()) then
-            local closest = nil
-            if Options.AimbotClosestMethod.Value == "Mouse" then
-                closest = Script.Functions.GetClosestFromMouse()
-            elseif Options.AimbotClosestMethod.Value == "Character" then
-                closest = Script.Functions.GetClosestFromCharacter()
-            end
-
-            if closest then
-                if Toggles.AimbotSmooth.Value then
-                    Script.AimbotTween = shared.TweenService:Create(shared.Camera, TweenInfo.new(Options.AimbotSmoothness.Value / 100, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {
-                        CFrame = CFrame.new(shared.Camera.CFrame.Position, closest[Options.AimbotTargetPart.Value].Position)
-                    })
-                    Script.AimbotTween:Play()
-                else
-                    shared.Camera.CFrame = CFrame.new(shared.Camera.CFrame.Position, closest[Options.AimbotTargetPart.Value].Position)
-                end
-            end
-        elseif Script.AimbotTween then
-            Script.AimbotTween:Cancel()
-            Script.AimbotTween = nil
-        end
-    end
-end))
-
---// Load \\--
-local success, gameName = pcall(function()
-    return shared.MarketplaceService:GetProductInfo(game.PlaceId).Name
-end)
-
-if success then Script.GameName = gameName end
-Script.Functions.UpdateBloxstrapRPC()
-
-task.spawn(Script.Functions.SetupCharacterConnection, shared.Character)
-task.spawn(Script.Functions.SetupChildConnection)
-task.spawn(Script.Functions.SetupBloxstrapRPCConnection)
-
---// Unload \\--
-shared.Library:OnUnload(function()
-    if wax.shared.BloxstrapRPC then
-        wax.shared.BloxstrapRPC.SetRichPresence({
-            details = "<reset>",
-            state = "<reset>",
-            largeImage = {
-                reset = true
-            },
-            smallImage = {
-                reset = true
-            }
-        })
-    end
-
-    for _, espType in pairs(Script.ESPTable) do
-        for _, esp in pairs(espType) do
-            esp.Destroy()
-        end
-    end
-
-    for _, object in pairs(workspace:GetDescendants()) do
-        if object:IsA("BasePart") then
-            if not object:GetAttribute("Material") then object:SetAttribute("Material", object.Material) end
-            if not object:GetAttribute("Reflectance") then object:SetAttribute("Reflectance", object.Reflectance) end
-
-            object.Material = object:GetAttribute("Material")
-            object.Reflectance = object:GetAttribute("Reflectance")
-        elseif object:IsA("Decal") then
-            if not object:GetAttribute("Transparency") then object:SetAttribute("Transparency", object.Transparency) end
-            
-            object.Transparency = object:GetAttribute("Transparency")
-        end
-    end
-
-    workspace.Terrain.WaterReflectance = 1
-    workspace.Terrain.WaterTransparency = 1
-    workspace.Terrain.WaterWaveSize = 0.05
-    workspace.Terrain.WaterWaveSpeed = 8
-    shared.Lighting.GlobalShadows = true
-
-    shared.Twerk:Disable()
-end)
-
-getgenv().mspaint_loaded = true
-end)() end,
-    [13] = function()local wax,script,require=ImportGlobals(13)local ImportGlobals return (function(...)--// Linoria \\--
+    [14] = function()local wax,script,require=ImportGlobals(14)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -2276,52 +2310,52 @@ local Options = shared.Options
 local Script = shared.Script
 local Tabs = Script.Tabs
 
---// Antidoor \\--
-local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Chống quái") do
+--// Exploits \\--
+local AntiEntityGroupBox = Tabs.Exploits:AddLeftGroupbox("Anti-Entity") do
     AntiEntityGroupBox:AddToggle("AntiDread", {
-        Text = "Chống-Dread",
+        Text = "Anti-Dread",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiHalt", {
-        Text = "Chống-Halt",
+        Text = "Anti-Halt",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiScreech", {
-        Text = "Chống Screech hù dọa",
+        Text = "Anti-Screech",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiDupe", {
-        Text = "Chống-" .. (Script.IsBackdoor and "Vacuum" or "Dupe"),
+        Text = "Anti-" .. (Script.IsBackdoor and "Vacuum" or "Dupe"),
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiEyes", {
-        Text = "Chống-" .. (Script.IsBackdoor and "Lookman" or "Eyes"),
+        Text = "Anti-" .. (Script.IsBackdoor and "Lookman" or "Eyes"),
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiSnare", {
-        Text = "Chống bẫy",
+        Text = "Anti-Snare",
         Default = false
     })
 
     AntiEntityGroupBox:AddToggle("AntiHearing", {
-        Text = "Chống Figure nghe thấy",
+        Text = "Anti-Figure Hearing",
         Default = false,
         Visible = not Script.IsFools
     })
 end
 
-local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trôn vn") do
+local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trolling") do
     TrollingGroupBox:AddToggle("SpamOtherTools", {
-        Text = "Tạo một số công cụ",
+        Text = "Spam Other Tools",
         Default = false
     }):AddKeyPicker("SpamOtherTools", {
         Default = "X",
-        Text = "Tạo một số công cụ",
+        Text = "Spam Other Tools",
         Mode = shared.Library.IsMobile and "Toggle" or "Hold",
         SyncToggleState = shared.Library.IsMobile
     })
@@ -2332,19 +2366,19 @@ local TrollingGroupBox = Tabs.Exploits:AddLeftGroupbox("Trôn vn") do
     })
 
     TrollingGroupBox:AddToggle("Twerk", {
-        Text = "Nhảy",
+        Text = "Twerk",
         Default = false
     })
 end
 
-local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bỏ qua") do
+local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bypass") do
     BypassGroupBox:AddToggle("SpeedBypass", {
-        Text = "Tăng thêm tốc độ",
+        Text = "Speed Bypass",
         Default = false
     })
 
     BypassGroupBox:AddSlider("SpeedBypassDelay", {
-        Text = "Độ trễ khi tăng tốc",
+        Text = "Speed Bypass Delay",
         Default = 0.23,
         Min = 0.22,
         Max = 0.25,
@@ -2355,52 +2389,52 @@ local BypassGroupBox = Tabs.Exploits:AddRightGroupbox("Bỏ qua") do
     BypassGroupBox:AddDivider()
 
     BypassGroupBox:AddToggle("AnticheatManipulation", {
-        Text = "Can thiệp anticheat",
+        Text = "Anticheat Manipulation",
         Default = false,
     }):AddKeyPicker("AnticheatManipulationKey", {
         Default = "T",
-        Text = "Can thiệp anticheat",
+        Text = "Anticheat Manipulation",
         Mode = shared.Library.IsMobile and "Toggle" or "Hold",
         SyncToggleState = shared.Library.IsMobile
     })
 
     BypassGroupBox:AddToggle("CollisionOffsetGodmode", {
-        Text = "Bất tử",
+        Text = "Godmode",
         Default = false,
         Risky = true,
-        Tooltip = "Có thể làm game chậm và lỗi",
+        Tooltip = "Lags you back and is buggy with crouch",
     }):AddKeyPicker("CollisionOffsetGodmodeKey", {
         Mode = "Toggle",
         Default = "K",
-        Text = "Bất tử",
+        Text = "Godmode",
         SyncToggleState = true
     })
 
     BypassGroupBox:AddDivider()
     
     BypassGroupBox:AddToggle("InfItems", {
-        Text = "Vô hạn vật phẩm",
+        Text = "Infinite Items",
         Default = false,
         Visible = not Script.IsFools
     })
 
     BypassGroupBox:AddToggle("InfCrucifix", {
-        Text = "Thánh giá vô hạn",
+        Text = "Infinite Crucifix",
         Default = false,
         Visible = not Script.IsFools,
-        Tooltip = "Rất rủi ro, bạn có thể chết và mất vật phẩm",
+        Tooltip = "Very risky, you might die/lose the crucifix",
         Risky = true
     })
 
     BypassGroupBox:AddDivider()
 
     BypassGroupBox:AddToggle("FakeRevive", {
-        Text = "Giả hồi sinh",
+        Text = "Fake Revive",
         Default = false
     })
 
     BypassGroupBox:AddToggle("DeleteSeek", {
-        Text = "Xóa seek (FE)",
+        Text = "Delete Seek (FE)",
         Default = false
     })
 end
@@ -2531,17 +2565,17 @@ Toggles.FakeRevive:OnChanged(function(value)
     if value and Script.Alive and shared.Character and not Script.FakeRevive.Enabled then
         if Script.LatestRoom and Script.LatestRoom.Value == 0 then
             shared.Notify:Alert({
-                Title = "Dương Api",
-                Description = "Bạn phải mở cửa tiếp theo để sử dụng tính năng này",
-                Reason = "Bạ đang ở phòng thứ nhất"
+                Title = "Fake Revive",
+                Description = "You have to open the next door to use fake revive",
+                Reason = "You are in the first room"
             })
             repeat task.wait() until Script.LatestRoom.Value > 0
         end
 
         shared.Notify:Alert({
-            Title = "Dương Api",
-            Description = "Phải tìm nơi để hẹo hoặc đợi 20s\nĐể hoạt động.",
-            Reason = "Bạn vẫn chưa hẹo",
+            Title = "Fake Revive",
+            Description = "Please find a way to die or wait for around 20 seconds\nfor fake revive to work.",
+            Reason = "You are not yet dead",
             Time = 20
         })
         
@@ -2567,9 +2601,9 @@ Toggles.FakeRevive:OnChanged(function(value)
         if Script.Alive and not Toggles.FakeRevive.Value then
             Script.RemotesFolder.Underwater:FireServer(false)
             shared.Notify:Alert({
-                Title = "Dương Api",
-                Description = "Đã tắt tính năng",
-                Reason = "Bạn vẫn chưa chết",
+                Title = "Fake Revive",
+                Description = "Fake revive has been disabled, was unable to kill player.",
+                Reason = "You are not yet dead",
             })
             oxygenModule.Enabled = true
             healthModule.Enabled = true
@@ -2878,7 +2912,7 @@ Toggles.FakeRevive:OnChanged(function(value)
             end
 
             if doStepped ~= false then
-                shared.Library:Notify("Bạn không còn hiển thị với người khác do bị mất mạng với nhân vật của bạn.", 5);
+                shared.Library:Notify("You are not longer visible to others because you have lost Network Ownership of your shared.Character.", 5);
 
                 for _,v in pairs(previewCharacter:GetDescendants()) do
                     if v:IsA("BasePart") then 
@@ -2938,7 +2972,7 @@ Toggles.FakeRevive:OnChanged(function(value)
             end
 
             if not shared.Character:FindFirstChild("HumanoidRootPart") then
-                shared.Library:Notify("Bạn đã mất hoàn toàn Quyền sở hữu mạng của Nhân vật được chia sẻ của bạn do phá vỡ Cái chết giả.", 5);
+                shared.Library:Notify("You have completely lost Network Ownership of your shared.Character which resulted of breaking Fake Death.", 5);
                 task.spawn(usePreviewCharacter, false)
                 Script.FakeRevive.Connections["mainStepped"]:Disconnect()
 
@@ -3084,9 +3118,9 @@ Toggles.FakeRevive:OnChanged(function(value)
         shared.Connect:GiveSignal(Script.FakeRevive.Connections["CurrentRoomFix"])
 
         shared.Notify:Alert({
-            Title = "Dương Api",
-            Description = "Đã giả chết thành công, hãy tận hưởng!",
-            Reason = 'Bạn đã chết',
+            Title = "Fake Revive",
+            Description = "Fake Revive is now initialized, have fun!",
+            Reason = 'You are now "dead"',
         })
     end
 end)
@@ -3105,7 +3139,7 @@ Toggles.CollisionOffsetGodmode:OnChanged(function(value)
     end
 end)
 end)() end,
-    [14] = function()local wax,script,require=ImportGlobals(14)local ImportGlobals return (function(...)--// Linoria \\--
+    [15] = function()local wax,script,require=ImportGlobals(15)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -3113,45 +3147,45 @@ local Options = shared.Options
 local Script = shared.Script
 local Tabs = Script.Tabs
 
---// Floordoor\\--
+--// Floor \\--
 if Script.IsHotel then
-    local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
+    local Hotel_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Hotel_AntiEntityGroupBox:AddToggle("AntiSeekObstructions", {
-            Text = "Xóa vật cản từ seek",
+            Text = "Anti-Seek Obstructions",
             Default = false
         })
     end
 
-    local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bỏ qua") do
+    local Hotel_BypassGroupBox = Tabs.Floor:AddLeftGroupbox("Bypass") do
         Hotel_BypassGroupBox:AddToggle("AvoidRushAmbush", {
-            Text = "Né tránh Rush/Ambush",
-            Tooltip = "Không hoạt động ở greenhouse :(",
+            Text = "Avoid Rush/Ambush",
+            Tooltip = "Doesn't work for greenhouse :(",
             Default = false,
             Risky = true
         })
     end
 
-    local Hotel_FarmGroupBox = Tabs.Floor:AddLeftGroupbox("Cày vật phẩm") do
+    local Hotel_FarmGroupBox = Tabs.Floor:AddLeftGroupbox("Farm") do
         Hotel_FarmGroupBox:AddToggle("KnobFarm", {
-            Text = "Cày Knob",
-            Tooltip = "Chỉ hoạt động ở cửa 100 và có figure xuất hiện",
+            Text = "Knob Farm",
+            Tooltip = "Only works in Room 100 and figure is spawned",
             Default = false
         })
     end
 
-    local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Tính năng khác") do
+    local Hotel_ModifiersGroupBox = Tabs.Floor:AddRightGroupbox("Modifiers") do
         Hotel_ModifiersGroupBox:AddToggle("NoVoiceActing", {
-            Text = "Không có âm thanh lồng tiếng",
+            Text = "No Voice Acting",
             Default = false
         })
 
         Hotel_ModifiersGroupBox:AddToggle("AntiA90", {
-            Text = "Chống-A90",
+            Text = "Anti-A90",
             Default = false
         })
 
         Hotel_ModifiersGroupBox:AddToggle("NoJammin", {
-            Text = "Không có Jammin",
+            Text = "No Jammin",
             Default = false
         })
     end
@@ -3232,9 +3266,9 @@ if Script.IsHotel then
         if jamminEffect then jamminEffect.Enabled = not value end
     end)
 elseif Script.IsMines then
-    local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Di chuyển") do
+    local Mines_MovementGroupBox = Tabs.Floor:AddLeftGroupbox("Movement") do
         Mines_MovementGroupBox:AddSlider("MaxSlopeAngle", {
-            Text = "Độ nghiêng sàn tối đa",
+            Text = "Max Floor Angle",
             Default = 45,
             Min = 0,
             Max = 90,
@@ -3242,41 +3276,41 @@ elseif Script.IsMines then
         })
     end
 
-    local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
+    local Mines_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Mines_AntiEntityGroupBox:AddToggle("AntiGiggle", {
-            Text = "Tránh bị giggle cắn",
+            Text = "Anti-Giggle",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiGloomEgg", {
-            Text = "Tránh dẫm phải gloomEgg",
+            Text = "Anti-Gloom Egg",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiBridgeFall", {
-            Text = "Chống bị đá rơi vô đầu",
+            Text = "Anti-Bridge Fall",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiPipeGap", {
-            Text = "Chống Pipe Gap",
+            Text = "Anti-Pipe Gap",
             Default = false
         })
 
         Mines_AntiEntityGroupBox:AddToggle("AntiSeekFlood", {
-            Text = "Chống bị seek ngập vô",
+            Text = "Anti-Seek Flood",
             Default = false
         })
     end
 
-    local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
+    local Mines_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
         Mines_AutomationGroupBox:AddButton({
-            Text = "Phá đảo cửa 200",
+            Text = "Beat Door 200",
             Func = function()
                 if Script.LatestRoom.Value < 99 then
                     shared.Notify:Alert({
-                        Title = "Dương Api",
-                        Description = "Bạn chưa tới cửa 200...",
+                        Title = "Beat Door 200",
+                        Description = "You haven't reached door 200...",
                         Time = 5
                     })
 
@@ -3340,27 +3374,27 @@ elseif Script.IsMines then
         })
 
         Mines_AutomationGroupBox:AddToggle("TheMinesAnticheatBypass", {
-            Text = "Bỏ qua hệ thống chống gian lận",
+            Text = "Anticheat Bypass",
             Default = false
         })
     end
 
-    local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bỏ qua") do
+    local Mines_BypassGroupBox = Tabs.Floor:AddRightGroupbox("Bypass") do
         Mines_BypassGroupBox:AddToggle("MinecartTeleport", {
-            Text = "Dịch chuyển xe mỏ",
+            Text = "Minecart Teleport",
             Default = false
         })
 
         Mines_BypassGroupBox:AddToggle("MinecartTeleportDebug", {
-            Text = "Vá lỗi dịch chuyển",
+            Text = "Minecart Teleport Debug",
             Default = false,
             Visible = true,
         })
     end
     
-    local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Tầm nhìn") do
+    local Mines_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visuals") do
         Mines_VisualGroupBox:AddToggle("MinecartPathVisualiser", {
-            Text = "Hiển thị đường đi đúng",
+            Text = "Visualize Correct Seek Path",
             Default = false
         })
     end
@@ -3537,14 +3571,14 @@ elseif Script.IsMines then
 elseif Script.IsBackdoor then
     local Backdoors_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Backdoors_AntiEntityGroupBox:AddToggle("AntiHasteJumpscare", {
-            Text = "Chặn Haste dọa",
+            Text = "Anti Haste Jumpscare",
             Default = false
         })
     end
 
     local Backdoors_VisualGroupBox = Tabs.Floor:AddRightGroupbox("Visual") do
         Backdoors_VisualGroupBox:AddToggle("HasteClock", {
-            Text = "Đồng hồ Haste",
+            Text = "Haste Clock",
             Default = true
         })
     end
@@ -3586,16 +3620,16 @@ elseif Script.IsBackdoor then
         end
     end))
 elseif Script.IsRooms then
-    local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Chống quái") do
+    local Rooms_AntiEntityGroupBox = Tabs.Floor:AddLeftGroupbox("Anti-Entity") do
         Rooms_AntiEntityGroupBox:AddToggle("AntiA90", {
-            Text = "Chống A90",
+            Text = "Anti-A90",
             Default = false
         })
     end
 
-    local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Tự động") do
+    local Rooms_AutomationGroupBox = Tabs.Floor:AddRightGroupbox("Automation") do
         Rooms_AutomationGroupBox:AddToggle("AutoRooms", {
-            Text = "Tự động A1000",
+            Text = "Auto Rooms",
             Default = false
         })
 
@@ -3604,12 +3638,12 @@ elseif Script.IsRooms then
         Rooms_AutomationGroupBox:AddDivider()
 
         Rooms_AutomationGroupBox:AddToggle("AutoRoomsDebug", { 
-            Text = "Hiển thị vá lỗi",
+            Text = "Show Debug Info",
             Default = false
         })
         
         Rooms_AutomationGroupBox:AddToggle("ShowAutoRoomsPathNodes", { 
-            Text = "Hiển thị ghi chú",
+            Text = "Show Pathfinding Nodes",
             Default = false
         })
 
@@ -3617,17 +3651,17 @@ elseif Script.IsRooms then
 
     Toggles.AntiA90:OnChanged(function(value)
         if Toggles.AutoRooms.Value and not value then
-            Script.Functions.Alert({
-                Title = "Phá đảo A-1000",
-                Description = "Cần bật chống A-90 để chạy ổn định!",
-                Reason = "Đã bật chống A-90",
+            shared.Notify:Alert({
+                Title = "Auto Rooms",
+                Description = "Anti A-90 is required for Auto Rooms to work!",
+                Reason = "Anti A-90 has been enabled",
             })
             
             Toggles.AntiA90:SetValue(true)
         end
 
-        if not mainGame then return end
-        local module = mainGame:FindFirstChild("A90", true) or mainGame:FindFirstChild("_A90", true)
+        if not Script.MainGame then return end
+        local module = Script.MainGame:FindFirstChild("A90", true) or Script.MainGame:FindFirstChild("_A90", true)
     
         if module then
             module.Name = value and "_A90" or "A90"
@@ -3644,14 +3678,14 @@ elseif Script.IsRooms then
             return GoalLocker.PrimaryPart
         end
 
-        return workspace.CurrentRooms[latestRoom.Value].Door.Door
+        return workspace.CurrentRooms[Script.LatestRoom.Value].RoomExit
     end
 
-    local _internal_mspaint_pathfinding_nodes = Instance.new("Folder", Workspace) do
+    local _internal_mspaint_pathfinding_nodes = Instance.new("Folder", shared.Workspace) do
         _internal_mspaint_pathfinding_nodes.Name = "_internal_mspaint_pathfinding_nodes"
     end
 
-    local _internal_mspaint_pathfinding_block = Instance.new("Folder", Workspace) do
+    local _internal_mspaint_pathfinding_block = Instance.new("Folder", shared.Workspace) do
         _internal_mspaint_pathfinding_block.Name = "_internal_mspaint_pathfinding_block"
     end
 
@@ -3664,21 +3698,21 @@ elseif Script.IsRooms then
         end
     end)
 
-    Library:GiveSignal(RunService.RenderStepped:Connect(function()
+    shared.Connect:GiveSignal(shared.RunService.RenderStepped:Connect(function()
         if not Toggles.AutoRooms.Value then return end
 
         local entity = (workspace:FindFirstChild("A60") or workspace:FindFirstChild("A120"))
         local isEntitySpawned = (entity and entity.PrimaryPart.Position.Y > -10)
         
-        if isEntitySpawned and not rootPart.Anchored then
+        if isEntitySpawned and not shared.RootPart.Anchored then
             local pathfindingGoal = Script.Functions.GetAutoRoomsPathfindingGoal()
 
             if Script.Functions.IsPromptInRange(pathfindingGoal.Parent.HidePrompt) then
-                forceFirePrompt(pathfindingGoal.Parent.HidePrompt)
+                shared.forcefireproximityprompt(pathfindingGoal.Parent.HidePrompt)
             end
-        elseif not isEntitySpawned and rootPart.Anchored then
+        elseif not isEntitySpawned and shared.RootPart.Anchored then
             for i = 1, 10 do
-                remotesFolder.CamLock:FireServer()
+                Script.RemotesFolder.CamLock:FireServer()
             end
         end
     end))
@@ -3693,10 +3727,10 @@ elseif Script.IsRooms then
         end
 
         local function moveToCleanup()
-            if humanoid then
-                humanoid:Move(rootPart.Position)
-                humanoid.WalkToPart = nil
-                humanoid.WalkToPoint = rootPart.Position
+            if shared.Humanoid then
+                shared.Humanoid:Move(shared.RootPart.Position)
+                shared.Humanoid.WalkToPart = nil
+                shared.Humanoid.WalkToPoint = shared.RootPart.Position
             end
             nodeCleanup()
         end
@@ -3704,11 +3738,6 @@ elseif Script.IsRooms then
         if value then
             Toggles.AntiA90:SetValue(true)
             local lastRoomValue = 0
-
-            shared.Notify:Log({
-                Title = "Duong Api",
-                Description = "Đang chạy, đừng điểu khiển :v tránh lỗi",
-            })
 
             local function createNewBlockedPoint(point: PathWaypoint)
                 local block = Instance.new("Part", _internal_mspaint_pathfinding_block)
@@ -3732,13 +3761,17 @@ elseif Script.IsRooms then
             local function doAutoRooms()
                 local pathfindingGoal = Script.Functions.GetAutoRoomsPathfindingGoal()
 
-                if latestRoom.Value ~= lastRoomValue then
+                if Script.LatestRoom.Value ~= lastRoomValue then
                     _internal_mspaint_pathfinding_block:ClearAllChildren()
-                    lastRoomValue = latestRoom.Value
+                    lastRoomValue = Script.LatestRoom.Value
                 end
                 
+                shared.Notify:Log({
+                    Title = "Auto Rooms",
+                    Description = "Calculated Objective Successfully!\nObjective: " .. pathfindingGoal.Parent.Name .. "\nCreating path...",
+                }, Toggles.AutoRoomsDebug.Value)
 
-                local path = PathfindingService:CreatePath({
+                local path = shared.PathfindingService:CreatePath({
                     AgentCanJump = false,
                     AgentCanClimb = false,
                     WaypointSpacing = 2,
@@ -3748,8 +3781,12 @@ elseif Script.IsRooms then
                     }
                 })
 
+                shared.Notify:Log({
+                    Title = "Auto Rooms",
+                    Description = "Computing Path to " .. pathfindingGoal.Parent.Name .. "...",
+                }, Toggles.AutoRoomsDebug.Value)
 
-                path:ComputeAsync(rootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
+                path:ComputeAsync(shared.RootPart.Position - Vector3.new(0, 2.5, 0), pathfindingGoal.Position)
                 local waypoints = path:GetWaypoints()
                 local waypointAmount = #waypoints
 
@@ -3758,23 +3795,23 @@ elseif Script.IsRooms then
                     task.spawn(function()
                         task.wait(0.1)
                         hasResetFailsafe = false
-                        if humanoid and collision then
-                            local checkFloor = humanoid.FloorMaterial
+                        if shared.Humanoid and Script.Collision then
+                            local checkFloor = shared.Humanoid.FloorMaterial
                             local isStuck = checkFloor == Enum.Material.Air or checkFloor == Enum.Material.Concrete
                             if isStuck then
                                 repeat task.wait()
-                                    collision.CanCollide = false
-                                    collision.CollisionCrouch.CanCollide = true
+                                    Script.Collision.CanCollide = false
+                                    Script.Collision.CollisionCrouch.CanCollide = not (Toggles.CollisionOffsetGodmode.Value or shared.Library.IsMobile or Options.CollisionOffsetGodmodeKey:GetState())
                                 until not isStuck or hasResetFailsafe
-                                collision.CanCollide = true
+                                Script.Collision.CanCollide = not (Toggles.CollisionOffsetGodmode.Value and (shared.Library.IsMobile or Options.CollisionOffsetGodmodeKey:GetState()))
                             end
                             hasResetFailsafe = true
                         end
                     end)
 
-                    Script.Functions.Log({
-                        Title = "Dương-Api",
-                        Description = "Tính toán thành công với " .. waypointAmount .. " điểm!",
+                    shared.Notify:Log({
+                        Title = "Auto Rooms",
+                        Description = "Computed path successfully with " .. waypointAmount .. " waypoints!",
                     }, Toggles.AutoRoomsDebug.Value)
 
                     _internal_mspaint_pathfinding_nodes:ClearAllChildren()
@@ -3796,14 +3833,14 @@ elseif Script.IsRooms then
                     for i, waypoint in pairs(waypoints) do
                         local moveToFinished = false
                         local recalculate = false
-                        local waypointConnection = humanoid.MoveToFinished:Connect(function() moveToFinished = true end)
+                        local waypointConnection = shared.Humanoid.MoveToFinished:Connect(function() moveToFinished = true end)
                         if not moveToFinished or not Toggles.AutoRooms.Value then
-                            humanoid:MoveTo(waypoint.Position)
+                            shared.Humanoid:MoveTo(waypoint.Position)
                             
                             local entity = (workspace:FindFirstChild("A60") or workspace:FindFirstChild("A120"))
                             local isEntitySpawned = (entity and entity.PrimaryPart.Position.Y > -10)
 
-                            if isEntitySpawned and not rootPart.Anchored and pathfindingGoal.Parent.Name ~= "Rooms_Locker" then
+                            if isEntitySpawned and not shared.RootPart.Anchored and pathfindingGoal.Parent.Name ~= "Rooms_Locker" then
                                 waypointConnection:Disconnect()
 
                                 if not Toggles.AutoRooms.Value then
@@ -3820,14 +3857,14 @@ elseif Script.IsRooms then
 
                             task.delay(1.5, function()
                                 if moveToFinished then return end
-                                if (not Toggles.AutoRooms.Value or Library.Unloaded) then return moveToCleanup() end
+                                if (not Toggles.AutoRooms.Value or shared.Library.Unloaded) then return moveToCleanup() end
 
-                                repeat task.wait(.25) until (not character:GetAttribute("Hiding") and not character.PrimaryPart.Anchored)
+                                repeat task.wait(0.25) until (not shared.Character:GetAttribute("Hiding") and not shared.Character.PrimaryPart.Anchored)
 
-                                Script.Functions.Alert({
-                                    Title = "Dương-Api",
-                                    Description = "Có vẻ bạn đang bị kẹt, đang tính toán đường đi khác...",
-                                    Reason = "Tạo đường kẻ thất bại",
+                                shared.Notify:Alert({
+                                    Title = "Auto Rooms",
+                                    Description = "Seems like you are stuck, trying to recalculate path...",
+                                    Reason = "Failed to move to waypoint",
                                 })
 
                                 recalculate = true
@@ -3841,7 +3878,7 @@ elseif Script.IsRooms then
                             end)
                         end
 
-                        repeat task.wait() until moveToFinished or not Toggles.AutoRooms.Value or recalculate or Library.Unloaded
+                        repeat task.wait() until moveToFinished or not Toggles.AutoRooms.Value or recalculate or shared.Library.Unloaded
                         lastWaypoint = waypoint
 
                         waypointConnection:Disconnect()
@@ -3858,20 +3895,20 @@ elseif Script.IsRooms then
                         if recalculate then break end
                     end
                 else
-                    Script.Functions.Log({
-                        Title = "Dương-Api",
-                        Description = "Tính toán thất bại với lỗi " .. tostring(path.Status)   
+                    shared.Notify:Log({
+                        Title = "Auto Rooms",
+                        Description = "Pathfinding failed with status " .. tostring(path.Status)   
                     }, Toggles.AutoRoomsDebug.Value)
                 end
             end
 
             -- Movement
-            while Toggles.AutoRooms.Value and not Library.Unloaded do
-                if latestRoom.Value == 1000 then
-                    Script.Functions.Alert({
-                        Title = "Dương-Api",
-                        Description = "Bạn đã tới cửa A-1000",
-                        Reason = "A-1000 sửa lại bởi Dương modder",
+            while Toggles.AutoRooms.Value and not shared.Library.Unloaded do
+                if Script.LatestRoom.Value == 1000 then
+                    shared.Notify:Alert({
+                        Title = "Auto Rooms",
+                        Description = "You have reached A-1000",
+                        Reason = "A-1000 reached by mspaint autorooms",
                     })
 
                     break
@@ -3880,7 +3917,7 @@ elseif Script.IsRooms then
                 doAutoRooms()
             end
             
-            -- Dừng chạy Tự động A1000
+            -- Unload Auto Rooms
             moveToCleanup()
         end
     end)
@@ -4075,7 +4112,7 @@ elseif Script.IsFools then
 end
 
 end)() end,
-    [15] = function()local wax,script,require=ImportGlobals(15)local ImportGlobals return (function(...)--// Linoria \\--
+    [16] = function()local wax,script,require=ImportGlobals(16)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -4084,14 +4121,14 @@ local Script = shared.Script
 local Tabs = Script.Tabs
 
 --// Main \\--
-local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Người chơi") do
+local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Player") do
     PlayerGroupBox:AddToggle("EnableSpeedHack", {
-        Text = "Áp dụng tốc độ chạy",
+        Text = "Enable Speed Hack",
         Default = false
     })
 
     PlayerGroupBox:AddSlider("WalkSpeed", {
-        Text = "Tốc độ chạy",
+        Text = "Walk Speed",
         Default = 15,
         Min = 0,
         Max = 22,
@@ -4100,7 +4137,7 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Người chơi") do
     })
 
     PlayerGroupBox:AddSlider("LadderSpeed", {
-        Text = "Tốc độ leo thang",
+        Text = "Ladder Speed",
         Default = 15,
         Min = 0,
         Max = 75,
@@ -4109,13 +4146,13 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Người chơi") do
     })
 
     PlayerGroupBox:AddToggle("EnableJump", {
-        Text = "Nút nhảy",
+        Text = "Enable Jump",
         Default = false,
         Visible = not Script.IsFools
     })
 
     PlayerGroupBox:AddSlider("JumpBoost", {
-        Text = "Độ cao nhảy",
+        Text = "Jump Boost",
         Default = 5,
         Min = 0,
         Max = 50,
@@ -4125,46 +4162,46 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Người chơi") do
     })
 
     PlayerGroupBox:AddToggle("NoAccel", {
-        Text = "không có gia tốc",
+        Text = "No Acceleration",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("InstaInteract", {
-        Text = "Tương tác tức thì",
+        Text = "Instant Interact",
         Default = false
     })
 
     PlayerGroupBox:AddToggle("FastClosetExit", {
-        Text = "Thoát khỏi tủ nhanh",
+        Text = "Fast Closet Exit",
         Default = false
     })
 
     PlayerGroupBox:AddDivider()
 
     PlayerGroupBox:AddToggle("Noclip", {
-        Text = "Xuyên tường",
+        Text = "Noclip",
         Default = false
     }):AddKeyPicker("NoclipKey", {
         Mode = "Toggle",
         Default = "N",
-        Text = "Xuyên tường",
+        Text = "Noclip",
         SyncToggleState = true
     })
 
     PlayerGroupBox:AddToggle("Fly", {
-        Text = "Bay",
+        Text = "Fly",
         Default = false
     }):AddKeyPicker("FlyKey", {
         Mode = "Toggle",
         Default = "F",
-        Text = "Bay",
+        Text = "Fly",
         SyncToggleState = true
     })
     
     PlayerGroupBox:AddSlider("FlySpeed", {
-        Text = "Tốc độ bay",
+        Text = "Fly Speed",
         Default = 15,
         Min = 10,
         Max = 22,
@@ -4173,19 +4210,19 @@ local PlayerGroupBox = Tabs.Main:AddLeftGroupbox("Người chơi") do
     })
 end
 
-local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Tương tác") do
+local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Reach") do
     ReachGroupBox:AddToggle("DoorReach", {
-        Text = "Mở cửa khoảng cách xa",
+        Text = "Door Reach",
         Default = false
     })
 
     ReachGroupBox:AddToggle("PromptClip", {
-        Text = "Tương tác xa",
+        Text = "Prompt Clip",
         Default = false
     })
 
     ReachGroupBox:AddSlider("PromptReachMultiplier", {
-        Text = "Khoảng cách tương tác",
+        Text = "Prompt Reach Multiplier",
         Default = 1,
         Min = 1,
         Max = 2,
@@ -4193,61 +4230,61 @@ local ReachGroupBox = Tabs.Main:AddLeftGroupbox("Tương tác") do
     })
 end
 
-local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
+local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Automation") do
     AutomationGroupBox:AddToggle("AutoInteract", {
-        Text = "Tự động lụm + mở",
+        Text = "Auto Interact",
         Default = false
     }):AddKeyPicker("AutoInteractKey", {
         Mode = shared.Library.IsMobile and "Toggle" or "Hold",
         Default = "R",
-        Text = "Tự động lụm + mở",
+        Text = "Auto Interact",
         SyncToggleState = shared.Library.IsMobile
     })
 
     AutomationGroupBox:AddDropdown("AutoInteractIgnore", {
         AllowNull = true,
         Values = {"Jeff Items", "Unlock w/ Lockpick", "Paintings", "Gold", "Light Source Items", "Skull Prompt"},
-        Default = {"Jeff Items","Paintings"},
+        Default = {"Jeff Items"},
         Multi = true,
 
-        Text = "Danh sách bỏ qua"
+        Text = "Ignore List"
     })
 
     AutomationGroupBox:AddDivider()
 
     AutomationGroupBox:AddToggle("AutoWardrobeNotif", {
-        Text = "Thông báo tự động ẩn nấp",
+        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value] .. " Notifications",
         Default = false
     })
 
     AutomationGroupBox:AddToggle("AutoWardrobe", {
-        Text = "Tự động ẩn nấp",
+        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value],
         Default = false,
-        Tooltip = "Có thể lỗi khi gặp (Rush & Ambush, 3+ Rush xuất hiện)",
+        Tooltip = "Might fail with multiple entities (Rush & Ambush, 3+ Rush spawns)",
         Visible = not Script.IsRetro,
         Risky = true
     }):AddKeyPicker("AutoWardrobeKey", {
         Mode = "Toggle",
         Default = "Q",
-        Text = "Tự động ẩn nấp",
+        Text = "Auto " .. Script.HidingPlaceName[Script.Floor.Value],
         SyncToggleState = true
     })
     AutomationGroupBox:AddDivider()
 
     AutomationGroupBox:AddToggle("AutoHeartbeat", {
-        Text = "Tự động win minigame nhịp tim",
+        Text = "Auto Heartbeat Minigame",
         Default = false,
         Visible = wax.shared.ExecutorSupport["getnamecallmethod"]
     })
 
     if Script.IsHotel or Script.IsFools then
         AutomationGroupBox:AddToggle("AutoLibrarySolver", {
-            Text = "Tụ động nhập mã code",
+            Text = "Auto Library Code",
             Default = false
         })
 
         AutomationGroupBox:AddSlider("AutoLibraryDistance", {
-            Text = "Khoảng cách nhập mã",
+            Text = "Unlock Distance",
             Default = 20,
             Min = 1,
             Max = 100,
@@ -4263,11 +4300,11 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
             Default = "Legit",
             Multi = false,
 
-            Text = "Phương pháp giải mã hộp cầu chì"
+            Text = "Auto Breaker Solver Method"
         })
 
         AutomationGroupBox:AddToggle("AutoBreakerSolver", {
-            Text = "Tự động giải mã hộp cầu chì",
+            Text = "Auto Breaker Box",
             Default = false
         })
 
@@ -4305,9 +4342,9 @@ local AutomationGroupBox = Tabs.Main:AddRightGroupbox("Tự động") do
     end
 end
 
-local MiscGroupBox = Tabs.Main:AddRightGroupbox("Tính năng phụ") do
+local MiscGroupBox = Tabs.Main:AddRightGroupbox("Misc") do
     MiscGroupBox:AddButton({
-        Text = "Hồi sinh",
+        Text = "Revive",
         Func = function()
             Script.RemotesFolder.Revive:FireServer()
         end,
@@ -4315,7 +4352,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Tính năng phụ") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Chơi lại",
+        Text = "Play Again",
         Func = function()
             Script.RemotesFolder.PlayAgain:FireServer()
         end,
@@ -4323,7 +4360,7 @@ local MiscGroupBox = Tabs.Main:AddRightGroupbox("Tính năng phụ") do
     })
 
     MiscGroupBox:AddButton({
-        Text = "Sảnh",
+        Text = "Lobby",
         Func = function()
             Script.RemotesFolder.Lobby:FireServer()
         end,
@@ -4409,7 +4446,7 @@ Options.PromptReachMultiplier:OnChanged(function(value)
     end
 end)
 end)() end,
-    [16] = function()local wax,script,require=ImportGlobals(16)local ImportGlobals return (function(...)--// Linoria \\--
+    [17] = function()local wax,script,require=ImportGlobals(17)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -4424,86 +4461,86 @@ end
 
 --// Visuals \\--
 local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
-    local ESPTab = ESPTabBox:AddTab("Định vị") do
+    local ESPTab = ESPTabBox:AddTab("ESP") do
         ESPTab:AddToggle("DoorESP", {
-            Text = "Cửa",
+            Text = "Door",
             Default = false,
         }):AddColorPicker("DoorEspColor", {
             Default = Color3.new(0, 1, 1),
         })
     
         ESPTab:AddToggle("ObjectiveESP", {
-            Text = "Dụng cụ",
+            Text = "Objective",
             Default = false,
         }):AddColorPicker("ObjectiveEspColor", {
             Default = Color3.new(0, 1, 0),
         })
     
         ESPTab:AddToggle("EntityESP", {
-            Text = "Quái vật",
+            Text = "Entity",
             Default = false,
         }):AddColorPicker("EntityEspColor", {
             Default = Color3.new(1, 0, 0),
         })
     
         ESPTab:AddToggle("ItemESP", {
-            Text = "Vật phẩm",
+            Text = "Item",
             Default = false,
         }):AddColorPicker("ItemEspColor", {
             Default = Color3.new(1, 0, 1),
         })
     
         ESPTab:AddToggle("ChestESP", {
-            Text = "Rương",
+            Text = "Chest",
             Default = false,
         }):AddColorPicker("ChestEspColor", {
             Default = Color3.new(1, 1, 0),
         })
     
         ESPTab:AddToggle("PlayerESP", {
-            Text = "Người chơi",
+            Text = "Player",
             Default = false,
         }):AddColorPicker("PlayerEspColor", {
             Default = Color3.new(1, 1, 1),
         })
     
         ESPTab:AddToggle("HidingSpotESP", {
-            Text = "Nơi ẩn nấp",
+            Text = Script.HidingPlaceName[Script.Floor.Value],
             Default = false,
         }):AddColorPicker("HidingSpotEspColor", {
             Default = Color3.new(0, 0.5, 0),
         })
     
         ESPTab:AddToggle("GoldESP", {
-            Text = "Vàng",
+            Text = "Gold",
             Default = false,
         }):AddColorPicker("GoldEspColor", {
             Default = Color3.new(1, 1, 0),
         })
     
         ESPTab:AddToggle("GuidingLightESP", {
-            Text = "Điểm sáng",
+            Text = "Guiding Light",
             Default = false,
         }):AddColorPicker("GuidingLightEspColor", {
             Default = Color3.new(0, 0.5, 1),
         })
     end
 
-    local ESPSettingsTab = ESPTabBox:AddTab("Cài đặt") do
+    local ESPSettingsTab = ESPTabBox:AddTab("Settings") do
         ESPSettingsTab:AddToggle("ESPRainbow", {
-            Text = "Định vị cầu vồng",
+            Text = "Rainbow ESP",
             Default = false,
         })
 
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPHighlight", {
-            Text = "Hiển thị đường sáng",
+            Text = "Enable Highlight",
             Default = true
         })
 
         ESPSettingsTab:AddSlider("ESPFillTransparency", {
-            Text = "Độ trong suốt vật phẩm",
+            Text = "Fill Transparency",
             Default = 0.75,
             Min = 0,
             Max = 1,
@@ -4511,7 +4548,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         })
     
         ESPSettingsTab:AddSlider("ESPOutlineTransparency", {
-            Text = "Độ trong suốt viền",
+            Text = "Outline Transparency",
             Default = 0,
             Min = 0,
             Max = 1,
@@ -4521,12 +4558,12 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPDistance", {
-            Text = "Hiển thị khoảng cách",
+            Text = "Show Distance",
             Default = true
         })
     
         ESPSettingsTab:AddSlider("ESPTextSize", {
-            Text = "Kích cỡ chữ",
+            Text = "Text Size",
             Default = 22,
             Min = 16,
             Max = 26,
@@ -4536,7 +4573,7 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPTracer", {
-            Text = "Hiển thị đường kẻ",
+            Text = "Enable Tracer",
             Default = false
         })
 
@@ -4546,18 +4583,18 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
             Default = "Bottom",
             Multi = false,
 
-            Text = "Vị trí hiển thị đường kẻ"
+            Text = "Tracer Start Position"
         })
 
         ESPSettingsTab:AddDivider()
 
         ESPSettingsTab:AddToggle("ESPArrow", {
-            Text = "Hiển thị mũi tên",
+            Text = "Enable Arrow",
             Default = false
         })
 
         ESPSettingsTab:AddSlider("ESPArrowCenterOffset", {
-            Text = "khoảng cách mũi tên với tâm",
+            Text = "Arrow Center Offset",
             Default = 300,
             Min = 0,
             Max = 500,
@@ -4566,9 +4603,9 @@ local ESPTabBox = Tabs.Visuals:AddLeftTabbox() do
     end
 end
 
-local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Giác quan") do
+local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Ambient") do
     AmbientGroupBox:AddSlider("Brightness", {
-        Text = "Mức độ sáng",
+        Text = "Brightness",
         Default = 0,
         Min = 0,
         Max = 3,
@@ -4576,73 +4613,73 @@ local AmbientGroupBox = Tabs.Visuals:AddLeftGroupbox("Giác quan") do
     })
 
     AmbientGroupBox:AddToggle("Fullbright", {
-        Text = "Map sáng",
+        Text = "Fullbright",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("NoFog", {
-        Text = "Không sương mù",
+        Text = "No Fog",
         Default = false,
     })
 
     AmbientGroupBox:AddToggle("AntiLag", {
-        Text = "Chống lag",
+        Text = "Anti-Lag",
         Default = false,
     })
 end
 
 local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
-    local NotifyTab = NotifyTabBox:AddTab("Thông báo") do
+    local NotifyTab = NotifyTabBox:AddTab("Notifier") do
         NotifyTab:AddDropdown("NotifyEntity", {
             AllowNull = true,
             Values = {"Blitz", "Lookman", "Rush", "Ambush", "Eyes", "Halt Room", "A60", "A120", "Jeff The Killer", "Gloombat Swarm", "Void/Glitch"},
             Default = {},
             Multi = true,
 
-            Text = "Cảnh báo quái"
+            Text = "Notify Entities"
         })
 
         NotifyTab:AddToggle("NotifyPadlock", {
-            Text = "Thông báo mã thư viện",
+            Text = "Notify Library Code",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyOxygen", {
-            Text = "Thông báo oxygen",
+            Text = "Notify Oxygen",
             Default = false,
         })
 
         NotifyTab:AddToggle("NotifyHideTime", {
-            Text = "Thông báo thời gian ẩn",
+            Text = "Notify Hide Time",
             Default = false,
         })
     end
 
-    local NotifySettingsTab = NotifyTabBox:AddTab("Cài đặt") do
+    local NotifySettingsTab = NotifyTabBox:AddTab("Settings") do
         NotifySettingsTab:AddToggle("NotifyChat", {
-            Text = "Cảnh báo trong chat",
-            Tooltip = "Cả mã thư viện và quái",
+            Text = "Notify Chat",
+            Tooltip = "Entity and Padlock Code",
             Default = false,
         })
 
         NotifySettingsTab:AddInput("NotifyEntityMessage", {
-            Default = "Đã xuất hiện",
+            Default = "has spawned!",
             Numeric = false,
             Finished = true,
             ClearTextOnFocus = false,
 
-            Text = "Tin nhắn thông báo"
+            Text = "Entity Notifier Message"
         })
 
         NotifySettingsTab:AddDivider()
         
         NotifySettingsTab:AddToggle("NotifySound", {
-            Text = "Âm thanh cảnh báo",
+            Text = "Play Alert Sound",
             Default = true,
         })
 
         NotifySettingsTab:AddSlider("NotifyVolume", {
-            Text = "Âm lượng cảnh báo",
+            Text = "Notify Volume",
             Default = 2,
             Min = 0,
             Max = 5,
@@ -4655,16 +4692,16 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
             Default = "Right",
             Multi = false,
 
-            Text = "Vị trí thông báo"
+            Text = "Notification Side"
         })
 
         NotifySettingsTab:AddDropdown("NotifyStyle", {
             AllowNull = false,
             Values = {"Linoria", "Doors"},
-            Default = "Doors",
+            Default = "Linoria",
             Multi = false,
 
-            Text = "Kiểu thông báo"
+            Text = "Notification Style"
         })
 
         NotifySettingsTab:AddDivider()
@@ -4672,28 +4709,28 @@ local NotifyTabBox = Tabs.Visuals:AddRightTabbox() do
         NotifySettingsTab:AddDropdown("CaptionStyle", {
             AllowNull = false,
             Values = CaptionStyles,
-            Default = "Doors",
+            Default = "Linoria",
             Multi = false,
 
-            Text = "Kiểu tiêu đề"
+            Text = "Caption Style"
         })
     end
 end
 
 local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
-    local SelfTab = SelfTabBox:AddTab("Bản thân") do
+    local SelfTab = SelfTabBox:AddTab("Self") do
         SelfTab:AddToggle("ThirdPerson", {
-            Text = "Góc nhìn thứ ba",
+            Text = "Third Person",
             Default = false
         }):AddKeyPicker("ThirdPersonKey", {
             Default = "V",
-            Text = "Góc nhìn thứ ba",
+            Text = "Third Person",
             Mode = "Toggle",
             SyncToggleState = not shared.Library.IsMobile -- ????
         })
         
         SelfTab:AddSlider("FOV", {
-            Text = "Độ cong màn",
+            Text = "Field of View",
             Default = 70,
             Min = 70,
             Max = 120,
@@ -4701,29 +4738,29 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
         })
         
         SelfTab:AddToggle("NoCamBob", {
-            Text = "Không nghiêng màn",
+            Text = "No Camera Bobbing",
             Default = false,
             Visible = wax.shared.ExecutorSupport["require"]
         })
     
         SelfTab:AddToggle("NoCamShake", {
-            Text = "Không lắc lư màn",
+            Text = "No Camera Shake",
             Default = false,
             Visible = wax.shared.ExecutorSupport["require"]
         })
     
         SelfTab:AddToggle("NoCutscenes", {
-            Text = "Không đoạn cắt cảnh",
+            Text = "No Cutscenes",
             Default = false,
         })
     
         SelfTab:AddToggle("TranslucentHidingSpot", {
-            Text = "Độ trong suốt của nơi ẩn nấp ",
+            Text = "Translucent " .. Script.HidingPlaceName[Script.Floor.Value],
             Default = false
         })
         
         SelfTab:AddSlider("HidingTransparency", {
-            Text = "Độ trong suốt",
+            Text = "Hiding Transparency",
             Default = 0.5,
             Min = 0,
             Max = 1,
@@ -4736,7 +4773,7 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
         end
 
         SelfTab:AddToggle("ViewmodelOffset", {
-            Text = "Tầm nhìn",
+            Text = "Viewmodel Offset",
             Default = false,
             Visible = wax.shared.ExecutorSupport["require"]
         })
@@ -4772,24 +4809,24 @@ local SelfTabBox = Tabs.Visuals:AddRightTabbox() do
         })
     end
 
-    local EffectsTab = SelfTabBox:AddTab("Hiệu ứng") do
+    local EffectsTab = SelfTabBox:AddTab("Effects") do
         EffectsTab:AddToggle("NoGlitchEffect", {
-            Text = "Không hiệu ứng Glicth",
+            Text = "No Glitch Effect",
             Default = false
         })
 
         EffectsTab:AddToggle("NoVoidEffect", {
-            Text = "Không hiệu ứng âm thanh",
+            Text = "No Void Effect",
             Default = false
         })
 
         EffectsTab:AddToggle("NoEntityJumpscare", {
-            Text = "Không hù dọa",
+            Text = "No Jumpscare",
             Default = false
         })
 
         EffectsTab:AddToggle("NoSpiderJumpscare", {
-            Text = "Không bị nhện dọa",
+            Text = "No Spider Jumpscare",
             Default = false
         })
     end
@@ -5379,7 +5416,7 @@ Toggles.ViewmodelOffset:OnChanged(function(value)
     end
 end)
 end)() end,
-    [18] = function()local wax,script,require=ImportGlobals(18)local ImportGlobals return (function(...)--// Linoria \\--
+    [19] = function()local wax,script,require=ImportGlobals(19)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -5390,7 +5427,7 @@ local Tabs = Script.Tabs
 ---// Main \\--
 local SniperGroupbox = Tabs.Main:AddLeftGroupbox("Sniper") do
     SniperGroupbox:AddToggle("ElevatorSniper", {
-        Text = "Chọn thang máy",
+        Text = "Elevator Sniper",
         Default = false
     })
 
@@ -5398,23 +5435,23 @@ local SniperGroupbox = Tabs.Main:AddLeftGroupbox("Sniper") do
         SpecialType = "Player",
         Multi = false,
 
-        Text = "Chọn người chơi"
+        Text = "Target"
     })
 end
 
 local OtherGroupbox = Tabs.Main:AddRightGroupbox("Other") do
     OtherGroupbox:AddToggle("Twerk", {
-        Text = "Nhảy",
+        Text = "Twerk",
         Default = false
     })
 
     OtherGroupbox:AddToggle("LoopAchievements", {
-        Text = "Thay đổi danh hiệu liên tục",
+        Text = "Loop Achievements",
         Default = false
     })
 
     OtherGroupbox:AddSlider("LoopAchievementsSpeed", {
-        Text = "Tốc độ chạy",
+        Text = "Speed",
         Default = 0.05,
         Min = 0.05,
         Max = 1,
@@ -5605,7 +5642,7 @@ Toggles.Twerk:OnChanged(function(value)
     shared.Twerk:Set(value)
 end)
 end)() end,
-    [20] = function()local wax,script,require=ImportGlobals(20)local ImportGlobals return (function(...)--// Linoria \\--
+    [21] = function()local wax,script,require=ImportGlobals(21)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -5657,7 +5694,7 @@ Toggles.SpeedHack:OnChanged(function(value)
     shared.Humanoid.WalkSpeed = if value then Options.WalkSpeed.Value else Script.LastSpeed
 end)
 end)() end,
-    [21] = function()local wax,script,require=ImportGlobals(21)local ImportGlobals return (function(...)--// Linoria \\--
+    [22] = function()local wax,script,require=ImportGlobals(22)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6064,7 +6101,7 @@ Options.NotifySide:OnChanged(function(value)
     shared.Library.NotifySide = value
 end)
 end)() end,
-    [25] = function()local wax,script,require=ImportGlobals(25)local ImportGlobals return (function(...)--// Linoria \\--
+    [26] = function()local wax,script,require=ImportGlobals(26)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6284,7 +6321,7 @@ function Script.Functions.GetNearestPromptWithCondition(condition)
     return nearestPrompt
 end
 end)() end,
-    [26] = function()local wax,script,require=ImportGlobals(26)local ImportGlobals return (function(...)--// Linoria \\--
+    [27] = function()local wax,script,require=ImportGlobals(27)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6324,10 +6361,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
     local NotifPrefix = "Auto " .. Script.HidingPlaceName[Script.Floor.Value];
     task.spawn(function() 
         shared.Notify:Log({
-            Title = "Dương Api",
-            Description = "Đang tìm nơi ẩn nấp",
+            Title = NotifPrefix,
+            Description = "Looking for a hiding place",
     
-            LinoriaMessage = "[" .. NotifPrefix .. "] Đang tìm nơi ẩn nấp..."
+            LinoriaMessage = "[" .. NotifPrefix .. "] Looking for a hiding spot..."
         }, Toggles.AutoWardrobeNotif.Value)
     end)
 
@@ -6366,10 +6403,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
     -- Hide
     task.spawn(function() 
         shared.Notify:Log({
-            Title = "Dương Api",
-            Description = "Bắt đầu chạy...",
+            Title = NotifPrefix,
+            Description = "Starting...",
     
-            LinoriaMessage = "[" .. NotifPrefix .. "] Bắt đầu chạy..."
+            LinoriaMessage = "[" .. NotifPrefix .. "] Starting..."
         }, Toggles.AutoWardrobeNotif.Value)
     end)
     
@@ -6414,10 +6451,9 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
                     task.spawn(function() 
                         shared.Notify:Log({
                             Title = NotifPrefix,
-                            Title = "Dương Api",
-                            Description = "Đang thoát khỏi tủ, quái đã đi xa",
+                            Description = "Exiting the locker, entity is far away.",
                             
-                            LinoriaMessage = "[" .. NotifPrefix .. "] Đang thoát khỏi tủ, quái đã đi xa."
+                            LinoriaMessage = "[" .. NotifPrefix .. "] Exiting the locker, entity is far away."
                         }, Toggles.AutoWardrobeNotif.Value)
                     end)
 
@@ -6426,10 +6462,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
                     if isSafe == true and not child:IsDescendantOf(workspace) then 
                         task.spawn(function() 
                             shared.Notify:Log({
-                                Title = "Dương Api",
-                                Description = "Đang thoát khỏi tủ, quái đã bị xóa.",
+                                Title = NotifPrefix,
+                                Description = "Exiting the locker, entity is deleted.",
                                 
-                                LinoriaMessage = "[" .. NotifPrefix .. "] Đang thoát khỏi tủ, quái đã bị xóa."
+                                LinoriaMessage = "[" .. NotifPrefix .. "] Exiting the locker, entity is deleted."
                             }, Toggles.AutoWardrobeNotif.Value)
                         end)
 
@@ -6441,10 +6477,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
                     if Toggles.AutoWardrobeNotif.Value then shared.Notify:Log("[" .. NotifPrefix .. "] Stopping (you died).") end             
                     task.spawn(function() 
                         shared.Notify:Log({
-                            Title = "Dương Api",
-                            Description = "Đang dừng lại (Bạn đã chết)",
+                            Title = NotifPrefix,
+                            Description = "Stopping (you died)",
                             
-                            LinoriaMessage = "[" .. NotifPrefix .. "] Đang dừng lại (Bạn đã chết)."
+                            LinoriaMessage = "[" .. NotifPrefix .. "] Stopping (you died)."
                         }, Toggles.AutoWardrobeNotif.Value)
                     end)
 
@@ -6483,10 +6519,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
         repeat task.wait()
             task.spawn(function() 
                 shared.Notify:Log({
-                    Title = "Dương Api",
-                    Description = "Đang chờ ambush đến gần để núp...",
+                    Title = NotifPrefix,
+                    Description = "Waiting for Ambush to be close enough...",
     
-                    LinoriaMessage = "[" .. NotifPrefix .. "] Đang chờ ambush đến gần để núp...",
+                    LinoriaMessage = "[" .. NotifPrefix .. "] Waiting for Ambush to be close enough...",
                 }, Toggles.AutoWardrobeNotif.Value)
             end)
 
@@ -6497,10 +6533,10 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
             if success then
                 task.spawn(function() 
                     shared.Notify:Log({
-                        Title = "Dương Api",
-                        Description = "Đang chờ nó đi xa để an toàn khi ra...",
+                        Title = NotifPrefix,
+                        Description = "Waiting for it to be safe to exit...",
     
-                        LinoriaMessage = "[" .. NotifPrefix .. "] Đang chờ nó đi xa để an toàn khi ra...",
+                        LinoriaMessage = "[" .. NotifPrefix .. "] Waiting for it to be safe to exit...",
                     }, Toggles.AutoWardrobeNotif.Value)
                 end)
 
@@ -6528,15 +6564,15 @@ function Script.Functions.AutoWardrobe(child, index: number | nil)
     table.remove(Script.Temp.AutoWardrobeEntities, entityIndex)
     task.spawn(function() 
         shared.Notify:Log({
-            Title = "Dương Api",
-            Description = "Hoàn thành.",
+            Title = NotifPrefix,
+            Description = "Finished.",
     
-            LinoriaMessage = "[" .. NotifPrefix .. "] Hoàn thành.",
+            LinoriaMessage = "[" .. NotifPrefix .. "] Finished.",
         }, Toggles.AutoWardrobeNotif.Value)
     end)
 end
 end)() end,
-    [27] = function()local wax,script,require=ImportGlobals(27)local ImportGlobals return (function(...)--// Linoria \\--
+    [28] = function()local wax,script,require=ImportGlobals(28)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6572,8 +6608,8 @@ function Script.Functions.SolveBreakerBox(breakerBox)
     if not breakerBox:IsDescendantOf(workspace) then return end
 
     shared.Notify:Alert({
-        Title = "Dương Api",
-        Description = "Đang giải mã hộp cầu chì...",
+        Title = "Auto Breaker Solver",
+        Description = "Solving the breaker box...",
         Reason = ""
     })
 
@@ -6607,8 +6643,8 @@ function Script.Functions.SolveBreakerBox(breakerBox)
         until not workspace.CurrentRooms["100"]:FindFirstChild("DoorToBreakDown")
 
         shared.Notify:Alert({
-            Title = "Dương Api",
-            Description = "Đã giải mã hộp cầu chì thành công.",
+            Title = "Auto Breaker Solver",
+            Description = "The breaker box has been successfully solved.",
         })
     end
 end
@@ -6638,7 +6674,7 @@ function Script.Functions.AutoBreaker(code, breakers)
     end
 end
 end)() end,
-    [28] = function()local wax,script,require=ImportGlobals(28)local ImportGlobals return (function(...)--// Linoria \\--
+    [29] = function()local wax,script,require=ImportGlobals(29)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -6669,7 +6705,7 @@ function Script.Functions.SetupRoomConnection(room)
     if Options.NotifyEntity.Value["Halt Room"] and room:GetAttribute("RawName") == "HaltHallway" then
         shared.Notify:Alert({
             Title = "ENTITIES",
-            Description = "Haft sẽ có ở phòng tiếp theo!",
+            Description = "Halt will spawn in next room!",
             Image = Script.EntityTable.NotifyReason["HaltRoom"].Image,
 
             Warning = true
@@ -6746,13 +6782,13 @@ function Script.Functions.SetupCharacterConnection(newCharacter)
 
             if Toggles.NotifyPadlock.Value and count < 5 then
                 shared.Notify:Alert({
-                    Title = "Dương Api",
-                    Description = string.format("Mã thư viện: %s", output),
-                    Reason = if tonumber(code) then "Đã giải mã với code:" else "Bạn vẫn còn tìm thiếu vở",
+                    Title = "Padlock Code",
+                    Description = string.format("Library Code: %s", output),
+                    Reason = if tonumber(code) then "Solved the library padlock code" else "You are still missing some books",
                 })
 
                 if Toggles.NotifyChat.Value and count == 0 then
-                    shared.RBXGeneral:SendAsync(string.format("Mã thư viện: %s", output))
+                    shared.RBXGeneral:SendAsync(string.format("Library Code: %s", output))
                 end
             end
         end)
@@ -7035,7 +7071,7 @@ function Script.Functions.SetupOtherCharacterConnection(character: Model)
 end
 
 end)() end,
-    [29] = function()local wax,script,require=ImportGlobals(29)local ImportGlobals return (function(...)--// Linoria \\--
+    [30] = function()local wax,script,require=ImportGlobals(30)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7160,7 +7196,7 @@ function Script.Functions.ObjectiveESP(child)
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = string.format("Cần gạt hẹn giờ [+%s]", child.TakeTimer.TextLabel.Text),
+            Text = string.format("Timer Lever [+%s]", child.TakeTimer.TextLabel.Text),
             Color = Options.ObjectiveEspColor.Value
         })
     -- Backdoor + Hotel
@@ -7168,7 +7204,7 @@ function Script.Functions.ObjectiveESP(child)
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Chìa khóa",
+            Text = "Key",
             Color = Options.ObjectiveEspColor.Value
         })
     -- Hotel
@@ -7176,28 +7212,28 @@ function Script.Functions.ObjectiveESP(child)
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Chìa khóa điện tử",
+            Text = "Electrical Key",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "LeverForGate" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Cần gạt",
+            Text = "Gate Lever",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "LiveHintBook" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Vở",
+            Text = "Book",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "LiveBreakerPolePickup" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Cầu chì",
+            Text = "Breaker",
             Color = Options.ObjectiveEspColor.Value
         })
     -- Mines
@@ -7205,21 +7241,21 @@ function Script.Functions.ObjectiveESP(child)
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Máy phát điện",
+            Text = "Generator",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "MinesGateButton" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Nút mở cửa",
+            Text = "Gate Power Button",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "FuseObtain" then
         Script.Functions.ESP({
             Type = "Objective",
             Object = child,
-            Text = "Cầu chì",
+            Text = "Fuse",
             Color = Options.ObjectiveEspColor.Value
         })
     elseif child.Name == "MinesAnchor" then
@@ -7229,7 +7265,7 @@ function Script.Functions.ObjectiveESP(child)
             Script.Functions.ESP({
                 Type = "Objective",
                 Object = child,
-                Text = string.format("Trụ điện %s", sign.TextLabel.Text),
+                Text = string.format("Anchor %s", sign.TextLabel.Text),
                 Color = Options.ObjectiveEspColor.Value
             })
         end
@@ -7243,7 +7279,7 @@ function Script.Functions.ObjectiveESP(child)
             local pumpEsp = Script.Functions.ESP({
                 Type = "Objective",
                 Object = wheel,
-                Text = "Máy bơm nước",
+                Text = "Water Pump",
                 Color = Options.ObjectiveEspColor.Value,
 
                 OnDestroy = function()
@@ -7340,7 +7376,7 @@ function Script.Functions.GoldESP(gold)
     Script.Functions.ESP({
         Type = "Gold",
         Object = gold,
-        Text = string.format("Vàng [%s]", gold:GetAttribute("GoldValue")),
+        Text = string.format("Gold [%s]", gold:GetAttribute("GoldValue")),
         Color = Options.GoldEspColor.Value
     })
 end
@@ -7360,7 +7396,7 @@ function Script.Functions.GuidingLightEsp(guidance)
     local guidanceEsp = Script.Functions.ESP({
         Type = "Guiding",
         Object = part,
-        Text = "Chỉ dẫn",
+        Text = "Guidance",
         Color = Options.GuidingLightEspColor.Value
     })
 
@@ -7373,7 +7409,7 @@ function Script.Functions.GuidingLightEsp(guidance)
     end)
 end
 end)() end,
-    [30] = function()local wax,script,require=ImportGlobals(30)local ImportGlobals return (function(...)--// Linoria \\--
+    [31] = function()local wax,script,require=ImportGlobals(31)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7434,16 +7470,16 @@ function Script.Functions.DeleteSeek(collision: BasePart)
         
         if collision:IsDescendantOf(workspace) and (collision.Parent and collision.Parent.Name == "TriggerEventCollision") then
             shared.Notify:Alert({
-                Title = "Dương Api",
-                Description = "Đang xóa seek...",
+                Title = "Delete Seek FE",
+                Description = "Deleting Seek trigger...",
                 Reason = "",
             })
 
             task.delay(4, function()
                 if collision:IsDescendantOf(workspace) then
                     shared.Notify:Alert({
-                        Title = "Dương Api",
-                        Description = "Xóa seek thất bại!",
+                        Title = "Delete Seek FE",
+                        Description = "Failed to delete Seek trigger!",
                         Reason = "",
                     })
                 end
@@ -7468,8 +7504,8 @@ function Script.Functions.DeleteSeek(collision: BasePart)
             
             if not collision:IsDescendantOf(workspace) then
                 shared.Notify:Log({
-                    Title = "Duong Api",
-                    Description = "Xóa seek thành công!",
+                    Title = "Delete Seek FE",
+                    Description = "Deleted Seek trigger successfully!",
                 })
             end
         end
@@ -7494,7 +7530,7 @@ function Script.Functions.AvoidEntity(value: boolean, oldNoclip: boolean)
     end
 end
 end)() end,
-    [31] = function()local wax,script,require=ImportGlobals(31)local ImportGlobals return (function(...)--// Linoria \\--
+    [32] = function()local wax,script,require=ImportGlobals(32)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -7730,8 +7766,8 @@ function Script.Functions.Minecart.Teleport(room: Model)
                 progressPart.Transparency = 1
             end
             shared.Notify:Alert({
-                Title = "Dịch chuyển xe mỏ",
-                Description = "Đã sẵn sàng, đang chờ lên xe...",
+                Title = "Minecart Teleport",
+                Description = "Minecart teleport is ready! Waiting for the minecart...",
 
                 Time = progressPart
             })
@@ -7765,8 +7801,8 @@ function Script.Functions.Minecart.Teleport(room: Model)
 
         if workspace:FindFirstChild("_internal_mspaint_minecart_teleport") then workspace:FindFirstChild("_internal_mspaint_minecart_teleport"):Destroy() end
         shared.Notify:Alert({
-            Title = "Dịch chuyển xe mỏ",
-            Description = "Đang chạy, hãy tận hưởng!",
+            Title = "Minecart Teleport",
+            Description = "Minecart teleport started. Enjoy the ride!",
 
             Time = 10
         })
@@ -8021,7 +8057,7 @@ function Script.Functions.Minecart.Pathfind(room: Model, forcePathfind: boolean)
     Script.Functions.Minecart.Teleport(room)
 end
 end)() end,
-    [32] = function()local wax,script,require=ImportGlobals(32)local ImportGlobals return (function(...)--// Linoria \\--
+    [33] = function()local wax,script,require=ImportGlobals(33)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8058,7 +8094,7 @@ function Script.Functions.GetPadlockCode(paper: Tool)
     return "_____"
 end
 end)() end,
-    [33] = function()local wax,script,require=ImportGlobals(33)local ImportGlobals return (function(...)--// Linoria \\--
+    [34] = function()local wax,script,require=ImportGlobals(34)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8113,7 +8149,7 @@ function Script.Functions.IsInViewOfPlayer(instance: Instance, range: number | n
     return false
 end
 end)() end,
-    [35] = function()local wax,script,require=ImportGlobals(35)local ImportGlobals return (function(...)--// Linoria \\--
+    [36] = function()local wax,script,require=ImportGlobals(36)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8199,7 +8235,300 @@ function Script.Functions.LoadPreset(name: string)
     })
 end
 end)() end,
-    [37] = function()local wax,script,require=ImportGlobals(37)local ImportGlobals return (function(...)--// Linoria \\--
+    [38] = function()local wax,script,require=ImportGlobals(38)local ImportGlobals return (function(...)--// Linoria \\--
+local Toggles = shared.Toggles
+local Options = shared.Options
+
+--// Variables \\--
+local Script = shared.Script
+
+--// Functions \\--
+function Script.Functions.ChildCheck(child)
+    if not child:IsA("Model") then return end
+
+    if Toggles.BatteryESP.Value and child.Name == "battery" then
+        Script.Functions.BatteryESP(child)
+    elseif Toggles.LockerESP.Value and child.Name == "hidelocker" then
+        Script.Functions.LockerESP(child)
+    elseif Toggles.TableESP.Value and child.Name == "hidetable" then
+        Script.Functions.TableESP(child)
+    end
+end
+end)() end,
+    [39] = function()local wax,script,require=ImportGlobals(39)local ImportGlobals return (function(...)--// Linoria \\--
+local Toggles = shared.Toggles
+local Options = shared.Options
+
+--// Variables \\--
+local Script = shared.Script
+
+--// Functions \\--
+function Script.Functions.Chat(message: string)
+    local chatEvents = shared.ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+    local sayMessage = chatEvents and chatEvents:FindFirstChild("SayMessageRequest")
+
+    if sayMessage then
+        sayMessage:FireServer(message, "All")
+    end
+end
+end)() end,
+    [40] = function()local wax,script,require=ImportGlobals(40)local ImportGlobals return (function(...)--// Linoria \\--
+local Toggles = shared.Toggles
+local Options = shared.Options
+
+--// Variables \\--
+local Script = shared.Script
+
+--// Functions \\--
+function Script.Functions.SetupCharacterConnection(newCharacter)
+    shared.Character = newCharacter
+    shared.Humanoid = shared.Character:WaitForChild("Humanoid")
+    shared.RootPart = shared.Character:WaitForChild("HumanoidRootPart")
+end
+
+function Script.Functions.SetupLightingConnection()
+    shared.Connect:GiveSignal(shared.Lighting:GetPropertyChangedSignal("Ambient"):Connect(function()
+        if shared.Lighting.Ambient ~= Script.CurrentAmbient and shared.Lighting.Ambient ~= Color3.new(1, 1, 1) then
+            Script.CurrentAmbient = shared.Lighting.Ambient
+        end
+
+        if Toggles.Fullbright.Value then
+            shared.Lighting.Ambient = Color3.new(1, 1, 1)
+        end
+    end))
+
+    shared.Connect:GiveSignal(shared.Lighting.ChildAdded:Connect(function(child)
+        if Toggles.NoBlur.Value and child:IsA("Blur") then
+            child.Enabled = false
+        end
+    end))
+end
+
+function Script.Functions.SetupRoomConnection(room)
+    if Script.LoadedRooms[room] then return end
+    Script.LoadedRooms[room] = true
+
+    if Toggles.DoorESP.Value then
+        Script.Functions.DoorESP(room)
+    end
+
+    for _, child in pairs(room:GetDescendants()) do
+        task.spawn(Script.Functions.ChildCheck, child)
+    end
+
+    shared.Connections[room] = room.DescendantAdded:Connect(function(child)
+        task.delay(0.1, Script.Functions.ChildCheck, child)
+    end)
+end
+
+function Script.Functions.SetupUIConnection(GUI)
+    Script.MainUI = GUI or shared.PlayerGui:WaitForChild("MainGui")
+    
+    if Toggles.NoFlashlightShadow.Value then
+        local slender = Script.MainUI:WaitForChild("slender")
+        if slender then
+            slender.ImageTransparency = 1
+            for _, bar in pairs(slender:GetChildren()) do
+                bar.Visible = false
+            end
+        end
+    end
+end
+end)() end,
+    [41] = function()local wax,script,require=ImportGlobals(41)local ImportGlobals return (function(...)--// Linoria \\--
+local Toggles = shared.Toggles
+local Options = shared.Options
+
+--// Variables \\--
+local Script = shared.Script
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/MS-ESP/refs/heads/main/source.lua"))()
+shared.ESPLibrary = ESPLibrary
+
+type ESP = {
+    Color: Color3,
+    IsInvisible: boolean,
+    Object: Instance,
+    Offset: Vector3,
+    MaxDistance: number,
+    Text: string,
+    TextParent: Instance,
+    Type: string,
+    OnDestroy: () -> (),
+}
+
+function Script.Functions.ESP(args: ESP)
+    if not args.Object then return Script.Functions.Warn("ESP Object is nil") end
+
+    local ESPManager = {
+        Object = args.Object,
+        Text = args.Text or "No Text",
+        Color = args.Color or Color3.new(),
+        MaxDistance = args.MaxDistance or 5000,
+        Offset = args.Offset or Vector3.zero,
+        IsInvisible = args.IsInvisible or false,
+        Type = args.Type or "None",
+        OnDestroy = args.OnDestroy or nil,
+
+        Humanoid = nil
+    }
+
+    if ESPManager.IsInvisible and ESPManager.Object.PrimaryPart then
+        if ESPManager.Object.PrimaryPart.Transparency == 1 then
+            ESPManager.Object.PrimaryPart.Transparency = 0.99
+        end
+
+        local humanoid = ESPManager.Object:FindFirstChildOfClass("Humanoid")
+        if not humanoid then humanoid = Instance.new("Humanoid", ESPManager.Object) end
+        ESPManager.Humanoid = humanoid
+    end
+
+    local ESPInstance = ESPLibrary.ESP.Highlight({
+        Name = ESPManager.Text,
+        Model = ESPManager.Object,
+        MaxDistance = ESPManager.MaxDistance,
+        StudsOffset = ESPManager.Offset,
+
+        FillColor = ESPManager.Color,
+        OutlineColor = ESPManager.Color,
+        TextColor = ESPManager.Color,
+        TextSize = Options.ESPTextSize.Value or 16,
+
+        FillTransparency = Options.ESPFillTransparency.Value,
+        OutlineTransparency = Options.ESPOutlineTransparency.Value,
+
+        Tracer = {
+            Enabled = true,
+            From = Options.ESPTracerStart.Value,
+            Color = ESPManager.Color
+        },
+        
+        Arrow = {
+            Enabled = true,
+            CenterOffset = Options.ESPArrowCenterOffset.Value,
+            Color = ESPManager.Color
+        },
+
+        OnDestroy = ESPManager.OnDestroy or function()
+            if ESPManager.Object.PrimaryPart and ESPManager.IsInvisible then ESPManager.Object.PrimaryPart.Transparency = 1 end
+            if ESPManager.Humanoid then ESPManager.Humanoid:Destroy() end
+        end
+    })
+
+    table.insert(Script.ESPTable[args.Type], ESPInstance)
+
+    return ESPInstance
+end
+
+function Script.Functions.DoorESP(room)
+    local door = room:WaitForChild("door", 5)
+
+    if door then
+        local clickDetector = door:FindFirstChild("ClickDetector")
+        if not clickDetector then return end
+
+        local roomNumber = if tonumber(room.Name) then room.Name else tostring(workspace.roomnumber.Value + 1)
+
+        local doorEsp = Script.Functions.ESP({
+            Type = "Door",
+            Object = door,
+            Text = string.format("Door %s", roomNumber),
+            Color = Options.DoorEspColor.Value,
+
+            OnDestroy = function()
+                if Script.FeatureConnections.Door[door] then Script.FeatureConnections.Door[door]:Disconnect() end
+            end
+        })
+
+        Script.FeatureConnections.Door[door] = clickDetector.AncestryChanged:Connect(function(_, parent)
+            if parent then return end
+            
+            if doorEsp then doorEsp.Destroy() end
+            if Script.FeatureConnections.Door[door] then Script.FeatureConnections.Door[door]:Disconnect() end
+        end)
+    end
+end
+
+function Script.Functions.EntityESP(entity, entityName)
+    local isInvisible = entity:IsA("BasePart") and entity.Transparency == 1
+    local entityModel = if isInvisible then Instance.new("Model") else entity
+
+    if isInvisible then
+        local entityClone = entity:Clone()
+        
+        entityClone.Parent = entityModel
+        entityModel.Parent = shared.Workspace
+    
+        entityModel.PrimaryPart = entityClone
+        entityClone:ClearAllChildren()
+        Instance.new("SpecialMesh", entityClone)
+
+        shared.Connections[entity] = shared.RunService.Heartbeat:Connect(function()
+            if entity:IsDescendantOf(workspace) then
+                entityModel:PivotTo(entity:GetPivot())
+            else
+                entityModel:Destroy()
+                shared.Connect:DisconnectSignal(shared.Connections[entity])
+            end
+        end)
+    end
+
+    Script.Functions.ESP({
+        Type = "Entity",
+        Object = entityModel,
+        Text = entityName,
+        Color = Options.EntityEspColor.Value,
+        IsInvisible = isInvisible,
+    })
+end
+
+function Script.Functions.BatteryESP(battery)
+    Script.Functions.ESP({
+        Type = "Battery",
+        Object = battery,
+        Text = "Battery",
+        Color = Options.BatteryEspColor.Value,
+        MaxDistance = 300
+    })
+end
+
+function Script.Functions.LockerESP(hideLocker)
+    local jack = hideLocker:FindFirstChild("jack")
+    local extra = if jack then " [Shell]" else ""
+
+    local lockerEsp = Script.Functions.ESP({
+        Type = "Locker",
+        Object = hideLocker,
+        Text = string.format("Locker%s", extra),
+        Color = Options.LockerEspColor.Value,
+        MaxDistance = 200,
+
+        OnDestroy = function()
+            if Script.FeatureConnections.Shell[jack] then Script.FeatureConnections.Shell[jack]:Disconnect() end
+        end
+    })
+
+    if jack then
+        Script.FeatureConnections.Shell[jack] = jack.AncestryChanged:Connect(function(_, parent)
+            if parent then return end
+
+            if lockerEsp then lockerEsp.Destroy() end
+            if Script.FeatureConnections.Shell[jack] then Script.FeatureConnections.Shell[jack]:Disconnect() end
+        end)
+    end
+end
+
+function Script.Functions.TableESP(hideTable)
+    Script.Functions.ESP({
+        Type = "Table",
+        Object = hideTable:FindFirstChild("spot"),
+        Text = "Table",
+        Color = Options.TableEspColor.Value,
+        IsInvisible = true,
+        MaxDistance = 250
+    })
+end
+end)() end,
+    [43] = function()local wax,script,require=ImportGlobals(43)local ImportGlobals return (function(...)--// Linoria \\--
 local Toggles = shared.Toggles
 local Options = shared.Options
 
@@ -8223,7 +8552,7 @@ function Script.Functions.SetupBloxstrapRPCConnection()
     end))
 end
 end)() end,
-    [39] = function()local wax,script,require=ImportGlobals(39)local ImportGlobals return (function(...)local BloxstrapRPC = {}
+    [45] = function()local wax,script,require=ImportGlobals(45)local ImportGlobals return (function(...)local BloxstrapRPC = {}
 
 type RichPresence = {
     details:     string?,
@@ -8264,7 +8593,7 @@ end
 
 return BloxstrapRPC
 end)() end,
-    [40] = function()local wax,script,require=ImportGlobals(40)local ImportGlobals return (function(...)local Connect = {}
+    [46] = function()local wax,script,require=ImportGlobals(46)local ImportGlobals return (function(...)local Connect = {}
 shared.Connections = {}
 
 function Connect:GiveSignal(signal: RBXScriptConnection | RBXScriptSignal)
@@ -8281,7 +8610,7 @@ end
 
 return Connect
 end)() end,
-    [41] = function()local wax,script,require=ImportGlobals(41)local ImportGlobals return (function(...)local ExecutorSupport = {}
+    [47] = function()local wax,script,require=ImportGlobals(47)local ImportGlobals return (function(...)local ExecutorSupport = {}
 local ExecutorSupportInfo = {}
 
 local executorName = string.split(identifyexecutor() or "None", " ")[1]
@@ -8462,7 +8791,7 @@ end
 
 return ExecutorSupport
 end)() end,
-    [42] = function()local wax,script,require=ImportGlobals(42)local ImportGlobals return (function(...)local FileHelper = {}
+    [48] = function()local wax,script,require=ImportGlobals(48)local ImportGlobals return (function(...)local FileHelper = {}
 
 function FileHelper.new(basepath: string)
     local self = setmetatable({}, {
@@ -8551,7 +8880,7 @@ end
 
 return FileHelper
 end)() end,
-    [44] = function()local wax,script,require=ImportGlobals(44)local ImportGlobals return (function(...)-- Addons
+    [50] = function()local wax,script,require=ImportGlobals(50)local ImportGlobals return (function(...)-- Addons
 if getgenv().mspaint_disable_addons or getgenv().mspaint_addons_activated then 
     return {}
 end
@@ -8737,7 +9066,7 @@ end)
 
 return {}
 end)() end,
-    [45] = function()local wax,script,require=ImportGlobals(45)local ImportGlobals return (function(...)local UICreator = {}
+    [51] = function()local wax,script,require=ImportGlobals(51)local ImportGlobals return (function(...)local UICreator = {}
 
 local repo = "https://raw.githubusercontent.com/deividcomsono/LinoriaLib/refs/heads/main/"
 
@@ -8756,7 +9085,7 @@ end
 
 function UICreator:CreateWindow()
     local Window = shared.Library:CreateWindow({
-        Title = "Dương Api V2 | " .. shared.ScriptName,
+        Title = "mspaint v3 (OUTDATED!) | " .. shared.ScriptName,
         Center = true,
         AutoShow = true,
         Resizable = true,
@@ -8800,6 +9129,11 @@ end
 
 function UICreator:CreateSettingsTab()
     local SettingsTab = shared.Window:AddTab("UI Settings")
+    SettingsTab:UpdateWarningBox({
+        Visible = true,
+        Title = "WARNING",
+        Text = "You are using a deprecated version of mspaint, to get the new version please join our discord server via .gg/mspaint"
+    })
 
     local MenuGroup = SettingsTab:AddLeftGroupbox("Menu")
     local CreditsGroup = SettingsTab:AddRightGroupbox("Credits")
@@ -8830,7 +9164,7 @@ function UICreator:CreateSettingsTab()
     CreditsGroup:AddLabel("upio - owner")
     CreditsGroup:AddLabel("deividcomsono - main script dev")
     CreditsGroup:AddLabel("mstudio45")
-    CreditsGroup:AddLabel("Dương-Modder")
+    CreditsGroup:AddLabel("bacalhauz")
 
     shared.Library.ToggleKeybind = shared.Options.MenuKeybind
 
@@ -8862,7 +9196,7 @@ end
 return UICreator
 
 end)() end,
-    [47] = function()local wax,script,require=ImportGlobals(47)local ImportGlobals return (function(...)local Doors = {}
+    [53] = function()local wax,script,require=ImportGlobals(53)local ImportGlobals return (function(...)local Doors = {}
 
 --// Player Variables \\--
 local mainUI
@@ -8962,7 +9296,7 @@ function Doors:Warn(options) Doors:Alert(options) end
 
 return Doors
 end)() end,
-    [48] = function()local wax,script,require=ImportGlobals(48)local ImportGlobals return (function(...)local Linoria = {}
+    [54] = function()local wax,script,require=ImportGlobals(54)local ImportGlobals return (function(...)local Linoria = {}
 
 function Linoria:Alert(options)
     if not shared.Library then return warn("No Linoria library") end
@@ -8991,7 +9325,7 @@ end
 
 return Linoria
 end)() end,
-    [49] = function()local wax,script,require=ImportGlobals(49)local ImportGlobals return (function(...)local Notify = {}
+    [55] = function()local wax,script,require=ImportGlobals(55)local ImportGlobals return (function(...)local Notify = {}
 
 local Linoria = require("Notifiers/Linoria")
 local Doors = require("Notifiers/Doors")
@@ -9028,7 +9362,7 @@ function Notify:Log(options) Notify:Notify(options) end
 
 return Notify
 end)() end,
-    [50] = function()local wax,script,require=ImportGlobals(50)local ImportGlobals return (function(...)return function(scriptType: "Utils" | "Tabs", name: string)
+    [56] = function()local wax,script,require=ImportGlobals(56)local ImportGlobals return (function(...)return function(scriptType: "Utils" | "Tabs", name: string)
     local scriptPath = script.Parent.Parent.Places[scriptType][shared.ScriptFolder or "Universal"]
 
     if shared.Mapping and shared.Mapping["Exclusions"] then
@@ -9039,7 +9373,7 @@ end)() end,
     require(scriptPath[name])
 end
 end)() end,
-    [51] = function()local wax,script,require=ImportGlobals(51)local ImportGlobals return (function(...)local Logs = {
+    [57] = function()local wax,script,require=ImportGlobals(57)local ImportGlobals return (function(...)local Logs = {
     Debug = true, --or getgenv().mspaint_dev_mode,
 
     FirstTime = true,
@@ -9092,7 +9426,7 @@ end
 
 return Logs
 end)() end,
-    [52] = function()local wax,script,require=ImportGlobals(52)local ImportGlobals return (function(...)local cloneref = (cloneref or function(instance: any) return instance end)
+    [58] = function()local wax,script,require=ImportGlobals(58)local ImportGlobals return (function(...)local cloneref = (cloneref or function(instance: any) return instance end)
 
 local Services = {}
 function Services:GetService(serviceName: string)
@@ -9112,7 +9446,7 @@ end
 
 return Services
 end)() end,
-    [54] = function()local wax,script,require=ImportGlobals(54)local ImportGlobals return (function(...)local ControlModule = if wax.shared.ExecutorSupport["require"] and shared.PlayerScripts:FindFirstChild("PlayerModule") then wax.require(shared.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")) else { replaced = true }
+    [60] = function()local wax,script,require=ImportGlobals(60)local ImportGlobals return (function(...)local ControlModule = if wax.shared.ExecutorSupport["require"] and shared.PlayerScripts:FindFirstChild("PlayerModule") then wax.require(shared.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")) else { replaced = true }
 
 if ControlModule.replaced == true then
     ControlModule = {
@@ -9175,7 +9509,7 @@ end
 
 return ControlModule
 end)() end,
-    [55] = function()local wax,script,require=ImportGlobals(55)local ImportGlobals return (function(...)local Fly = {
+    [61] = function()local wax,script,require=ImportGlobals(61)local ImportGlobals return (function(...)local Fly = {
     FlyBody = nil,
     FlyGyro = nil,
     Enabled = false, 
@@ -9238,7 +9572,7 @@ end
 
 return Fly
 end)() end,
-    [56] = function()local wax,script,require=ImportGlobals(56)local ImportGlobals return (function(...)local Twerk = {
+    [62] = function()local wax,script,require=ImportGlobals(62)local ImportGlobals return (function(...)local Twerk = {
     TwerkAnimation = nil,
     TwerkTrack = nil,
 }
@@ -9284,142 +9618,149 @@ local ObjectTree = {
         },
         {
             {
-                38,
+                2,
+                2,
+                {
+                    "Mappings"
+                }
+            },
+            {
+                44,
                 1,
                 {
                     "Utils"
                 },
                 {
                     {
-                        40,
+                        46,
                         2,
                         {
                             "Connections"
                         }
                     },
                     {
-                        51,
-                        2,
-                        {
-                            "Logs"
-                        }
-                    },
-                    {
-                        52,
-                        2,
-                        {
-                            "Services"
-                        }
-                    },
-                    {
-                        43,
-                        1,
-                        {
-                            "GUI"
-                        },
-                        {
-                            {
-                                49,
-                                2,
-                                {
-                                    "Notify"
-                                }
-                            },
-                            {
-                                46,
-                                1,
-                                {
-                                    "Notifiers"
-                                },
-                                {
-                                    {
-                                        48,
-                                        2,
-                                        {
-                                            "Linoria"
-                                        }
-                                    },
-                                    {
-                                        47,
-                                        2,
-                                        {
-                                            "Doors"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                45,
-                                2,
-                                {
-                                    "Creator"
-                                }
-                            },
-                            {
-                                44,
-                                2,
-                                {
-                                    "Addons"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        53,
+                        59,
                         1,
                         {
                             "Universal"
                         },
                         {
                             {
-                                56,
+                                62,
                                 2,
                                 {
                                     "Twerk"
                                 }
                             },
                             {
-                                55,
-                                2,
-                                {
-                                    "Fly"
-                                }
-                            },
-                            {
-                                54,
+                                60,
                                 2,
                                 {
                                     "ControlModule"
+                                }
+                            },
+                            {
+                                61,
+                                2,
+                                {
+                                    "Fly"
                                 }
                             }
                         }
                     },
                     {
-                        39,
-                        2,
+                        49,
+                        1,
                         {
-                            "BloxstrapRPC"
+                            "GUI"
+                        },
+                        {
+                            {
+                                55,
+                                2,
+                                {
+                                    "Notify"
+                                }
+                            },
+                            {
+                                51,
+                                2,
+                                {
+                                    "Creator"
+                                }
+                            },
+                            {
+                                50,
+                                2,
+                                {
+                                    "Addons"
+                                }
+                            },
+                            {
+                                52,
+                                1,
+                                {
+                                    "Notifiers"
+                                },
+                                {
+                                    {
+                                        54,
+                                        2,
+                                        {
+                                            "Linoria"
+                                        }
+                                    },
+                                    {
+                                        53,
+                                        2,
+                                        {
+                                            "Doors"
+                                        }
+                                    }
+                                }
+                            }
                         }
                     },
                     {
-                        41,
+                        57,
+                        2,
+                        {
+                            "Logs"
+                        }
+                    },
+                    {
+                        47,
                         2,
                         {
                             "ExecutorSupport"
                         }
                     },
                     {
-                        50,
+                        45,
+                        2,
+                        {
+                            "BloxstrapRPC"
+                        }
+                    },
+                    {
+                        48,
+                        2,
+                        {
+                            "FileHelper"
+                        }
+                    },
+                    {
+                        56,
                         2,
                         {
                             "Loader"
                         }
                     },
                     {
-                        42,
+                        58,
                         2,
                         {
-                            "FileHelper"
+                            "Services"
                         }
                     }
                 }
@@ -9432,187 +9773,100 @@ local ObjectTree = {
                 },
                 {
                     {
-                        10,
-                        1,
-                        {
-                            "Tabs"
-                        },
-                        {
-                            {
-                                11,
-                                1,
-                                {
-                                    "Doors"
-                                },
-                                {
-                                    {
-                                        12,
-                                        1,
-                                        {
-                                            "Doors"
-                                        },
-                                        {
-                                            {
-                                                15,
-                                                2,
-                                                {
-                                                    "Main"
-                                                }
-                                            },
-                                            {
-                                                16,
-                                                2,
-                                                {
-                                                    "Visuals"
-                                                }
-                                            },
-                                            {
-                                                14,
-                                                2,
-                                                {
-                                                    "Floor"
-                                                }
-                                            },
-                                            {
-                                                13,
-                                                2,
-                                                {
-                                                    "Exploits"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        17,
-                                        1,
-                                        {
-                                            "Lobby"
-                                        },
-                                        {
-                                            {
-                                                18,
-                                                2,
-                                                {
-                                                    "Main"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                19,
-                                1,
-                                {
-                                    "R&D"
-                                },
-                                {
-                                    {
-                                        21,
-                                        2,
-                                        {
-                                            "Visuals"
-                                        }
-                                    },
-                                    {
-                                        20,
-                                        2,
-                                        {
-                                            "Main"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        22,
+                        23,
                         1,
                         {
                             "Utils"
                         },
                         {
                             {
-                                36,
+                                37,
                                 1,
                                 {
-                                    "Template"
+                                    "R&D"
                                 },
                                 {
                                     {
-                                        37,
+                                        39,
+                                        2,
+                                        {
+                                            "Chat"
+                                        }
+                                    },
+                                    {
+                                        38,
+                                        2,
+                                        {
+                                            "Assets"
+                                        }
+                                    },
+                                    {
+                                        40,
                                         2,
                                         {
                                             "ConnectionsFuncs"
+                                        }
+                                    },
+                                    {
+                                        41,
+                                        2,
+                                        {
+                                            "ESP"
                                         }
                                     }
                                 }
                             },
                             {
-                                23,
+                                24,
                                 1,
                                 {
                                     "Doors"
                                 },
                                 {
                                     {
-                                        24,
+                                        25,
                                         1,
                                         {
                                             "Doors"
                                         },
                                         {
                                             {
-                                                28,
-                                                2,
-                                                {
-                                                    "ConnectionsFuncs"
-                                                }
-                                            },
-                                            {
-                                                25,
-                                                2,
-                                                {
-                                                    "Assets"
-                                                }
-                                            },
-                                            {
-                                                29,
-                                                2,
-                                                {
-                                                    "ESP"
-                                                }
-                                            },
-                                            {
                                                 32,
-                                                2,
-                                                {
-                                                    "Padlock"
-                                                }
-                                            },
-                                            {
-                                                31,
                                                 2,
                                                 {
                                                     "Minecarts"
                                                 }
                                             },
                                             {
+                                                29,
+                                                2,
+                                                {
+                                                    "ConnectionsFuncs"
+                                                }
+                                            },
+                                            {
                                                 26,
                                                 2,
                                                 {
-                                                    "AutoWardrobe"
+                                                    "Assets"
                                                 }
                                             },
                                             {
                                                 27,
                                                 2,
                                                 {
+                                                    "AutoWardrobe"
+                                                }
+                                            },
+                                            {
+                                                28,
+                                                2,
+                                                {
                                                     "BreakerBox"
                                                 }
                                             },
                                             {
-                                                33,
+                                                34,
                                                 2,
                                                 {
                                                     "Player"
@@ -9622,23 +9876,147 @@ local ObjectTree = {
                                                 30,
                                                 2,
                                                 {
+                                                    "ESP"
+                                                }
+                                            },
+                                            {
+                                                33,
+                                                2,
+                                                {
+                                                    "Padlock"
+                                                }
+                                            },
+                                            {
+                                                31,
+                                                2,
+                                                {
                                                     "Entities"
                                                 }
                                             }
                                         }
                                     },
                                     {
-                                        34,
+                                        35,
                                         1,
                                         {
                                             "Lobby"
                                         },
                                         {
                                             {
-                                                35,
+                                                36,
                                                 2,
                                                 {
                                                     "Preset"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                42,
+                                1,
+                                {
+                                    "Template"
+                                },
+                                {
+                                    {
+                                        43,
+                                        2,
+                                        {
+                                            "ConnectionsFuncs"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        11,
+                        1,
+                        {
+                            "Tabs"
+                        },
+                        {
+                            {
+                                20,
+                                1,
+                                {
+                                    "R&D"
+                                },
+                                {
+                                    {
+                                        22,
+                                        2,
+                                        {
+                                            "Visuals"
+                                        }
+                                    },
+                                    {
+                                        21,
+                                        2,
+                                        {
+                                            "Main"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                12,
+                                1,
+                                {
+                                    "Doors"
+                                },
+                                {
+                                    {
+                                        13,
+                                        1,
+                                        {
+                                            "Doors"
+                                        },
+                                        {
+                                            {
+                                                15,
+                                                2,
+                                                {
+                                                    "Floor"
+                                                }
+                                            },
+                                            {
+                                                17,
+                                                2,
+                                                {
+                                                    "Visuals"
+                                                }
+                                            },
+                                            {
+                                                16,
+                                                2,
+                                                {
+                                                    "Main"
+                                                }
+                                            },
+                                            {
+                                                14,
+                                                2,
+                                                {
+                                                    "Exploits"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        18,
+                                        1,
+                                        {
+                                            "Lobby"
+                                        },
+                                        {
+                                            {
+                                                19,
+                                                2,
+                                                {
+                                                    "Main"
                                                 }
                                             }
                                         }
@@ -9655,6 +10033,13 @@ local ObjectTree = {
                         },
                         {
                             {
+                                10,
+                                2,
+                                {
+                                    "Template"
+                                }
+                            },
+                            {
                                 5,
                                 1,
                                 {
@@ -9662,44 +10047,39 @@ local ObjectTree = {
                                 },
                                 {
                                     {
-                                        6,
-                                        2,
-                                        {
-                                            "Doors"
-                                        }
-                                    },
-                                    {
                                         7,
                                         2,
                                         {
                                             "Lobby"
+                                        }
+                                    },
+                                    {
+                                        6,
+                                        2,
+                                        {
+                                            "Doors"
                                         }
                                     }
                                 }
                             },
                             {
                                 8,
-                                2,
+                                1,
                                 {
-                                    "Template"
-                                }
-                            },
-                            {
-                                9,
-                                2,
+                                    "R&D"
+                                },
                                 {
-                                    "Universal"
+                                    {
+                                        9,
+                                        2,
+                                        {
+                                            "R&D"
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            },
-            {
-                2,
-                2,
-                {
-                    "Mappings"
                 }
             }
         }
@@ -9710,43 +10090,47 @@ local ObjectTree = {
 local LineOffsets = {
     8,
     142,
-    [6] = 180,
-    [7] = 1824,
-    [8] = 1996,
-    [9] = 2099,
-    [13] = 2274,
-    [14] = 3111,
-    [15] = 4084,
-    [16] = 4418,
-    [18] = 5388,
-    [20] = 5614,
-    [21] = 5666,
-    [25] = 6073,
-    [26] = 6293,
-    [27] = 6544,
-    [28] = 6646,
-    [29] = 7043,
-    [30] = 7381,
-    [31] = 7502,
-    [32] = 8029,
-    [33] = 8066,
-    [35] = 8121,
-    [56] = 9246,
-    [40] = 8272,
-    [55] = 9183,
-    [48] = 8970,
-    [49] = 8999,
-    [39] = 8231,
-    [37] = 8207,
-    [52] = 9100,
-    [45] = 8745,
-    [42] = 8470,
-    [51] = 9047,
-    [54] = 9120,
-    [47] = 8870,
-    [50] = 9036,
-    [41] = 8289,
-    [44] = 8559
+    [6] = 160,
+    [7] = 1804,
+    [9] = 1976,
+    [10] = 2213,
+    [14] = 2316,
+    [15] = 3153,
+    [16] = 4126,
+    [17] = 4460,
+    [19] = 5430,
+    [21] = 5656,
+    [22] = 5708,
+    [26] = 6115,
+    [27] = 6335,
+    [28] = 6586,
+    [29] = 6688,
+    [30] = 7085,
+    [31] = 7423,
+    [32] = 7544,
+    [33] = 8071,
+    [34] = 8108,
+    [36] = 8163,
+    [38] = 8249,
+    [39] = 8269,
+    [40] = 8286,
+    [41] = 8349,
+    [43] = 8542,
+    [45] = 8566,
+    [46] = 8607,
+    [47] = 8624,
+    [48] = 8805,
+    [50] = 8894,
+    [51] = 9080,
+    [53] = 9210,
+    [54] = 9310,
+    [55] = 9339,
+    [56] = 9376,
+    [57] = 9387,
+    [58] = 9440,
+    [60] = 9460,
+    [61] = 9523,
+    [62] = 9586
 }
 
 -- Misc AOT variable imports
